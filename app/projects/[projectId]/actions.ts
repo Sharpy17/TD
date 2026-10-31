@@ -6,7 +6,7 @@ import { createModule } from "@/lib/modules/service";
 import { createTask, deleteTask, updateTask, addTaskComment } from "@/lib/tasks/service";
 import { getCurrentUser } from "@/lib/auth/service";
 import { canonicalProjectId } from "@/lib/projects/service";
-import { publish } from "@/lib/realtime/hub";
+import { chatTopic, publish } from "@/lib/realtime/hub";
 import { parseChecklist } from "@/lib/tasks/checklist";
 
 export interface ModuleActionState {
@@ -338,5 +338,6 @@ export async function addCommentAction(
 
   revalidateProjectViews(projectId);
   if (projectId) publish(canonicalProjectId(projectId), { type: "comments", taskId });
+  if (result.channelId) publish(chatTopic(result.channelId), { type: "messages", channelId: result.channelId });
   return { success: true };
 }

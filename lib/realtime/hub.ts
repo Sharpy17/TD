@@ -18,7 +18,12 @@ export type BoardViewer = {
 export type BoardEvent =
   | { type: "tasks" }
   | { type: "comments"; taskId: string }
-  | { type: "presence"; viewers: BoardViewer[] };
+  | { type: "presence"; viewers: BoardViewer[] }
+  /** A chat channel changed (new message or reaction). Published on the `chatTopic(channelId)` key. */
+  | { type: "messages"; channelId: string };
+
+/** Hub key for one chat channel's listeners (board listeners are keyed by project id). */
+export const chatTopic = (channelId: string) => `chat:${channelId}`;
 
 type Listener = (event: BoardEvent) => void;
 

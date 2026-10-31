@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import type { Project, Module, Task, UserSummary } from "@/lib/domain/types";
 import { demoProject, demoProjectSlug } from "@/lib/data/demo";
 import { readStoredChecklist } from "@/lib/tasks/checklist";
+import { moduleChannelName } from "@/lib/chat/names";
 
 const LEGACY_DEMO_PROJECT_NAME = "Toguz Hub Core";
 
@@ -79,7 +80,7 @@ function mapDbProjectToDomain(dbProj: {
         name: m.name,
         description: m.description || "",
         icon: m.icon || "▦",
-        channelSlug: `mod-${m.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
+        channelSlug: moduleChannelName(m.name),
         lead: leadUser,
         assignees: (m.assignees || []).map((user) => ({ ...user, initials: user.name.slice(0, 2).toUpperCase() })),
         tasks: m.tasks.map((t): Task => {
