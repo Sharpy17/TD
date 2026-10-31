@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { parseQuickAdd } from "../lib/tasks/quickAdd";
-import { compareByUrgency, deadlineChipLabel, type BoardTask } from "../components/board/boardModel";
+import { compareForColumn, deadlineChipLabel, type BoardTask } from "../components/board/boardModel";
 
 const HOUR = 3_600_000;
 const now = Date.UTC(2026, 9, 31, 10, 0, 0);
@@ -44,7 +44,12 @@ describe("parseQuickAdd", () => {
 });
 
 describe("board deadline chips", () => {
-  const task = (id: string, dueInHours: number | null, status: BoardTask["status"] = "IN_PROGRESS"): BoardTask => ({
+  const task = (
+    id: string,
+    dueInHours: number | null,
+    status: BoardTask["status"] = "IN_PROGRESS",
+    orderKey = "m",
+  ): BoardTask => ({
     id,
     title: id,
     status,
@@ -52,6 +57,8 @@ describe("board deadline chips", () => {
     assignee: null,
     moduleId: "m",
     moduleName: "M",
+    code: null,
+    orderKey,
   });
 
   it("formats each urgency state", () => {
@@ -62,10 +69,13 @@ describe("board deadline chips", () => {
     expect(deadlineChipLabel(task("e", -10, "DONE"), now)).toBe("Shipped");
   });
 
-  it("sorts overdue first, then soonest due, undated last", () => {
-    const sorted = [task("later", 100), task("none", null), task("late", -1), task("soon", 2)].sort((a, b) =>
-      compareByUrgency(a, b, now),
-    );
-    expect(sorted.map((t) => t.id)).toEqual(["late", "soon", "later", "none"]);
+  it("pins overdue then burning cards, then follows the manual order", () => {
+    const sorted = [
+      task("later", 100, "IN_PROGRESS", "b"),
+      task("none", null, "IN_PROGRESS", "a"),
+      task("late", -1, "IN_PROGRESS", "z"),
+      task("soon", 2, "IN_PROGRESS", "y"),
+    ].sort((a, b) => compareForColumn(a, b, now));
+    expect(sorted.map((t) => t.id)).toEqual(["late", "soon", "none", "later"]);
   });
 });

@@ -1,9 +1,13 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { KanbanBoard } from "@/components/board/KanbanBoard";
 import { ProjectSidebar } from "@/components/navigation/ProjectSidebar";
 import { getCurrentUser } from "@/lib/auth/service";
 import { getProjectById, getProjectMembers } from "@/lib/projects/service";
+import { normalizeProjectTasks } from "@/lib/tasks/service";
+
+export const metadata: Metadata = { title: "Board · Toguz Hub" };
 
 /** Request-time clock; seeds the client countdowns so server and client render the same first frame. */
 function requestTimeMs(): number {
@@ -16,14 +20,16 @@ export default async function ProjectBoardPage({
   params: Promise<{ projectId: string }>;
 }) {
   const { projectId } = await params;
-  const [project, members, currentUser] = await Promise.all([
+  const [loaded, members, currentUser] = await Promise.all([
     getProjectById(projectId),
     getProjectMembers(projectId),
     getCurrentUser(),
   ]);
-  const nowMs = requestTimeMs();
+  if (!loaded) notFound();
 
-  if (!project) notFound();
+  // Older rows may lack numbers/order keys; fix them once, then reload what changed.
+  const project = (await normalizeProjectTasks(loaded.id)) ? ((await getProjectById(projectId)) ?? loaded) : loaded;
+  const nowMs = requestTimeMs();
 
   return (
     <main className="app-shell project-shell">
@@ -34,7 +40,11 @@ export default async function ProjectBoardPage({
           routeProjectId={projectId}
           project={project}
           members={members}
-          currentUserId={currentUser?.id ?? null}
+          currentUser={
+            currentUser
+              ? { id: currentUser.id, name: currentUser.name, initials: currentUser.name.slice(0, 2).toUpperCase() }
+              : null
+          }
           initialNowMs={nowMs}
           breadcrumb={
             <Link className="board-crumb" href={`/projects/${projectId}`}>

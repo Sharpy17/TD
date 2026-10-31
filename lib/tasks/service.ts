@@ -1,5 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { ensureDemoProjectSeeded } from "@/lib/projects/service";
+import { isValidOrderKey, keyBetween, sequentialKeys } from "@/lib/domain/ordering";
+import type { ChecklistItem, TaskComment } from "@/lib/domain/types";
 
 export interface CreateTaskInput {
   moduleId: string;
@@ -57,17 +59,17 @@ export async function createTask(input: CreateTaskInput): Promise<TaskResult> {
       }
     }
 
-    // Generate orderKey for Kanban ordering
-    const existingCount = await prisma.task.count({
-      where: { moduleId: targetModule.id },
-    });
-    const orderKey = (existingCount + 1).toString().padStart(4, "0");
-
     const status = input.status || "BACKLOG";
     const priority = input.priority || "MEDIUM";
 
     const task = await prisma.$transaction(async (tx) => {
-      // 1. Create Task
+      // 1. Create Task at the bottom of the board with the next project-wide number
+      const projectTasks = { module: { projectId: targetModule.projectId } };
+      const [lastByKey, lastByNumber] = await Promise.all([
+        tx.task.findFirst({ where: projectTasks, orderBy: { orderKey: "desc" }, select: { orderKey: true } }),
+        tx.task.aggregate({ where: projectTasks, _max: { number: true } }),
+      ]);
+
       const createdTask = await tx.task.create({
         data: {
           title: trimmedTitle,
@@ -75,7 +77,9 @@ export async function createTask(input: CreateTaskInput): Promise<TaskResult> {
           status,
           priority,
           dueAt: parsedDueAt,
-          orderKey,
+          orderKey: keyBetween(lastByKey?.orderKey ?? null, null),
+          number: (lastByNumber._max.number ?? 0) + 1,
+          completedAt: status === "DONE" ? new Date() : null,
           moduleId: targetModule.id,
           assigneeId: input.assigneeId || null,
         },
@@ -228,6 +232,8 @@ export interface UpdateTaskInput {
   dueAt?: Date | string | null;
   moduleId?: string;
   assigneeId?: string | null;
+  orderKey?: string;
+  checklist?: ChecklistItem[];
 }
 
 /**
@@ -278,8 +284,34 @@ export async function updateTask(input: UpdateTaskInput): Promise<TaskResult> {
       dataToUpdate.description = input.description ? input.description.trim() : null;
     }
 
-    if (input.status !== undefined) {
+    if (input.status !== undefined && input.status !== task.status) {
       dataToUpdate.status = input.status;
+      dataToUpdate.completedAt = input.status === "DONE" ? new Date() : null;
+    }
+
+    if (input.orderKey !== undefined) {
+      if (!isValidOrderKey(input.orderKey)) {
+        return { success: false, error: "Invalid card position." };
+      }
+      dataToUpdate.orderKey = input.orderKey;
+    }
+
+    if (input.checklist !== undefined) {
+      dataToUpdate.checklist = input.checklist;
+    }
+
+    if (input.assigneeId !== undefined) {
+      if (input.assigneeId) {
+        // Only people in the project's workspace can own its tasks.
+        const membership = await prisma.membership.findFirst({
+          where: { userId: input.assigneeId, workspace: { projects: { some: { id: task.module.projectId } } } },
+          select: { id: true },
+        });
+        if (!membership) {
+          return { success: false, error: "That person isn't a member of this workspace." };
+        }
+      }
+      dataToUpdate.assigneeId = input.assigneeId;
     }
 
     if (input.priority !== undefined) {
@@ -303,7 +335,7 @@ export async function updateTask(input: UpdateTaskInput): Promise<TaskResult> {
 
     if (input.moduleId && input.moduleId !== previousModuleId) {
       const targetMod = await prisma.module.findUnique({ where: { id: input.moduleId } });
-      if (!targetMod) {
+      if (!targetMod || targetMod.projectId !== task.module.projectId) {
         return { success: false, error: "New target module not found." };
       }
       dataToUpdate.moduleId = input.moduleId;
@@ -364,6 +396,120 @@ export async function updateTask(input: UpdateTaskInput): Promise<TaskResult> {
       success: false,
       error: "Failed to update task. Please check database connectivity.",
     };
+  }
+}
+
+/**
+ * Brings older rows up to the board's expectations: every task gets a project-wide number,
+ * order keys become unique and valid, and finished tasks get a completion time.
+ * Cheap no-op once a project is clean. Returns true when any row was changed.
+ */
+export async function normalizeProjectTasks(projectId: string): Promise<boolean> {
+  try {
+    const tasks = await prisma.task.findMany({
+      where: { module: { projectId } },
+      select: { id: true, number: true, orderKey: true, status: true, completedAt: true, updatedAt: true, createdAt: true },
+      orderBy: [{ orderKey: "asc" }, { createdAt: "asc" }],
+    });
+
+    const keys = tasks.map((t) => t.orderKey);
+    const needsRekey = new Set(keys).size !== keys.length || keys.some((k) => !isValidOrderKey(k));
+    const missingNumbers = tasks.filter((t) => t.number == null);
+    const missingCompletion = tasks.filter((t) => t.status === "DONE" && !t.completedAt);
+    if (!needsRekey && missingNumbers.length === 0 && missingCompletion.length === 0) return false;
+
+    let nextNumber = tasks.reduce((max, t) => Math.max(max, t.number ?? 0), 0);
+    const numberFor = new Map(
+      [...missingNumbers]
+        .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
+        .map((t) => [t.id, ++nextNumber]),
+    );
+    const newKeys = needsRekey ? sequentialKeys(tasks.length) : null;
+
+    await prisma.$transaction(
+      tasks
+        .map((t, index) => {
+          const data: { number?: number; orderKey?: string; completedAt?: Date } = {};
+          if (numberFor.has(t.id)) data.number = numberFor.get(t.id);
+          if (newKeys) data.orderKey = newKeys[index];
+          if (t.status === "DONE" && !t.completedAt) data.completedAt = t.updatedAt;
+          return Object.keys(data).length ? prisma.task.update({ where: { id: t.id }, data }) : null;
+        })
+        .filter((op) => op !== null),
+    );
+    return true;
+  } catch (err) {
+    console.error(`[normalizeProjectTasks] Failed for project ${projectId}:`, err);
+    return false;
+  }
+}
+
+/** Returns the project a task belongs to, or null when it does not exist. */
+export async function getTaskProjectId(taskId: string): Promise<string | null> {
+  const task = await prisma.task.findUnique({
+    where: { id: taskId },
+    select: { module: { select: { projectId: true } } },
+  });
+  return task?.module.projectId ?? null;
+}
+
+export async function listTaskComments(taskId: string): Promise<TaskComment[]> {
+  const messages = await prisma.message.findMany({
+    where: { taskId },
+    orderBy: { createdAt: "asc" },
+    take: 200,
+    select: { id: true, content: true, createdAt: true, author: { select: { id: true, name: true } } },
+  });
+
+  return messages.map((m) => ({
+    id: m.id,
+    content: m.content,
+    createdAt: m.createdAt.toISOString(),
+    author: { id: m.author.id, name: m.author.name, initials: m.author.name.slice(0, 2).toUpperCase() },
+  }));
+}
+
+/**
+ * Posts a comment on a task. Comments live in the task's module channel, which is created on first use.
+ */
+export async function addTaskComment(input: {
+  taskId: string;
+  authorId: string;
+  content: string;
+}): Promise<{ success: boolean; error?: string }> {
+  const content = input.content.trim();
+  if (!content) return { success: false, error: "Comment cannot be empty." };
+  if (content.length > 2000) return { success: false, error: "Comment cannot exceed 2000 characters." };
+
+  try {
+    const task = await prisma.task.findUnique({
+      where: { id: input.taskId },
+      select: { module: { select: { id: true, name: true, channel: { select: { id: true } }, project: { select: { workspaceId: true } } } } },
+    });
+    if (!task) return { success: false, error: "Task not found." };
+
+    const channelId =
+      task.module.channel?.id ??
+      (
+        await prisma.channel.upsert({
+          where: { moduleId: task.module.id },
+          update: {},
+          create: {
+            name: `mod-${task.module.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
+            moduleId: task.module.id,
+            workspaceId: task.module.project.workspaceId,
+          },
+          select: { id: true },
+        })
+      ).id;
+
+    await prisma.message.create({
+      data: { content, channelId, authorId: input.authorId, taskId: input.taskId },
+    });
+    return { success: true };
+  } catch (err) {
+    console.error(`[addTaskComment] Failed for task ${input.taskId}:`, err);
+    return { success: false, error: "Failed to post comment." };
   }
 }
 

@@ -1,6 +1,12 @@
 import { prisma } from "@/lib/prisma";
 import type { Project, Module, Task, UserSummary } from "@/lib/domain/types";
 import { demoProject, demoProjectSlug } from "@/lib/data/demo";
+import { readStoredChecklist } from "@/lib/tasks/checklist";
+
+/** The demo project is reachable by a friendly slug; everything else uses the real id. */
+export function canonicalProjectId(projectId: string): string {
+  return projectId === demoProjectSlug ? demoProject.id : projectId;
+}
 
 export interface CreateProjectInput {
   name: string;
@@ -36,6 +42,12 @@ function mapDbProjectToDomain(dbProj: {
       dueAt: Date | null;
       assigneeId: string | null;
       assignee?: { id: string; name: string } | null;
+      number?: number | null;
+      orderKey?: string;
+      completedAt?: Date | null;
+      updatedAt?: Date;
+      checklist?: unknown;
+      _count?: { comments: number };
     }>;
   }>;
 }): Project {
@@ -74,6 +86,12 @@ function mapDbProjectToDomain(dbProj: {
                   initials: t.assignee.name.slice(0, 2).toUpperCase(),
                 }
               : null,
+            number: t.number ?? null,
+            orderKey: t.orderKey,
+            completedAt:
+              t.status === "DONE" ? (t.completedAt ?? t.updatedAt ?? null)?.toISOString() ?? null : null,
+            checklist: readStoredChecklist(t.checklist),
+            commentCount: t._count?.comments ?? 0,
           };
         }),
       };
@@ -155,7 +173,12 @@ export async function getProjects(): Promise<Array<{ project: Project; slug: str
         modules: {
           include: {
             leadUser: true,
-            tasks: { include: { assignee: { select: { id: true, name: true } } } },
+            tasks: {
+              include: {
+                assignee: { select: { id: true, name: true } },
+                _count: { select: { comments: true } },
+              },
+            },
           },
         },
       },
@@ -169,7 +192,12 @@ export async function getProjects(): Promise<Array<{ project: Project; slug: str
           modules: {
             include: {
               leadUser: true,
-              tasks: { include: { assignee: { select: { id: true, name: true } } } },
+              tasks: {
+              include: {
+                assignee: { select: { id: true, name: true } },
+                _count: { select: { comments: true } },
+              },
+            },
             },
           },
         },
@@ -206,7 +234,12 @@ export async function getProjectById(projectId: string): Promise<Project | null>
         modules: {
           include: {
             leadUser: true,
-            tasks: { include: { assignee: { select: { id: true, name: true } } } },
+            tasks: {
+              include: {
+                assignee: { select: { id: true, name: true } },
+                _count: { select: { comments: true } },
+              },
+            },
           },
         },
       },
@@ -221,7 +254,12 @@ export async function getProjectById(projectId: string): Promise<Project | null>
           modules: {
             include: {
               leadUser: true,
-              tasks: { include: { assignee: { select: { id: true, name: true } } } },
+              tasks: {
+              include: {
+                assignee: { select: { id: true, name: true } },
+                _count: { select: { comments: true } },
+              },
+            },
             },
           },
         },

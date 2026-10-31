@@ -113,3 +113,36 @@ export function playVoiceChime(type: VoiceChimeType): void {
   }
 }
 
+/**
+ * Soft two-note "done" tick for shipping a task. Deliberately quiet: it should feel like a
+ * keyboard click with a smile, not a notification.
+ */
+export function playTaskDoneChime(): void {
+  const ctx = getAudioContext();
+  if (!ctx) return;
+
+  try {
+    const now = ctx.currentTime;
+    // E5 then B5 — a perfect fifth reads as "resolved".
+    [659.25, 987.77].forEach((frequency, index) => {
+      const start = now + index * 0.07;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(frequency, start);
+
+      gain.gain.setValueAtTime(0.0001, start);
+      gain.gain.exponentialRampToValueAtTime(0.035, start + 0.012);
+      gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.18);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(start);
+      osc.stop(start + 0.2);
+    });
+  } catch (err) {
+    console.debug("[playTaskDoneChime] Audio context unavailable:", err);
+  }
+}
+

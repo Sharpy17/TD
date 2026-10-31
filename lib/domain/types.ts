@@ -9,6 +9,12 @@ export type UserSummary = {
 
 export type TaskPriority = "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
 
+export type ChecklistItem = {
+  id: string;
+  text: string;
+  done: boolean;
+};
+
 export type Task = {
   id: string;
   title: string;
@@ -17,6 +23,18 @@ export type Task = {
   description?: string | null;
   dueAt: string | null;
   assignee: UserSummary | null;
+  number?: number | null;
+  orderKey?: string;
+  completedAt?: string | null;
+  checklist?: ChecklistItem[];
+  commentCount?: number;
+};
+
+export type TaskComment = {
+  id: string;
+  content: string;
+  createdAt: string;
+  author: UserSummary;
 };
 
 export type Module = {

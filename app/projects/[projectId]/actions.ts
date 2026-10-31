@@ -2,7 +2,11 @@
 
 import { revalidatePath } from "next/cache";
 import { createModule } from "@/lib/modules/service";
-import { createTask, deleteTask, updateTask } from "@/lib/tasks/service";
+import { createTask, deleteTask, updateTask, addTaskComment } from "@/lib/tasks/service";
+import { getCurrentUser } from "@/lib/auth/service";
+import { canonicalProjectId } from "@/lib/projects/service";
+import { publish } from "@/lib/realtime/hub";
+import { parseChecklist } from "@/lib/tasks/checklist";
 
 export interface ModuleActionState {
   error?: string;
@@ -51,6 +55,7 @@ export async function createModuleAction(
   revalidatePath("/projects/toguz-hub", "layout");
   revalidatePath("/projects");
   revalidatePath("/");
+  notifyBoard(projectId);
 
   return { success: true };
 }
@@ -103,6 +108,7 @@ export async function createTaskAction(
   revalidatePath("/projects/toguz-hub", "layout");
   revalidatePath("/projects");
   revalidatePath("/");
+  notifyBoard(projectId);
 
   return { success: true };
 }
@@ -122,6 +128,7 @@ export async function renameTaskAction(
   revalidatePath("/projects/toguz-hub", "layout");
   revalidatePath("/projects");
   revalidatePath("/");
+  notifyBoard(projectId);
 
   return { success: true };
 }
@@ -167,6 +174,7 @@ export async function updateTaskAction(
   revalidatePath("/projects/toguz-hub", "layout");
   revalidatePath("/projects");
   revalidatePath("/");
+  notifyBoard(projectId);
 
   return { success: true };
 }
@@ -190,8 +198,14 @@ export async function deleteTaskAction(
   revalidatePath("/projects/toguz-hub", "layout");
   revalidatePath("/projects");
   revalidatePath("/");
+  notifyBoard(projectId);
 
   return { success: true };
+}
+
+/** Tells every open board for this project to refetch. */
+function notifyBoard(projectId?: string) {
+  if (projectId) publish(canonicalProjectId(projectId), { type: "tasks" });
 }
 
 function revalidateProjectViews(projectId?: string) {
@@ -201,19 +215,20 @@ function revalidateProjectViews(projectId?: string) {
   revalidatePath("/projects/toguz-hub", "layout");
   revalidatePath("/projects");
   revalidatePath("/");
+  notifyBoard(projectId);
 }
 
 const BOARD_STATUSES = new Set(["BACKLOG", "IN_PROGRESS", "REVIEW", "DONE"]);
 
 export async function moveTaskAction(
   taskId: string,
-  status: "BACKLOG" | "IN_PROGRESS" | "REVIEW" | "DONE",
+  move: { status: "BACKLOG" | "IN_PROGRESS" | "REVIEW" | "DONE"; orderKey?: string },
   projectId?: string
 ): Promise<{ success: boolean; error?: string }> {
   if (!taskId) return { success: false, error: "Missing task ID." };
-  if (!BOARD_STATUSES.has(status)) return { success: false, error: "Unknown status." };
+  if (!BOARD_STATUSES.has(move.status)) return { success: false, error: "Unknown status." };
 
-  const result = await updateTask({ taskId, status });
+  const result = await updateTask({ taskId, status: move.status, orderKey: move.orderKey });
   if (!result.success) return { success: false, error: result.error };
 
   revalidateProjectViews(projectId);
@@ -238,5 +253,70 @@ export async function quickAddTaskAction(input: {
   if (!result.success) return { success: false, error: result.error };
 
   revalidateProjectViews(input.projectId);
+  return { success: true };
+}
+
+const PRIORITIES = new Set(["LOW", "MEDIUM", "HIGH", "CRITICAL"]);
+
+/** Inline edits from the board's details panel. Only the fields present are changed. */
+export async function updateTaskFieldsAction(
+  taskId: string,
+  fields: {
+    assigneeId?: string | null;
+    moduleId?: string;
+    priority?: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+    dueAt?: string | null;
+  },
+  projectId?: string
+): Promise<{ success: boolean; error?: string }> {
+  if (!taskId) return { success: false, error: "Missing task ID." };
+  if (fields.priority !== undefined && !PRIORITIES.has(fields.priority)) {
+    return { success: false, error: "Unknown priority." };
+  }
+  if (fields.dueAt && Number.isNaN(Date.parse(fields.dueAt))) {
+    return { success: false, error: "Invalid due date." };
+  }
+
+  const result = await updateTask({
+    taskId,
+    assigneeId: fields.assigneeId,
+    moduleId: fields.moduleId,
+    priority: fields.priority,
+    dueAt: fields.dueAt,
+  });
+  if (!result.success) return { success: false, error: result.error };
+
+  revalidateProjectViews(projectId);
+  return { success: true };
+}
+
+export async function updateChecklistAction(
+  taskId: string,
+  checklist: unknown,
+  projectId?: string
+): Promise<{ success: boolean; error?: string }> {
+  const items = parseChecklist(checklist);
+  if (!taskId || !items) return { success: false, error: "Invalid checklist." };
+
+  const result = await updateTask({ taskId, checklist: items });
+  if (!result.success) return { success: false, error: result.error };
+
+  revalidateProjectViews(projectId);
+  return { success: true };
+}
+
+export async function addCommentAction(
+  taskId: string,
+  content: string,
+  projectId?: string
+): Promise<{ success: boolean; error?: string }> {
+  const user = await getCurrentUser();
+  if (!user) return { success: false, error: "Sign in to comment." };
+
+  const result = await addTaskComment({ taskId, authorId: user.id, content });
+  if (!result.success) return result;
+
+  revalidateProjectViews(projectId);
+  if (projectId) publish(canonicalProjectId(projectId), { type: "comments", taskId });
   return { success: true };
 }
