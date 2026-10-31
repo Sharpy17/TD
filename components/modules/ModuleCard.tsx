@@ -87,9 +87,13 @@ export function ModuleCard({
       </div>
 
       <div className="module-card__footer">
-        <button type="button" className="channel-pill">
-          # {module.channelSlug}
-        </button>
+        {projectId ? (
+          <Link className="channel-pill" href={`/projects/${projectId}/channels?module=${module.id}`} title="Open module chat">
+            # {module.channelSlug}
+          </Link>
+        ) : (
+          <span className="channel-pill"># {module.channelSlug}</span>
+        )}
         {onAddTask && (
           <button
             type="button"

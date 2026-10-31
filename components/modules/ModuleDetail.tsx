@@ -21,7 +21,14 @@ export function ModuleDetail({ project, moduleId, routeProjectId, people, curren
       currentUser={currentUser}
       canEdit={canEdit}
       initialNowMs={nowMs}
-      breadcrumb={<Link className="board-crumb" href={`/projects/${routeProjectId}#modules`}>← {project.name}</Link>}
+      breadcrumb={
+        <>
+          <Link className="board-crumb" href={`/projects/${routeProjectId}#modules`}>← {project.name}</Link>
+          <Link className="board-crumb board-crumb--chat" href={`/projects/${routeProjectId}/channels?module=${moduleId}`}>
+            # Module chat
+          </Link>
+        </>
+      }
     />
   );
 }

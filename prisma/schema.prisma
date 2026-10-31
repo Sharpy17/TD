@@ -106,6 +106,7 @@ model Project {
   workspaceId    String
   workspace      Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   modules        Module[]
+  channels       Channel[]
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 
@@ -155,17 +156,22 @@ model Task {
   @@index([dueAt])
 }
 
+/// Channels follow the hierarchy: the workspace #general (no project), each project's #general
+/// (projectId only) and one channel per module (projectId + moduleId). See lib/chat/service.ts.
 model Channel {
   id          String    @id @default(cuid())
   name        String
   workspaceId String
   workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  projectId   String?
+  project     Project?  @relation(fields: [projectId], references: [id], onDelete: Cascade)
   moduleId    String?   @unique
   module      Module?   @relation(fields: [moduleId], references: [id], onDelete: Cascade)
   messages    Message[]
   createdAt   DateTime  @default(now())
 
   @@index([workspaceId])
+  @@index([projectId])
 }
 
 model Message {

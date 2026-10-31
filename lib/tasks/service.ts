@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { ensureDemoProjectSeeded } from "@/lib/projects/service";
+import { ensureModuleChannel } from "@/lib/chat/service";
 import { isValidOrderKey, keyBetween, sequentialKeys } from "@/lib/domain/ordering";
 import type { ChecklistItem, TaskComment } from "@/lib/domain/types";
 
@@ -476,37 +477,22 @@ export async function addTaskComment(input: {
   taskId: string;
   authorId: string;
   content: string;
-}): Promise<{ success: boolean; error?: string }> {
+}): Promise<{ success: boolean; error?: string; channelId?: string }> {
   const content = input.content.trim();
   if (!content) return { success: false, error: "Comment cannot be empty." };
   if (content.length > 2000) return { success: false, error: "Comment cannot exceed 2000 characters." };
 
   try {
-    const task = await prisma.task.findUnique({
-      where: { id: input.taskId },
-      select: { module: { select: { id: true, name: true, channel: { select: { id: true } }, project: { select: { workspaceId: true } } } } },
-    });
+    const task = await prisma.task.findUnique({ where: { id: input.taskId }, select: { moduleId: true } });
     if (!task) return { success: false, error: "Task not found." };
 
-    const channelId =
-      task.module.channel?.id ??
-      (
-        await prisma.channel.upsert({
-          where: { moduleId: task.module.id },
-          update: {},
-          create: {
-            name: `mod-${task.module.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
-            moduleId: task.module.id,
-            workspaceId: task.module.project.workspaceId,
-          },
-          select: { id: true },
-        })
-      ).id;
+    const channelId = await ensureModuleChannel(task.moduleId);
+    if (!channelId) return { success: false, error: "Task not found." };
 
     await prisma.message.create({
       data: { content, channelId, authorId: input.authorId, taskId: input.taskId },
     });
-    return { success: true };
+    return { success: true, channelId };
   } catch (err) {
     console.error(`[addTaskComment] Failed for task ${input.taskId}:`, err);
     return { success: false, error: "Failed to post comment." };

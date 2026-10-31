@@ -13,7 +13,7 @@ export function ProjectSidebar({
 }: {
   projectId: string;
   projectName: string;
-  active?: "overview" | "board";
+  active?: "overview" | "board" | "channels";
   account: SidebarAccount;
 }) {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -59,7 +59,11 @@ export function ProjectSidebar({
           >
             <span>✓</span> Board
           </Link>
-          <Link className="nav-item" href={`${projectHref}#voice-lounges`}>
+          <Link
+            className={`nav-item ${active === "channels" ? "nav-item--active" : ""}`}
+            href={`${projectHref}/channels`}
+            aria-current={active === "channels" ? "page" : undefined}
+          >
             <span>#</span> Channels
           </Link>
         </nav>
