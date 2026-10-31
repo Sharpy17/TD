@@ -7,12 +7,12 @@ const marat: UserSummary = { id: "usr_marat", name: "Marat", initials: "MK" };
 
 // Dates are intentionally relative so every local demo shows each urgency state.
 export const demoNowMs = Date.now();
-export const demoProjectSlug = "toguz-hub";
+export const demoProjectSlug = "daihub";
 const inHours = (hours: number): string => new Date(demoNowMs + hours * 3_600_000).toISOString();
 
 export const demoProject: Project = {
   id: "prj_toguz",
-  name: "Toguz Hub Core",
+  name: "DaiHub Core",
   modules: [
     {
       id: "mod_auth",

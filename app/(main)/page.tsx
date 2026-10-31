@@ -11,7 +11,7 @@ export default async function HomePage() {
     <div className="route-enter">
       <header className="main-topbar">
         <div>
-          <span className="eyebrow">Toguz workspace</span>
+          <span className="eyebrow">DaiHub workspace</span>
           <strong>Home</strong>
         </div>
         <label className="search">
@@ -28,7 +28,7 @@ export default async function HomePage() {
         <section className="main-hero">
           <div>
             <span className="eyebrow">Workspace pulse</span>
-            <h1>{account ? `Welcome back, ${account.name.split(" ")[0]}.` : "Welcome to Toguz."}</h1>
+            <h1>{account ? `Welcome back, ${account.name.split(" ")[0]}.` : "Welcome to DaiHub."}</h1>
             <p>Pick up where you left off, or jump into a conversation with your team.</p>
           </div>
           <Link className="primary-button button-link" href="/projects">

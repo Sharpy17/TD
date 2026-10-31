@@ -3,6 +3,15 @@ import type { Project, Module, Task, UserSummary } from "@/lib/domain/types";
 import { demoProject, demoProjectSlug } from "@/lib/data/demo";
 import { readStoredChecklist } from "@/lib/tasks/checklist";
 
+const LEGACY_DEMO_PROJECT_NAME = "Toguz Hub Core";
+
+/** Databases seeded before the DaiHub rebrand still carry the old demo name; fix it the first time it's read. */
+async function healLegacyDemoName<T extends { id: string; name: string }>(project: T): Promise<T> {
+  if (project.id !== demoProject.id || project.name !== LEGACY_DEMO_PROJECT_NAME) return project;
+  await prisma.project.update({ where: { id: project.id }, data: { name: demoProject.name } }).catch(() => {});
+  return { ...project, name: demoProject.name };
+}
+
 /** The demo project is reachable by a friendly slug; everything else uses the real id. */
 export function canonicalProjectId(projectId: string): string {
   return projectId === demoProjectSlug ? demoProject.id : projectId;
@@ -215,7 +224,8 @@ export async function getProjects(): Promise<Array<{ project: Project; slug: str
       return [{ project: demoProject, slug: demoProjectSlug }];
     }
 
-    return dbProjects.map((p) => ({
+    const healed = await Promise.all(dbProjects.map(healLegacyDemoName));
+    return healed.map((p) => ({
       project: mapDbProjectToDomain(p),
       slug: p.id === demoProject.id ? demoProjectSlug : p.id,
     }));
@@ -280,7 +290,7 @@ export async function getProjectById(projectId: string): Promise<Project | null>
       return isDemo ? demoProject : null;
     }
 
-    return mapDbProjectToDomain(dbProj);
+    return mapDbProjectToDomain(await healLegacyDemoName(dbProj));
   } catch (err) {
     console.error(`[getProjectById] Failed to find project ${projectId}:`, err);
     return isDemo ? demoProject : null;

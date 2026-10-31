@@ -10,7 +10,7 @@ date: 2026-10-29
 
 # 🚀 Дорожная карта реализации (Implementation Roadmap)
 
-План пошагового создания платформы Toguz Hub, разбитый на четкие спринты.
+План пошагового создания платформы DaiHub, разбитый на четкие спринты.
 
 ---
 
@@ -18,7 +18,7 @@ date: 2026-10-29
 
 ```mermaid
 gantt
-    title Toguz Hub Development Timeline
+    title DaiHub Development Timeline
     dateFormat  YYYY-MM-DD
     section Фаза 1: Core MVP & Auth
     Схема БД & Prisma Setup           :done, 2026-11-01, 3d

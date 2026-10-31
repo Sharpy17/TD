@@ -10,14 +10,14 @@ date: 2026-10-29
 
 # ⚡ 03. Реалтайм синхронизация и протокол WebSockets
 
-Toguz Hub — это живое приложение. Изменения, сделанные одним разработчиком (перенос задачи, вход в голосовую комнату, запуск звука саундборда), должны отображаться у остальных членов команды **быстрее чем за 100 миллисекунд**.
+DaiHub — это живое приложение. Изменения, сделанные одним разработчиком (перенос задачи, вход в голосовую комнату, запуск звука саундборда), должны отображаться у остальных членов команды **быстрее чем за 100 миллисекунд**.
 
 ---
 
 ## 1. Схема каналов событий (Channel Taxonomy)
 
 ```
-ws://api.toguz.hub/realtime?token=JWT_TOKEN
+ws://api.daihub.app/realtime?token=JWT_TOKEN
 
 ROOMS & SUBSCRIBERS:
 ├── workspace:{workspaceId}          (Глобальные события: проекты, модули, статус присутствия)
@@ -99,7 +99,7 @@ ROOMS & SUBSCRIBERS:
   "event": "soundboard:broadcast",
   "data": {
     "clipId": "clip_airhorn",
-    "audioUrl": "https://cdn.toguz.hub/sounds/airhorn.mp3",
+    "audioUrl": "https://cdn.daihub.app/sounds/airhorn.mp3",
     "triggeredBy": {
       "id": "usr_alex",
       "name": "Alex"

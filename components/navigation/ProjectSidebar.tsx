@@ -24,7 +24,7 @@ export function ProjectSidebar({
       <aside className="sidebar project-sidebar">
         <Link className="brand" href="/">
           <span>⚡</span>
-          <strong>Toguz</strong>
+          <strong>DaiHub</strong>
         </Link>
 
         <Link className="back-link" href="/projects">
