@@ -18,6 +18,8 @@ import {
   updateChecklistAction,
   updateTaskFieldsAction,
 } from "@/app/projects/[projectId]/actions";
+import { ModuleAssignees } from "@/components/modules/ModuleAssignees";
+import { RadialProgressRing } from "@/components/modules/RadialProgressRing";
 import { DeleteTaskModal } from "@/components/tasks/DeleteTaskModal";
 import { EditTaskModal } from "@/components/tasks/EditTaskModal";
 import { useVoice } from "@/components/voice/VoiceContext";
@@ -136,6 +138,8 @@ export function KanbanBoard({
   currentUser,
   initialNowMs,
   breadcrumb,
+  moduleId,
+  canEdit = true,
 }: {
   routeProjectId: string;
   project: Project;
@@ -143,10 +147,15 @@ export function KanbanBoard({
   currentUser: UserSummary | null;
   initialNowMs: number;
   breadcrumb: ReactNode;
+  moduleId?: string;
+  canEdit?: boolean;
 }) {
+  const boardModules = useMemo(() => moduleId ? project.modules.filter((item) => item.id === moduleId) : project.modules, [project.modules, moduleId]);
+  const scopedModule = moduleId ? boardModules[0] : undefined;
+  const boardTitle = scopedModule ? scopedModule.name : "Board";
   const serverTasks = useMemo<BoardTask[]>(
     () =>
-      project.modules.flatMap((module) =>
+      boardModules.flatMap((module) =>
         module.tasks.map((task) => ({
           ...task,
           moduleId: module.id,
@@ -154,7 +163,7 @@ export function KanbanBoard({
           code: taskCode(module.name, task.number),
         })),
       ),
-    [project],
+    [boardModules],
   );
   const [tasks, applyOptimistic] = useOptimistic(serverTasks, applyAction);
   const [, startTransition] = useTransition();
@@ -238,7 +247,7 @@ export function KanbanBoard({
   const overdueCount = tasks.filter((task) => isUrgentTask(task, nowMs) && Date.parse(task.dueAt!) < nowMs).length;
   const inProgress = tasks.filter((task) => task.status === "IN_PROGRESS");
   const defaultModule =
-    project.modules.find((module) => module.id === moduleFilter) ?? project.modules[0] ?? null;
+    boardModules.find((module) => module.id === moduleFilter) ?? boardModules[0] ?? null;
 
   // Per-person load in "In progress", most loaded first.
   const personalWip = useMemo(() => {
@@ -256,11 +265,11 @@ export function KanbanBoard({
   const urgentTotal = burningCount + overdueCount;
   useEffect(() => {
     const previous = document.title;
-    document.title = urgentTotal > 0 ? `🔥 ${urgentTotal} · Board · ${project.name}` : `Board · ${project.name}`;
+    document.title = urgentTotal > 0 ? `🔥 ${urgentTotal} · ${boardTitle} · ${project.name}` : `${boardTitle} · ${project.name}`;
     return () => {
       document.title = previous;
     };
-  }, [urgentTotal, project.name]);
+  }, [urgentTotal, project.name, boardTitle]);
 
   const celebrate = (taskId: string) => {
     if (soundOn) playTaskDoneChime();
@@ -274,7 +283,7 @@ export function KanbanBoard({
 
   const moveTask = (taskId: string, status: TaskStatus, orderKey?: string) => {
     const task = tasks.find((t) => t.id === taskId);
-    if (!task || task.pending) return;
+    if (!canEdit || !task || task.pending) return;
     if (task.status === status && (orderKey === undefined || orderKey === task.orderKey)) return;
 
     if (status === "DONE" && task.status !== "DONE") {
@@ -291,7 +300,8 @@ export function KanbanBoard({
 
     startTransition(async () => {
       applyOptimistic({ type: "move", taskId, status, orderKey });
-      const result = await moveTaskAction(taskId, { status, orderKey }, routeProjectId);
+      const result = await moveTaskAction(taskId, { status, orderKey }, routeProjectId)
+        .catch(() => ({ success: false, error: "Connection interrupted. Please try again." }));
       if (!result.success) {
         setToast({ tone: "error", text: `Couldn't move “${task.title}”`, detail: result.error ?? "Moved it back." });
       }
@@ -300,7 +310,7 @@ export function KanbanBoard({
 
   const updateFields = (taskId: string, fields: TaskFieldsPatch) => {
     const task = tasks.find((t) => t.id === taskId);
-    if (!task || task.pending) return;
+    if (!canEdit || !task || task.pending) return;
 
     // Translate ids into what the card renders, so the change shows before the server answers.
     const patch: Partial<BoardTask> = {};
@@ -310,7 +320,7 @@ export function KanbanBoard({
       patch.assignee = fields.assigneeId ? (members.find((m) => m.id === fields.assigneeId) ?? null) : null;
     }
     if (fields.moduleId !== undefined) {
-      const target = project.modules.find((m) => m.id === fields.moduleId);
+      const target = boardModules.find((m) => m.id === fields.moduleId);
       if (!target) return;
       patch.moduleId = target.id;
       patch.moduleName = target.name;
@@ -319,7 +329,8 @@ export function KanbanBoard({
 
     startTransition(async () => {
       applyOptimistic({ type: "fields", taskId, patch });
-      const result = await updateTaskFieldsAction(taskId, fields, routeProjectId);
+      const result = await updateTaskFieldsAction(taskId, fields, routeProjectId)
+        .catch(() => ({ success: false, error: "Connection interrupted. Please try again." }));
       if (!result.success) {
         setToast({ tone: "error", text: `Couldn't update “${task.title}”`, detail: result.error ?? "Change undone." });
       }
@@ -327,9 +338,11 @@ export function KanbanBoard({
   };
 
   const updateChecklist = (taskId: string, items: ChecklistItem[]) => {
+    if (!canEdit || !tasks.some((task) => task.id === taskId)) return;
     startTransition(async () => {
       applyOptimistic({ type: "checklist", taskId, items });
-      const result = await updateChecklistAction(taskId, items, routeProjectId);
+      const result = await updateChecklistAction(taskId, items, routeProjectId)
+        .catch(() => ({ success: false, error: "Connection interrupted. Please try again." }));
       if (!result.success) {
         setToast({ tone: "error", text: "Couldn't save the checklist", detail: result.error });
       }
@@ -337,8 +350,8 @@ export function KanbanBoard({
   };
 
   const addTask = (parsed: QuickAddResult & { moduleId: string }) => {
-    const target = project.modules.find((m) => m.id === parsed.moduleId);
-    if (!target) return;
+    const target = boardModules.find((m) => m.id === parsed.moduleId);
+    if (!canEdit || !target) return;
 
     const optimistic: BoardTask = {
       id: `optimistic-${crypto.randomUUID()}`,
@@ -364,7 +377,7 @@ export function KanbanBoard({
         title: parsed.title,
         assigneeId: parsed.assigneeId,
         dueAt: parsed.dueAt,
-      });
+      }).catch(() => ({ success: false, error: "Connection interrupted. Please try again." }));
       if (!result.success) {
         setToast({ tone: "error", text: `Couldn't add “${parsed.title}”`, detail: result.error });
       }
@@ -417,14 +430,14 @@ export function KanbanBoard({
 
   const moduleTabs = [
     { id: "all", name: "All modules", progress: calculateProgress(tasks) },
-    ...project.modules.map((module) => ({ id: module.id, name: module.name, progress: moduleProgress(module.id, tasks) })),
+    ...boardModules.map((module) => ({ id: module.id, name: module.name, progress: moduleProgress(module.id, tasks) })),
   ];
 
   return (
     <>
       <header className="topbar">
         <div>
-          <span className="eyebrow">Board</span>
+          <span className="eyebrow">{scopedModule ? "Module board" : "Board"}</span>
           <strong>{breadcrumb}</strong>
         </div>
         <label className="search">
@@ -437,7 +450,7 @@ export function KanbanBoard({
           />
         </label>
         <div className="board-topbar-actions">
-          <div className="board-presence" aria-label={`${otherViewers.length} other people viewing`}>
+          <div className="board-presence" aria-label={`${otherViewers.length} other people viewing this project`}>
             <span
               className={`board-live-dot ${connected ? "board-live-dot--on" : ""}`}
               title={connected ? "Live — changes from your team appear instantly" : "Reconnecting…"}
@@ -460,17 +473,18 @@ export function KanbanBoard({
           >
             <SoundIcon muted={!soundOn} />
           </button>
-          <button type="button" className="primary-button board-new" onClick={() => quickAddRef.current?.focus()}>
+          <button type="button" disabled={!canEdit} className="primary-button board-new" onClick={() => quickAddRef.current?.focus()}>
             + New task <kbd>N</kbd>
           </button>
         </div>
       </header>
 
-      <div className="board-layout">
-        <section className="board" aria-label="Board">
+      <div className={`board-layout ${scopedModule ? "board-layout--module" : ""}`}>
+        <section className="board" aria-label={scopedModule ? `${scopedModule.name} task board` : "Board"}>
           <div className="board-head">
             <div>
-              <h1>Board</h1>
+              <h1>{scopedModule && <span aria-hidden="true">{scopedModule.icon} </span>}{boardTitle}</h1>
+              {scopedModule?.description && <p className="module-board-description">{scopedModule.description}</p>}
               <p className="board-mono" suppressHydrationWarning>
                 {openCount} open · {burningCount} burning · {overdueCount} overdue · {calculateProgress(tasks)}% shipped
               </p>
@@ -501,7 +515,12 @@ export function KanbanBoard({
             </div>
           </div>
 
-          <div className="board-tabs" role="group" aria-label="Filter by module">
+          {scopedModule && <div className="module-board-overview">
+            <ModuleAssignees moduleId={scopedModule.id} assignees={scopedModule.assignees || []} people={members} canEdit={canEdit} />
+            <RadialProgressRing percentage={calculateProgress(tasks)} />
+          </div>}
+          {!canEdit && <p className="module-readonly">Sign in as a workspace member to manage tasks.</p>}
+          {!scopedModule && <div className="board-tabs" role="group" aria-label="Filter by module">
             {moduleTabs.map((tab) => (
               <button
                 key={tab.id}
@@ -514,7 +533,7 @@ export function KanbanBoard({
                 <span className="board-mono">{tab.progress}%</span>
               </button>
             ))}
-          </div>
+          </div>}
 
           <div className="board-columns" onDragEnd={() => (setDraggingId(null), setDropMarker(null))}>
             {columns.map((column) => {
@@ -569,6 +588,8 @@ export function KanbanBoard({
                     <KanbanCard
                       key={task.id}
                       task={task}
+                      canEdit={canEdit}
+                      showModule={!scopedModule}
                       nowMs={nowMs}
                       selected={task.id === selectedId}
                       assigneeLive={!!task.assignee && liveUserIds.has(task.assignee.id)}
@@ -597,9 +618,10 @@ export function KanbanBoard({
                     </button>
                   )}
 
-                  {column.status === "BACKLOG" && (
+                  {column.status === "BACKLOG" && canEdit && (
                     <QuickAdd
-                      modules={project.modules}
+                      lockedModule={!!scopedModule}
+                      modules={boardModules}
                       members={members}
                       defaultModule={defaultModule}
                       nowMs={nowMs}
@@ -614,11 +636,13 @@ export function KanbanBoard({
         </section>
 
         <TaskInspector
+          canEdit={canEdit}
+          lockedModule={!!scopedModule}
           task={selectedTask}
           nowMs={nowMs}
           projectId={routeProjectId}
           members={members}
-          modules={project.modules}
+          modules={boardModules}
           currentUser={currentUser}
           commentsVersion={selectedTask ? (commentVersions[selectedTask.id] ?? 0) : 0}
           assigneeLive={!!selectedTask?.assignee && liveUserIds.has(selectedTask.assignee.id)}
@@ -637,7 +661,7 @@ export function KanbanBoard({
           isOpen
           onClose={() => setEditing(null)}
           task={editing}
-          modules={project.modules}
+          modules={boardModules}
           currentModuleId={editing.moduleId}
           projectId={routeProjectId}
         />

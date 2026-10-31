@@ -26,6 +26,8 @@ export function Avatar({ user, live = false, size }: { user: UserSummary | null;
 export type DropEdge = "before" | "after";
 
 export function KanbanCard({
+  canEdit = true,
+  showModule = true,
   task,
   nowMs,
   selected,
@@ -34,6 +36,8 @@ export function KanbanCard({
   onSelect,
   onDragOverCard,
 }: {
+  canEdit?: boolean;
+  showModule?: boolean;
   task: BoardTask;
   nowMs: number;
   selected: boolean;
@@ -70,7 +74,7 @@ export function KanbanCard({
       ]
         .filter(Boolean)
         .join(" ")}
-      draggable={!task.pending}
+      draggable={canEdit && !task.pending}
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}
       onClick={() => onSelect(task.id)}
@@ -80,7 +84,7 @@ export function KanbanCard({
       <span className="board-card__top">
         <PriorityBars level={PRIORITY_LEVEL[task.priority ?? "MEDIUM"]} />
         {task.code && <span className="board-mono board-card__code">{task.code}</span>}
-        <span className="board-card__module">{task.moduleName}</span>
+        {showModule && <span className="board-card__module">{task.moduleName}</span>}
       </span>
       <span className="board-card__title">{task.title}</span>
       <span className="board-card__foot">

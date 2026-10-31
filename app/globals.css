@@ -1060,6 +1060,12 @@ kbd { padding: 3px 6px; border: 1px solid var(--border); border-radius: 5px; bac
 .board-icon { width: 12px; height: 12px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 
 .board-layout { display: grid; grid-template-columns: minmax(0, 1fr) 320px; min-height: calc(100vh - 76px); }
+.module-board-overview { display: flex; align-items: center; gap: 20px; margin: 20px 0; }
+.module-board-overview .module-people { flex: 1; min-width: 0; margin: 0; padding: 16px; }
+.module-board-overview .progress-ring { flex-shrink: 0; }
+.board-head .module-board-description { margin: 8px 0 12px; max-width: 650px; font-family: inherit; font-size: 13px; line-height: 1.6; }
+.board-layout--module .board-columns { margin-top: 20px; }
+@media (max-width: 640px) { .module-board-overview { align-items: flex-start; } .module-board-overview .progress-ring { display: none; } }
 .board { min-width: 0; display: flex; flex-direction: column; gap: 16px; padding: 24px 28px 40px; }
 .board-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 12px 24px; }
 .board-head h1 { margin: 0 0 6px; font-size: 22px; font-weight: 600; letter-spacing: -.025em; }

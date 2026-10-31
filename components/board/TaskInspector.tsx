@@ -250,6 +250,8 @@ function CustomDue({ value, onSet }: { value: string | null; onSet: (dueAt: stri
 }
 
 export function TaskInspector({
+  canEdit = true,
+  lockedModule = false,
   task,
   nowMs,
   projectId,
@@ -265,6 +267,8 @@ export function TaskInspector({
   onEdit,
   onDelete,
 }: {
+  canEdit?: boolean;
+  lockedModule?: boolean;
   task: BoardTask | null;
   nowMs: number;
   projectId: string;
@@ -335,7 +339,7 @@ export function TaskInspector({
               key={column.status}
               type="button"
               aria-pressed={task.status === column.status}
-              disabled={task.pending}
+              disabled={!canEdit || task.pending}
               onClick={() => onMove(task.id, column.status)}
             >
               {column.short}
@@ -347,7 +351,7 @@ export function TaskInspector({
       <dl className="board-props">
         <PropertyMenu
           label="Assignee"
-          disabled={task.pending}
+          disabled={!canEdit || task.pending}
           display={
             <>
               <Avatar user={task.assignee} live={assigneeLive} />
@@ -370,7 +374,7 @@ export function TaskInspector({
         />
         <PropertyMenu
           label="Module"
-          disabled={task.pending}
+          disabled={lockedModule || !canEdit || task.pending}
           display={task.moduleName}
           selected={task.moduleId}
           options={modules.map((module) => ({ value: module.id, label: module.name }))}
@@ -378,7 +382,7 @@ export function TaskInspector({
         />
         <PropertyMenu
           label="Priority"
-          disabled={task.pending}
+          disabled={!canEdit || task.pending}
           display={
             <>
               <PriorityBars level={PRIORITY_LEVEL[priority]} />
@@ -395,7 +399,7 @@ export function TaskInspector({
         />
         <PropertyMenu
           label="Due"
-          disabled={task.pending}
+          disabled={!canEdit || task.pending}
           display={
             <span className="board-mono" suppressHydrationWarning>
               {formatFullDate(task.dueAt)}
@@ -433,7 +437,7 @@ export function TaskInspector({
       <Checklist
         key={`checklist-${task.id}`}
         items={task.checklist ?? []}
-        disabled={!!task.pending}
+        disabled={!canEdit || !!task.pending}
         onChange={(items) => onChecklistChange(task.id, items)}
       />
 
@@ -443,19 +447,19 @@ export function TaskInspector({
           taskId={task.id}
           projectId={projectId}
           version={commentsVersion}
-          currentUser={currentUser}
+          currentUser={canEdit ? currentUser : null}
           nowMs={nowMs}
         />
       )}
 
       <div className="board-inspector__actions">
-        <button type="button" className="secondary-button" disabled={task.pending} onClick={() => onEdit(task)}>
+        <button type="button" className="secondary-button" disabled={!canEdit || task.pending} onClick={() => onEdit(task)}>
           Edit task
         </button>
         <button
           type="button"
           className="secondary-button board-danger"
-          disabled={task.pending}
+          disabled={!canEdit || task.pending}
           onClick={() => onDelete(task)}
         >
           Delete
