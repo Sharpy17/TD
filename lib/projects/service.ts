@@ -35,6 +35,7 @@ function mapDbProjectToDomain(dbProj: {
       priority?: string;
       dueAt: Date | null;
       assigneeId: string | null;
+      assignee?: { id: string; name: string } | null;
     }>;
   }>;
 }): Project {
@@ -66,7 +67,13 @@ function mapDbProjectToDomain(dbProj: {
             status: t.status as Task["status"],
             priority: (t.priority as Task["priority"]) || "MEDIUM",
             dueAt: t.dueAt ? t.dueAt.toISOString() : null,
-            assignee: leadUser,
+            assignee: t.assignee
+              ? {
+                  id: t.assignee.id,
+                  name: t.assignee.name,
+                  initials: t.assignee.name.slice(0, 2).toUpperCase(),
+                }
+              : null,
           };
         }),
       };
@@ -148,7 +155,7 @@ export async function getProjects(): Promise<Array<{ project: Project; slug: str
         modules: {
           include: {
             leadUser: true,
-            tasks: true,
+            tasks: { include: { assignee: { select: { id: true, name: true } } } },
           },
         },
       },
@@ -162,7 +169,7 @@ export async function getProjects(): Promise<Array<{ project: Project; slug: str
           modules: {
             include: {
               leadUser: true,
-              tasks: true,
+              tasks: { include: { assignee: { select: { id: true, name: true } } } },
             },
           },
         },
@@ -199,7 +206,7 @@ export async function getProjectById(projectId: string): Promise<Project | null>
         modules: {
           include: {
             leadUser: true,
-            tasks: true,
+            tasks: { include: { assignee: { select: { id: true, name: true } } } },
           },
         },
       },
@@ -214,7 +221,7 @@ export async function getProjectById(projectId: string): Promise<Project | null>
           modules: {
             include: {
               leadUser: true,
-              tasks: true,
+              tasks: { include: { assignee: { select: { id: true, name: true } } } },
             },
           },
         },
@@ -350,3 +357,35 @@ export async function deleteProject(
 }
 
 
+
+/**
+ * Lists the people who can be assigned tasks in a project (its workspace members).
+ */
+export async function getProjectMembers(projectId: string): Promise<UserSummary[]> {
+  const searchId = projectId === demoProjectSlug ? demoProject.id : projectId;
+
+  try {
+    const project = await prisma.project.findUnique({
+      where: { id: searchId },
+      select: {
+        workspace: {
+          select: {
+            memberships: {
+              select: { user: { select: { id: true, name: true } } },
+              orderBy: { createdAt: "asc" },
+            },
+          },
+        },
+      },
+    });
+
+    return (project?.workspace.memberships ?? []).map(({ user }) => ({
+      id: user.id,
+      name: user.name,
+      initials: user.name.slice(0, 2).toUpperCase(),
+    }));
+  } catch (err) {
+    console.error(`[getProjectMembers] Failed for project ${projectId}:`, err);
+    return [];
+  }
+}

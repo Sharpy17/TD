@@ -7,9 +7,11 @@ import { DeleteProjectModal } from "@/components/projects/DeleteProjectModal";
 export function ProjectSidebar({
   projectId,
   projectName,
+  active = "overview",
 }: {
   projectId: string;
   projectName: string;
+  active?: "overview" | "board";
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -38,15 +40,23 @@ export function ProjectSidebar({
 
         <div className="sidebar-label">Project</div>
         <nav aria-label="Project navigation">
-          <Link className="nav-item nav-item--active" href={projectHref}>
+          <Link
+            className={`nav-item ${active === "overview" ? "nav-item--active" : ""}`}
+            href={projectHref}
+            aria-current={active === "overview" ? "page" : undefined}
+          >
             <span>⌂</span> Overview
           </Link>
           <Link className="nav-item" href={`${projectHref}#modules`}>
             <span>▦</span> Modules
           </Link>
-          <span className="nav-item nav-item--disabled" aria-disabled="true">
-            <span>✓</span> Kanban <small>Soon</small>
-          </span>
+          <Link
+            className={`nav-item ${active === "board" ? "nav-item--active" : ""}`}
+            href={`${projectHref}/board`}
+            aria-current={active === "board" ? "page" : undefined}
+          >
+            <span>✓</span> Board
+          </Link>
           <Link className="nav-item" href={`${projectHref}#voice-lounges`}>
             <span>#</span> Channels
           </Link>

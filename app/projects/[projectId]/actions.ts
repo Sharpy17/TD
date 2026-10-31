@@ -47,8 +47,8 @@ export async function createModuleAction(
     return { error: result.error || "Failed to create module." };
   }
 
-  revalidatePath(`/projects/${projectId}`);
-  revalidatePath("/projects/toguz-hub");
+  revalidatePath(`/projects/${projectId}`, "layout");
+  revalidatePath("/projects/toguz-hub", "layout");
   revalidatePath("/projects");
   revalidatePath("/");
 
@@ -98,9 +98,9 @@ export async function createTaskAction(
   }
 
   if (projectId) {
-    revalidatePath(`/projects/${projectId}`);
+    revalidatePath(`/projects/${projectId}`, "layout");
   }
-  revalidatePath("/projects/toguz-hub");
+  revalidatePath("/projects/toguz-hub", "layout");
   revalidatePath("/projects");
   revalidatePath("/");
 
@@ -118,8 +118,8 @@ export async function renameTaskAction(
   const result = await updateTask({ taskId, title });
   if (!result.success) return { success: false, error: result.error };
 
-  if (projectId) revalidatePath(`/projects/${projectId}`);
-  revalidatePath("/projects/toguz-hub");
+  if (projectId) revalidatePath(`/projects/${projectId}`, "layout");
+  revalidatePath("/projects/toguz-hub", "layout");
   revalidatePath("/projects");
   revalidatePath("/");
 
@@ -163,8 +163,8 @@ export async function updateTaskAction(
     return { error: result.error || "Failed to update task." };
   }
 
-  if (projectId) revalidatePath(`/projects/${projectId}`);
-  revalidatePath("/projects/toguz-hub");
+  if (projectId) revalidatePath(`/projects/${projectId}`, "layout");
+  revalidatePath("/projects/toguz-hub", "layout");
   revalidatePath("/projects");
   revalidatePath("/");
 
@@ -185,11 +185,58 @@ export async function deleteTaskAction(
   }
 
   if (projectId) {
-    revalidatePath(`/projects/${projectId}`);
+    revalidatePath(`/projects/${projectId}`, "layout");
   }
-  revalidatePath("/projects/toguz-hub");
+  revalidatePath("/projects/toguz-hub", "layout");
   revalidatePath("/projects");
   revalidatePath("/");
 
+  return { success: true };
+}
+
+function revalidateProjectViews(projectId?: string) {
+  if (projectId) {
+    revalidatePath(`/projects/${projectId}`, "layout");
+  }
+  revalidatePath("/projects/toguz-hub", "layout");
+  revalidatePath("/projects");
+  revalidatePath("/");
+}
+
+const BOARD_STATUSES = new Set(["BACKLOG", "IN_PROGRESS", "REVIEW", "DONE"]);
+
+export async function moveTaskAction(
+  taskId: string,
+  status: "BACKLOG" | "IN_PROGRESS" | "REVIEW" | "DONE",
+  projectId?: string
+): Promise<{ success: boolean; error?: string }> {
+  if (!taskId) return { success: false, error: "Missing task ID." };
+  if (!BOARD_STATUSES.has(status)) return { success: false, error: "Unknown status." };
+
+  const result = await updateTask({ taskId, status });
+  if (!result.success) return { success: false, error: result.error };
+
+  revalidateProjectViews(projectId);
+  return { success: true };
+}
+
+export async function quickAddTaskAction(input: {
+  projectId: string;
+  moduleId: string;
+  title: string;
+  assigneeId: string | null;
+  dueAt: string | null;
+}): Promise<{ success: boolean; error?: string }> {
+  if (!input.moduleId) return { success: false, error: "Pick a module with ^name." };
+
+  const result = await createTask({
+    moduleId: input.moduleId,
+    title: input.title,
+    assigneeId: input.assigneeId,
+    dueAt: input.dueAt,
+  });
+  if (!result.success) return { success: false, error: result.error };
+
+  revalidateProjectViews(input.projectId);
   return { success: true };
 }
