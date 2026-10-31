@@ -27,6 +27,7 @@ function mapDbProjectToDomain(dbProj: {
     description: string | null;
     icon: string;
     leadUser: { id: string; name: string } | null;
+    assignees?: Array<{ id: string; name: string }>;
     tasks: Array<{
       id: string;
       title: string;
@@ -35,6 +36,7 @@ function mapDbProjectToDomain(dbProj: {
       priority?: string;
       dueAt: Date | null;
       assigneeId: string | null;
+      assignee?: { id: string; name: string } | null;
     }>;
   }>;
 }): Project {
@@ -58,6 +60,7 @@ function mapDbProjectToDomain(dbProj: {
         icon: m.icon || "▦",
         channelSlug: `mod-${m.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
         lead: leadUser,
+        assignees: (m.assignees || []).map((user) => ({ ...user, initials: user.name.slice(0, 2).toUpperCase() })),
         tasks: m.tasks.map((t): Task => {
           return {
             id: t.id,
@@ -66,7 +69,7 @@ function mapDbProjectToDomain(dbProj: {
             status: t.status as Task["status"],
             priority: (t.priority as Task["priority"]) || "MEDIUM",
             dueAt: t.dueAt ? t.dueAt.toISOString() : null,
-            assignee: leadUser,
+            assignee: t.assignee ? { ...t.assignee, initials: t.assignee.name.slice(0, 2).toUpperCase() } : null,
           };
         }),
       };
@@ -148,7 +151,8 @@ export async function getProjects(): Promise<Array<{ project: Project; slug: str
         modules: {
           include: {
             leadUser: true,
-            tasks: true,
+            assignees: true,
+            tasks: { include: { assignee: true }, orderBy: { orderKey: "asc" } },
           },
         },
       },
@@ -162,7 +166,8 @@ export async function getProjects(): Promise<Array<{ project: Project; slug: str
           modules: {
             include: {
               leadUser: true,
-              tasks: true,
+            assignees: true,
+              tasks: { include: { assignee: true }, orderBy: { orderKey: "asc" } },
             },
           },
         },
@@ -199,7 +204,8 @@ export async function getProjectById(projectId: string): Promise<Project | null>
         modules: {
           include: {
             leadUser: true,
-            tasks: true,
+            assignees: true,
+            tasks: { include: { assignee: true }, orderBy: { orderKey: "asc" } },
           },
         },
       },
@@ -214,7 +220,8 @@ export async function getProjectById(projectId: string): Promise<Project | null>
           modules: {
             include: {
               leadUser: true,
-              tasks: true,
+            assignees: true,
+              tasks: { include: { assignee: true }, orderBy: { orderKey: "asc" } },
             },
           },
         },

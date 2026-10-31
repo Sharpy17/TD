@@ -1,5 +1,6 @@
 "use server";
 
+import { canEditProject, canEditModule, canEditTask } from "@/lib/auth/project-access";
 import { revalidatePath } from "next/cache";
 import { createModule } from "@/lib/modules/service";
 import { createTask, deleteTask, updateTask } from "@/lib/tasks/service";
@@ -36,6 +37,8 @@ export async function createModuleAction(
     };
   }
 
+  if (!(await canEditProject(projectId))) return { error: "Sign in as a workspace member to create modules." };
+
   const result = await createModule({
     projectId,
     name,
@@ -49,6 +52,7 @@ export async function createModuleAction(
 
   revalidatePath(`/projects/${projectId}`);
   revalidatePath("/projects/toguz-hub");
+  revalidatePath("/projects/[projectId]", "layout");
   revalidatePath("/projects");
   revalidatePath("/");
 
@@ -84,6 +88,8 @@ export async function createTaskAction(
 
   const dueAt = dueAtRaw ? new Date(dueAtRaw) : null;
 
+  if (!(await canEditModule(moduleId))) return { error: "Sign in as a workspace member to create tasks." };
+
   const result = await createTask({
     moduleId,
     title,
@@ -101,6 +107,7 @@ export async function createTaskAction(
     revalidatePath(`/projects/${projectId}`);
   }
   revalidatePath("/projects/toguz-hub");
+  revalidatePath("/projects/[projectId]", "layout");
   revalidatePath("/projects");
   revalidatePath("/");
 
@@ -115,11 +122,13 @@ export async function renameTaskAction(
   if (!taskId) return { success: false, error: "Missing task ID." };
   if (!title.trim()) return { success: false, error: "Title cannot be empty." };
 
+  if (!(await canEditTask(taskId))) return { success: false, error: "You cannot edit this task." };
   const result = await updateTask({ taskId, title });
   if (!result.success) return { success: false, error: result.error };
 
   if (projectId) revalidatePath(`/projects/${projectId}`);
   revalidatePath("/projects/toguz-hub");
+  revalidatePath("/projects/[projectId]", "layout");
   revalidatePath("/projects");
   revalidatePath("/");
 
@@ -149,6 +158,8 @@ export async function updateTaskAction(
   const dueAt =
     dueAtRaw !== undefined ? (dueAtRaw ? new Date(dueAtRaw) : null) : undefined;
 
+  if (!(await canEditTask(taskId)) || (moduleId && !(await canEditModule(moduleId)))) return { error: "You cannot edit this task or target module." };
+
   const result = await updateTask({
     taskId,
     title,
@@ -165,6 +176,7 @@ export async function updateTaskAction(
 
   if (projectId) revalidatePath(`/projects/${projectId}`);
   revalidatePath("/projects/toguz-hub");
+  revalidatePath("/projects/[projectId]", "layout");
   revalidatePath("/projects");
   revalidatePath("/");
 
@@ -179,6 +191,7 @@ export async function deleteTaskAction(
     return { success: false, error: "Missing task ID." };
   }
 
+  if (!(await canEditTask(taskId))) return { success: false, error: "You cannot delete this task." };
   const result = await deleteTask(taskId);
   if (!result.success) {
     return { success: false, error: result.error || "Failed to delete task." };
@@ -188,6 +201,7 @@ export async function deleteTaskAction(
     revalidatePath(`/projects/${projectId}`);
   }
   revalidatePath("/projects/toguz-hub");
+  revalidatePath("/projects/[projectId]", "layout");
   revalidatePath("/projects");
   revalidatePath("/");
 

@@ -2,7 +2,7 @@
 
 import { useActionState, useEffect, useState } from "react";
 import { createModuleAction, type ModuleActionState } from "@/app/projects/[projectId]/actions";
-import { PRESET_MODULE_ICONS } from "@/lib/modules/service";
+import { PRESET_MODULE_ICONS } from "@/lib/modules/constants";
 
 interface CreateModuleModalProps {
   isOpen: boolean;
