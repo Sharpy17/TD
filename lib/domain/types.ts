@@ -7,10 +7,14 @@ export type UserSummary = {
   initials: string;
 };
 
+export type TaskPriority = "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+
 export type Task = {
   id: string;
   title: string;
   status: TaskStatus;
+  priority?: TaskPriority;
+  description?: string | null;
   dueAt: string | null;
   assignee: UserSummary | null;
 };
@@ -28,6 +32,7 @@ export type Module = {
 export type Project = {
   id: string;
   name: string;
+  description?: string;
   modules: Module[];
 };
 

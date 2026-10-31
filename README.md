@@ -1,48 +1,89 @@
-# Toguz Hub
+# ⚡ Toguz Hub (The Anti-Bitrix)
 
-The first vertical slice of the “Anti-Bitrix” product described in `instructions/`.
+> *"A Discord for Gen X and a Bitrix for Gen Z"*
 
-## What exists now
+**Toguz Hub** is an ultra-fast, opinionated startup command center. It cuts away 90% of legacy Enterprise CRM bloat (Bitrix24/Jira bureaucracy, multi-nested menus, endless required fields) and fuses crystal-clear project/module progress tracking with the live energy of Discord (voice lounges, burning deadlines, soundboard, and hotkeys).
 
-- A responsive dark dashboard with project progress, module cards, urgent deadlines, voice-room presence, and personal focus.
-- Strict TypeScript domain models.
-- UTC-safe deadline classification and binary module/project progress calculations.
-- Unit tests for deadline boundaries, completed-task behavior, empty modules, and project aggregation.
-- An initial Prisma/PostgreSQL schema for workspaces, memberships, projects, modules, tasks, channels, voice rooms, and soundboard clips.
+---
 
-The UI currently reads from `lib/data/demo.ts`. This is intentional: it makes the first product loop reviewable before authentication and infrastructure are introduced.
+## 🚀 What's Built & Ready
 
-## Run locally
+- 🔐 **Authentication & Sessions**:
+  - Secure Argon2id and PBKDF2 password hashing with cryptographically random salts.
+  - HTTP-only signed session cookies, constant-time dummy verification, and brute-force lockout.
+- 📦 **Project & Module Hierarchy**:
+  - Full PostgreSQL persistence via Prisma with automatic demo workspace provisioning.
+  - Dynamic module cards with radial SVG progress rings ($N_{\text{DONE}} / N_{\text{TOTAL}}$).
+  - Project creation and cascade deletion.
+- 📋 **Task Management**:
+  - Instant task creation and deletion with automated progress recalculation.
+  - **1-Click Inline Renaming**: Click any task title to edit; press `Enter` or click outside to save instantly.
+  - **Edit Dialog (`✎`)**: Quick deadline presets (`🔥 Today 8h`, `⏳ In 2 days`, `📅 In 1 week`, `Clear`), custom datetime picker, stage selector (`Backlog`, `In Progress`, `Review`, `Done`), module transfer, and priority chips.
+- 🔥 **Burning Deadlines Classifier**:
+  - UTC-safe urgency classifier (< 24h = Burning 🔥, overdue = Overdue ⚠️).
+  - Attention-required live banner on dashboard with direct inline rename and task editing.
+- 🎙️ **Voice Lounges (Foundation)**:
+  - Database-backed voice channels (`#Dev-General`, `#Pair-Programming`, `#Chill Lounge`, `#Silent Focus`).
+  - 1-click hop-in and instant room switching.
+  - Pure Web Audio API dual-tone chimes on room join/leave/mute (zero external audio files, 0ms latency).
+  - **Persistent Floating Audio Dock**: Stays connected at the bottom of the screen across routes with live presence, mute/deafen/screen share controls, and global hotkeys (`Ctrl+Shift+M`, `Ctrl+Shift+D`).
+  - Lounge creation modal with quick templates (`#War-Room`, `#Code-Review`, `#Pair-Programming`).
+- 🧪 **Test Suite**:
+  - 30 unit tests running in Vitest covering domain math, deadline boundaries, auth security, and project/module/task/voice services.
 
+---
+
+## 🛠️ Quick Local Setup
+
+### 1. Requirements
+- Node.js `20.x` or newer
+- PostgreSQL instance (running locally or in Docker)
+
+### 2. Install & Configure
 ```bash
+git clone https://github.com/Sharpy17/TD.git
+cd TD
 npm install
+```
+
+Copy the example environment configuration:
+```bash
+cp .env.example .env
+```
+Ensure your `DATABASE_URL` in `.env` points to your PostgreSQL database:
+```env
+DATABASE_URL="postgresql://postgres:password@localhost:5432/toguz?schema=public"
+```
+
+### 3. Sync Database Schema
+```bash
+npx prisma db push
+```
+
+### 4. Start Development Server
+```bash
 npm run dev
 ```
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-Then open `http://localhost:3000`.
+---
 
-Validation:
+## 🧪 Testing & Validation
 
 ```bash
-npm test
-npm run build
+npx vitest run     # Run full unit test suite (30/30 tests)
+npm run lint       # Run ESLint (Next.js 16 + React 19 rules)
+npm run build      # Turbopack production compilation check
 ```
 
-## Recommended delivery sequence
+---
 
-1. Confirm the dashboard’s information hierarchy and deadline language with real users.
-2. Add PostgreSQL and Prisma migrations, seed the demo workspace, and replace `lib/data/demo.ts` with a repository implementation.
-3. Add magic-link authentication and enforce workspace membership at every data boundary.
-4. Build task CRUD and the four-column Kanban with optimistic movement plus rollback.
-5. Emit a transactional outbox event when task status changes; use it to update other clients and cached progress safely.
-6. Add module chat and presence over a realtime gateway.
-7. Integrate LiveKit only after the core project loop is useful; add the soundboard as WebSocket triggers with local Web Audio playback.
-8. Wrap the stable web app in Tauri after desktop-only requirements (global hotkeys and screen capture) are proven.
+## 📚 Knowledge Vault & Team Tasks
 
-## Decisions to resolve early
+The documentation in `instructions/` is an **Obsidian Vault**.
 
-- Hosted services versus self-hosting for PostgreSQL, auth, object storage, realtime, and LiveKit.
-- Whether progress is strictly binary (`DONE / total`) or weighted. The current code follows the vault’s default binary model.
-- Whether guests are scoped only by assignment or can see whole modules. This affects nearly every query and event authorization check.
-- The source of truth for task order. The schema uses a string `orderKey` so a LexoRank-style strategy can replace fragile floating-point ordering.
-- Accessibility behavior for urgency: color is reinforced with text, and motion respects `prefers-reduced-motion`.
+👉 **New contributors**: Check out [`instructions/04_AI_Developer_Instructions/Team_Handover_&_Next_Tasks.md`](instructions/04_AI_Developer_Instructions/Team_Handover_&_Next_Tasks.md) for the active sprint tracks:
+- **Track A**: Full Kanban Board & Drag-and-Drop (`/projects/[projectId]/kanban`)
+- **Track B**: Module Chat Channels & Realtime Sync (`/chats`, `#mod-[slug]`)
+- **Track C**: LiveKit SFU Real Audio Streams & Soundboard
+- **Track D**: Quick Search (`⌘K`) & Personal Focus Queue
