@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { ProjectCard } from "@/components/projects/ProjectCard";
 import { getProjects } from "@/lib/projects/service";
+import { getSidebarAccount } from "@/lib/auth/account";
 
 export default async function HomePage() {
-  const projects = await getProjects();
+  const [projects, account] = await Promise.all([getProjects(), getSidebarAccount()]);
   const featured = projects[0];
 
   return (
@@ -27,7 +28,7 @@ export default async function HomePage() {
         <section className="main-hero">
           <div>
             <span className="eyebrow">Workspace pulse</span>
-            <h1>Good evening, Dastan.</h1>
+            <h1>{account ? `Welcome back, ${account.name.split(" ")[0]}.` : "Welcome to Toguz."}</h1>
             <p>Pick up where you left off, or jump into a conversation with your team.</p>
           </div>
           <Link className="primary-button button-link" href="/projects">

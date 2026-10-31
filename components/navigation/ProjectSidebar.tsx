@@ -3,17 +3,19 @@
 import { useState } from "react";
 import Link from "next/link";
 import { DeleteProjectModal } from "@/components/projects/DeleteProjectModal";
+import { AccountMenu, type SidebarAccount } from "./AccountMenu";
 
 export function ProjectSidebar({
   projectId,
   projectName,
   active = "overview",
+  account,
 }: {
   projectId: string;
   projectName: string;
   active?: "overview" | "board";
+  account: SidebarAccount;
 }) {
-  const [menuOpen, setMenuOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const projectHref = `/projects/${projectId}`;
 
@@ -79,61 +81,19 @@ export function ProjectSidebar({
           <span>🗑</span> Delete project
         </button>
 
-        <div className="sidebar__bottom" style={{ position: "relative" }}>
-          <span className="avatar">DA</span>
-          <div>
-            <strong>Dastan</strong>
-            <small>Project owner</small>
-          </div>
-          <button
-            type="button"
-            aria-label="Open project settings"
-            onClick={() => setMenuOpen(!menuOpen)}
-            style={{ cursor: "pointer", padding: "4px 8px" }}
-          >
-            ···
-          </button>
-
-          {menuOpen && (
-            <div
-              style={{
-                position: "absolute",
-                bottom: "100%",
-                left: 10,
-                right: 10,
-                marginBottom: 8,
-                padding: "6px",
-                background: "var(--surface-2)",
-                border: "1px solid var(--border)",
-                borderRadius: 10,
-                boxShadow: "0 10px 25px rgba(0,0,0,0.5)",
-                zIndex: 50,
-              }}
+        <AccountMenu
+          account={account}
+          extraItems={
+            <button
+              type="button"
+              className="account__item account__item--danger"
+              role="menuitem"
+              onClick={() => setDeleteModalOpen(true)}
             >
-              <button
-                type="button"
-                className="nav-item"
-                onClick={() => {
-                  setMenuOpen(false);
-                  setDeleteModalOpen(true);
-                }}
-                style={{
-                  minHeight: 32,
-                  fontSize: 12,
-                  width: "100%",
-                  textAlign: "left",
-                  border: 0,
-                  background: "transparent",
-                  color: "#ff708f",
-                  cursor: "pointer",
-                  padding: "0 8px",
-                }}
-              >
-                <span>🗑</span> Delete project
-              </button>
-            </div>
-          )}
-        </div>
+              <span aria-hidden="true">🗑</span> Delete project
+            </button>
+          }
+        />
       </aside>
 
       <DeleteProjectModal
