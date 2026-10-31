@@ -8,6 +8,7 @@ import { demoNowMs, demoProjectSlug, demoVoiceRooms } from "@/lib/data/demo";
 import { calculateProjectProgress } from "@/lib/domain/progress";
 import { getProjectById } from "@/lib/projects/service";
 import { getVoiceRooms } from "@/lib/voice/service";
+import { getSidebarAccount } from "@/lib/auth/account";
 
 export const dynamicParams = true;
 
@@ -21,9 +22,10 @@ export default async function ProjectPage({
   params: Promise<{ projectId: string }>;
 }) {
   const { projectId } = await params;
-  const [project, dbVoiceRooms] = await Promise.all([
+  const [project, dbVoiceRooms, account] = await Promise.all([
     getProjectById(projectId),
     getVoiceRooms(),
+    getSidebarAccount(),
   ]);
 
   if (!project) notFound();
@@ -40,7 +42,7 @@ export default async function ProjectPage({
 
   return (
     <main className="app-shell project-shell">
-      <ProjectSidebar projectId={projectId} projectName={project.name} />
+      <ProjectSidebar projectId={projectId} projectName={project.name} account={account} />
       <div className="workspace route-enter">
         <header className="topbar">
           <div>

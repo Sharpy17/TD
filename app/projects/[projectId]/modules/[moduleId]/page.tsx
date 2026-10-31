@@ -5,6 +5,7 @@ import { ModuleDetail } from "@/components/modules/ModuleDetail";
 import { getProjectById } from "@/lib/projects/service";
 import { getModulePeople } from "@/lib/modules/assignments";
 import { canEditProject } from "@/lib/auth/project-access";
+import { getSidebarAccount } from "@/lib/auth/account";
 
 export const dynamic = "force-dynamic";
 
@@ -15,9 +16,10 @@ export default async function ModulePage({ params }: {
   const project = await getProjectById(projectId);
   const targetModule = project?.modules.find((item) => item.id === moduleId);
   if (!project || !targetModule) notFound();
-  const [people, canEdit] = await Promise.all([
+  const [people, canEdit, account] = await Promise.all([
     getModulePeople(project.id),
     canEditProject(project.id),
+    getSidebarAccount(),
   ]);
 
   // This dynamic server page captures a fresh deadline snapshot per request.
@@ -26,7 +28,7 @@ export default async function ModulePage({ params }: {
 
   return (
     <main className="app-shell project-shell">
-      <ProjectSidebar projectId={projectId} projectName={project.name} />
+      <ProjectSidebar projectId={projectId} projectName={project.name} account={account} />
       <div className="workspace route-enter">
         <header className="topbar module-topbar">
           <Link className="module-back-link" href={`/projects/${projectId}#modules`}>← {project.name}</Link>

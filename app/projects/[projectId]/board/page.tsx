@@ -30,10 +30,11 @@ export default async function ProjectBoardPage({
   // Older rows may lack numbers/order keys; fix them once, then reload what changed.
   const project = (await normalizeProjectTasks(loaded.id)) ? ((await getProjectById(projectId)) ?? loaded) : loaded;
   const nowMs = requestTimeMs();
+  const account = currentUser ? { name: currentUser.name, email: currentUser.email } : null;
 
   return (
     <main className="app-shell project-shell">
-      <ProjectSidebar projectId={projectId} projectName={project.name} active="board" />
+      <ProjectSidebar projectId={projectId} projectName={project.name} active="board" account={account} />
       <div className="workspace route-enter">
         <KanbanBoard
           key={project.id}
