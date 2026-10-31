@@ -241,6 +241,7 @@ export async function moveTaskAction(
 ): Promise<{ success: boolean; error?: string }> {
   if (!taskId) return { success: false, error: "Missing task ID." };
   if (!BOARD_STATUSES.has(move.status)) return { success: false, error: "Unknown status." };
+  if (!(await canEditTask(taskId))) return { success: false, error: "You cannot edit this task." };
 
   const result = await updateTask({ taskId, status: move.status, orderKey: move.orderKey });
   if (!result.success) return { success: false, error: result.error };
@@ -257,6 +258,7 @@ export async function quickAddTaskAction(input: {
   dueAt: string | null;
 }): Promise<{ success: boolean; error?: string }> {
   if (!input.moduleId) return { success: false, error: "Pick a module with ^name." };
+  if (!(await canEditModule(input.moduleId))) return { success: false, error: "You cannot add tasks to this module." };
 
   const result = await createTask({
     moduleId: input.moduleId,
@@ -290,6 +292,9 @@ export async function updateTaskFieldsAction(
   if (fields.dueAt && Number.isNaN(Date.parse(fields.dueAt))) {
     return { success: false, error: "Invalid due date." };
   }
+  if (!(await canEditTask(taskId)) || (fields.moduleId && !(await canEditModule(fields.moduleId)))) {
+    return { success: false, error: "You cannot edit this task or target module." };
+  }
 
   const result = await updateTask({
     taskId,
@@ -311,6 +316,7 @@ export async function updateChecklistAction(
 ): Promise<{ success: boolean; error?: string }> {
   const items = parseChecklist(checklist);
   if (!taskId || !items) return { success: false, error: "Invalid checklist." };
+  if (!(await canEditTask(taskId))) return { success: false, error: "You cannot edit this task." };
 
   const result = await updateTask({ taskId, checklist: items });
   if (!result.success) return { success: false, error: result.error };

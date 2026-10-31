@@ -1,4 +1,5 @@
-import Link from "next/link";
+import { getCurrentUser } from "@/lib/auth/service";
+import { normalizeProjectTasks } from "@/lib/tasks/service";
 import { notFound } from "next/navigation";
 import { ProjectSidebar } from "@/components/navigation/ProjectSidebar";
 import { ModuleDetail } from "@/components/modules/ModuleDetail";
@@ -13,12 +14,15 @@ export default async function ModulePage({ params }: {
   params: Promise<{ projectId: string; moduleId: string }>;
 }) {
   const { projectId, moduleId } = await params;
-  const project = await getProjectById(projectId);
+  const loaded = await getProjectById(projectId);
+  if (!loaded || !loaded.modules.some((item) => item.id === moduleId)) notFound();
+  const project = (await normalizeProjectTasks(loaded.id)) ? ((await getProjectById(projectId)) ?? loaded) : loaded;
   const targetModule = project?.modules.find((item) => item.id === moduleId);
   if (!project || !targetModule) notFound();
-  const [people, canEdit, account] = await Promise.all([
+  const [people, canEdit, currentUser, account] = await Promise.all([
     getModulePeople(project.id),
     canEditProject(project.id),
+    getCurrentUser(),
     getSidebarAccount(),
   ]);
 
@@ -30,11 +34,9 @@ export default async function ModulePage({ params }: {
     <main className="app-shell project-shell">
       <ProjectSidebar projectId={projectId} projectName={project.name} account={account} />
       <div className="workspace route-enter">
-        <header className="topbar module-topbar">
-          <Link className="module-back-link" href={`/projects/${projectId}#modules`}>← {project.name}</Link>
-          <span className="eyebrow">Module workspace</span>
-        </header>
-        <ModuleDetail module={targetModule} projectId={project.id} people={people} canEdit={canEdit} nowMs={nowMs} />
+        <ModuleDetail project={project} moduleId={moduleId} routeProjectId={projectId} people={people} canEdit={canEdit} nowMs={nowMs}
+          currentUser={currentUser ? { id: currentUser.id, name: currentUser.name, initials: currentUser.name.slice(0, 2).toUpperCase() } : null}
+        />
       </div>
     </main>
   );

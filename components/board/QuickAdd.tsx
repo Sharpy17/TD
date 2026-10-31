@@ -5,6 +5,7 @@ import type { UserSummary } from "@/lib/domain/types";
 import { parseQuickAdd, type QuickAddResult } from "@/lib/tasks/quickAdd";
 
 export function QuickAdd({
+  lockedModule = false,
   modules,
   members,
   defaultModule,
@@ -12,6 +13,7 @@ export function QuickAdd({
   inputRef,
   onSubmit,
 }: {
+  lockedModule?: boolean;
   modules: Array<{ id: string; name: string }>;
   members: UserSummary[];
   defaultModule: { id: string; name: string } | null;
@@ -36,7 +38,7 @@ export function QuickAdd({
           ref={inputRef}
           value={draft}
           maxLength={200}
-          placeholder="Add task…  @who ^module !when"
+          placeholder={lockedModule ? "Add task…  @who !when" : "Add task…  @who ^module !when"}
           onChange={(event) => setDraft(event.target.value)}
           onKeyDown={(event) => {
             if (event.key === "Escape") {
@@ -46,7 +48,7 @@ export function QuickAdd({
             if (event.key !== "Enter" || !parsed.title) return;
             // Re-parse at submit time so relative dates use the exact moment of creation.
             const final = parseQuickAdd(draft, { modules, members, nowMs: Date.now() });
-            onSubmit({ ...final, moduleId: final.moduleId ?? defaultModule.id });
+            onSubmit({ ...final, moduleId: lockedModule ? defaultModule.id : (final.moduleId ?? defaultModule.id) });
             setDraft("");
           }}
         />
