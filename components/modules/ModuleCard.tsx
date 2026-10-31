@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import Link from "next/link";
 import { isUrgentTask } from "@/lib/domain/deadlines";
 import { calculateProgress, countCompleted } from "@/lib/domain/progress";
 import type { Module, Task } from "@/lib/domain/types";
@@ -56,7 +57,7 @@ export function ModuleCard({
 
   return (
     <article className={`module-card ${burningCount ? "module-card--burning" : ""}`}>
-      <div className="module-card__head">
+      <Link className="module-card__head module-card__link" href={`/projects/${projectId}/modules/${module.id}`} aria-label={`Open ${module.name}`}>
         <span className="module-card__icon" aria-hidden="true">
           {module.icon}
         </span>
@@ -65,7 +66,7 @@ export function ModuleCard({
           <p>{module.description}</p>
         </div>
         <RadialProgressRing percentage={progress} />
-      </div>
+      </Link>
       <div className="module-card__meta">
         <button
           type="button"
@@ -82,7 +83,7 @@ export function ModuleCard({
         >
           {completed}/{module.tasks.length} tasks {expanded ? "▲" : "▼"}
         </button>
-        <span>Lead: @{module.lead.name.toLowerCase()}</span>
+        <span>{module.assignees?.length ? module.assignees.map((person) => person.name).join(", ") : "Everyone"}</span>
       </div>
 
       <div className="module-card__footer">

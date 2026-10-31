@@ -44,6 +44,7 @@ export type Module = {
   icon: string;
   channelSlug: string;
   lead: UserSummary;
+  assignees?: UserSummary[];
   tasks: Task[];
 };
 

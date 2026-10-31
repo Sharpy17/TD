@@ -77,3 +77,8 @@ date: 2026-10-29
 - [[Edge_Cases_&_Pitfalls|Подводные камни и Граничные случаи]]
 - [[AI_Prompt_Playbook|Сборник готовых промптов для ИИ]]
 - [[Implementation_Roadmap|План реализации]]
+
+
+## Team Git workflow
+
+Follow [Team Git Workflow](Team_Git_Workflow.md) for feature branches, push approval, synchronization with main, and local/GitHub branch cleanup.

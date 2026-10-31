@@ -37,6 +37,7 @@ model User {
   sessions    Session[]
   memberships Membership[]
   ledModules  Module[]            @relation("ModuleLead")
+  assignedModules Module[]        @relation("ModuleAssignees")
   assignments Task[]              @relation("TaskAssignee")
   messages    Message[]
   reactions   Reaction[]
@@ -121,6 +122,7 @@ model Module {
   project        Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
   leadUserId     String?
   leadUser       User?    @relation("ModuleLead", fields: [leadUserId], references: [id], onDelete: SetNull)
+  assignees      User[]   @relation("ModuleAssignees")
   tasks          Task[]
   channel        Channel?
   createdAt      DateTime @default(now())
