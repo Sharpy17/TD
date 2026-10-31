@@ -17,7 +17,7 @@ export function GlobalSidebar({ account }: { account: SidebarAccount }) {
     <aside className="sidebar global-sidebar">
       <Link className="brand" href="/">
         <span>⚡</span>
-        <strong>Toguz</strong>
+        <strong>DaiHub</strong>
       </Link>
 
       <div className="sidebar-label">Workspace</div>

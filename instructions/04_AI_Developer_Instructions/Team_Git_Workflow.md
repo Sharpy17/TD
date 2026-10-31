@@ -9,7 +9,7 @@ date: 2026-10-31
 
 # Team Git Workflow
 
-This is the agreed workflow for collaborating on Toguz with multiple developers. Apply it to every feature task.
+This is the agreed workflow for collaborating on DaiHub with multiple developers. Apply it to every feature task.
 
 1. **Use a separate branch.** Start from the latest `main` and create a descriptive `feature/<name>` or `fix/<name>` branch. Keep unrelated local changes out of the task's commits.
 2. **Finish before asking to push.** Implement the requested work, run the relevant checks, and prepare focused commits. Summarize the changes and verification, then ask the user whether to push. Do not push without their approval.

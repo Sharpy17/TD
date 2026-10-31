@@ -1,8 +1,8 @@
-# ⚡ Toguz Hub (The Anti-Bitrix)
+# ⚡ DaiHub (The Anti-Bitrix)
 
 > *"A Discord for Gen X and a Bitrix for Gen Z"*
 
-**Toguz Hub** is an ultra-fast, opinionated startup command center. It cuts away 90% of legacy Enterprise CRM bloat (Bitrix24/Jira bureaucracy, multi-nested menus, endless required fields) and fuses crystal-clear project/module progress tracking with the live energy of Discord (voice lounges, burning deadlines, soundboard, and hotkeys).
+**DaiHub** is an ultra-fast, opinionated startup command center. It cuts away 90% of legacy Enterprise CRM bloat (Bitrix24/Jira bureaucracy, multi-nested menus, endless required fields) and fuses crystal-clear project/module progress tracking with the live energy of Discord (voice lounges, burning deadlines, soundboard, and hotkeys).
 
 ---
 

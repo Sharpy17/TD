@@ -37,7 +37,7 @@ export async function createVoiceRoomAction(
   if (projectId) {
     revalidatePath(`/projects/${projectId}`);
   }
-  revalidatePath("/projects/toguz-hub");
+  revalidatePath("/projects/daihub");
   revalidatePath("/projects");
   revalidatePath("/");
 
@@ -60,7 +60,7 @@ export async function deleteVoiceRoomAction(
   if (projectId) {
     revalidatePath(`/projects/${projectId}`);
   }
-  revalidatePath("/projects/toguz-hub");
+  revalidatePath("/projects/daihub");
   revalidatePath("/projects");
   revalidatePath("/");
 

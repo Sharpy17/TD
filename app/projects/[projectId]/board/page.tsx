@@ -7,7 +7,7 @@ import { getCurrentUser } from "@/lib/auth/service";
 import { getProjectById, getProjectMembers } from "@/lib/projects/service";
 import { normalizeProjectTasks } from "@/lib/tasks/service";
 
-export const metadata: Metadata = { title: "Board · Toguz Hub" };
+export const metadata: Metadata = { title: "Board · DaiHub" };
 
 /** Request-time clock; seeds the client countdowns so server and client render the same first frame. */
 function requestTimeMs(): number {

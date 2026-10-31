@@ -29,8 +29,8 @@ interface Hub {
   viewers: Map<string, Map<string, BoardViewer & { seenAt: number }>>;
 }
 
-const globalForHub = globalThis as unknown as { __toguzBoardHub?: Hub };
-const hub: Hub = (globalForHub.__toguzBoardHub ??= { listeners: new Map(), viewers: new Map() });
+const globalForHub = globalThis as unknown as { __daihubBoardHub?: Hub };
+const hub: Hub = (globalForHub.__daihubBoardHub ??= { listeners: new Map(), viewers: new Map() });
 
 export function publish(projectId: string, event: BoardEvent): void {
   for (const listener of hub.listeners.get(projectId) ?? []) {

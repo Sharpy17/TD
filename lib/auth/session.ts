@@ -1,6 +1,6 @@
 import crypto from "crypto";
 
-export const SESSION_COOKIE_NAME = "toguz_session";
+export const SESSION_COOKIE_NAME = "daihub_session";
 export const SESSION_MAX_AGE_SECONDS = 30 * 24 * 60 * 60; // 30 days
 export const SESSION_MAX_AGE_MS = SESSION_MAX_AGE_SECONDS * 1000;
 

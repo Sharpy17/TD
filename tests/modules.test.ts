@@ -60,8 +60,8 @@ describe("Modules Service (lib/modules/service)", () => {
     await deleteProject(projectId);
   });
 
-  it("successfully creates a module inside the default demo project (toguz-hub)", async () => {
-    const demoSlug = "toguz-hub";
+  it("successfully creates a module inside the default demo project (daihub)", async () => {
+    const demoSlug = "daihub";
     const moduleRes = await createModule({
       projectId: demoSlug,
       name: "Autonomous AI Agents",

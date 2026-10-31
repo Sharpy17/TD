@@ -55,7 +55,7 @@ export async function createModuleAction(
   }
 
   revalidatePath(`/projects/${projectId}`, "layout");
-  revalidatePath("/projects/toguz-hub", "layout");
+  revalidatePath("/projects/daihub", "layout");
   revalidatePath("/projects/[projectId]", "layout");
   revalidatePath("/projects");
   revalidatePath("/");
@@ -111,7 +111,7 @@ export async function createTaskAction(
   if (projectId) {
     revalidatePath(`/projects/${projectId}`, "layout");
   }
-  revalidatePath("/projects/toguz-hub", "layout");
+  revalidatePath("/projects/daihub", "layout");
   revalidatePath("/projects/[projectId]", "layout");
   revalidatePath("/projects");
   revalidatePath("/");
@@ -133,7 +133,7 @@ export async function renameTaskAction(
   if (!result.success) return { success: false, error: result.error };
 
   if (projectId) revalidatePath(`/projects/${projectId}`, "layout");
-  revalidatePath("/projects/toguz-hub", "layout");
+  revalidatePath("/projects/daihub", "layout");
   revalidatePath("/projects/[projectId]", "layout");
   revalidatePath("/projects");
   revalidatePath("/");
@@ -182,7 +182,7 @@ export async function updateTaskAction(
   }
 
   if (projectId) revalidatePath(`/projects/${projectId}`, "layout");
-  revalidatePath("/projects/toguz-hub", "layout");
+  revalidatePath("/projects/daihub", "layout");
   revalidatePath("/projects/[projectId]", "layout");
   revalidatePath("/projects");
   revalidatePath("/");
@@ -208,7 +208,7 @@ export async function deleteTaskAction(
   if (projectId) {
     revalidatePath(`/projects/${projectId}`, "layout");
   }
-  revalidatePath("/projects/toguz-hub", "layout");
+  revalidatePath("/projects/daihub", "layout");
   revalidatePath("/projects/[projectId]", "layout");
   revalidatePath("/projects");
   revalidatePath("/");
@@ -226,7 +226,7 @@ function revalidateProjectViews(projectId?: string) {
   if (projectId) {
     revalidatePath(`/projects/${projectId}`, "layout");
   }
-  revalidatePath("/projects/toguz-hub", "layout");
+  revalidatePath("/projects/daihub", "layout");
   revalidatePath("/projects");
   revalidatePath("/");
   notifyBoard(projectId);

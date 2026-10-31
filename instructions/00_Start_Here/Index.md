@@ -1,5 +1,5 @@
 ---
-title: "Toguz Hub — The Gen-Z Anti-Bitrix Knowledge Base"
+title: "DaiHub — The Gen-Z Anti-Bitrix Knowledge Base"
 tags:
   - moc
   - index
@@ -8,7 +8,7 @@ tags:
 date: 2026-10-29
 ---
 
-# ⚡ Toguz Hub (Codename: Pulse)
+# ⚡ DaiHub (Codename: Pulse)
 ### *"A Discord for Gen X and a Bitrix for Gen Z"*
 
 > **Миссия проекта**: Создать ультрабыстрый, современный и кайфовый хаб для стартапов, который выкидывает на свалку 90% неповоротливого хлама Битрикс24 (сделки, склады, бесконечные меню и визуальный шум) и объединяет кристально чистый трекинг проектов с живой атмосферой Discord (голосовые комнаты, саундборд, стикеры, горящие дедлайны).

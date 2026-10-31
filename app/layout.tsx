@@ -4,7 +4,7 @@ import { VoiceProvider } from "@/components/voice/VoiceContext";
 import { VoiceAudioDock } from "@/components/voice/VoiceAudioDock";
 
 export const metadata: Metadata = {
-  title: "Toguz Hub",
+  title: "DaiHub",
   description: "A fast project hub for startup teams.",
 };
 

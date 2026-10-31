@@ -1,14 +1,14 @@
 ---
-title: "Toguz Hub — The Gen Z Anti-Bitrix"
+title: "DaiHub — The Gen Z Anti-Bitrix"
 tags:
   - root
   - home
 date: 2026-10-29
 ---
 
-# ⚡ Toguz Hub (The Anti-Bitrix)
+# ⚡ DaiHub (The Anti-Bitrix)
 
-Добро пожаловать в базу знаний и проектную документацию **Toguz Hub**!
+Добро пожаловать в базу знаний и проектную документацию **DaiHub**!
 
 > **Главная навигация**: Перейдите в корневую карту знаний:  
 > ➡️ **[[00_Start_Here/Index|🗺️ Открыть главную Карту Знаний (Map of Content)]]**

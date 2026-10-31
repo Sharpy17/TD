@@ -7,11 +7,11 @@ describe("Projects Service (lib/projects/service)", () => {
     const bySlug = await getProjectById(demoProjectSlug);
     expect(bySlug).toBeDefined();
     expect(bySlug?.id).toBe(demoProject.id);
-    expect(bySlug?.name).toBe("Toguz Hub Core");
+    expect(bySlug?.name).toBe("DaiHub Core");
 
     const byId = await getProjectById(demoProject.id);
     expect(byId).toBeDefined();
-    expect(byId?.name).toBe("Toguz Hub Core");
+    expect(byId?.name).toBe("DaiHub Core");
   });
 
   it("returns null for non-existent projects", async () => {

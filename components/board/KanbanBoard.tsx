@@ -86,7 +86,7 @@ function useNow(initialNowMs: number): number {
   return nowMs;
 }
 
-const SOUND_KEY = "toguz.board.sound";
+const SOUND_KEY = "daihub.board.sound";
 const soundListeners = new Set<() => void>();
 
 function readSoundSetting(): boolean {
