@@ -7,6 +7,7 @@ import { MAX_MESSAGE_LENGTH, QUICK_REACTIONS, type ChannelSummary, type ChatMess
 import type { BoardEvent } from "@/lib/realtime/hub";
 import type { UserSummary } from "@/lib/domain/types";
 import { MessageContent } from "./MessageContent";
+import { Icon } from "@/components/ui/Icon";
 
 const GROUP_WINDOW_MS = 5 * 60 * 1000;
 const NEAR_BOTTOM_PX = 120;
@@ -159,9 +160,9 @@ export function ChatRoom({
       <header className="chat-header">
         <div className="chat-header__title">
           {context.scopeHref ? (
-            <Link className="eyebrow chat-header__scope" href={context.scopeHref}>{context.scopeLabel}</Link>
+            <Link className="crumb chat-header__scope" href={context.scopeHref}>{context.scopeLabel}</Link>
           ) : (
-            <span className="eyebrow">{context.scopeLabel}</span>
+            <span className="crumb">{context.scopeLabel}</span>
           )}
           <h1><span>#</span>{channel.name}</h1>
           <p>{describe(channel, context.scopeLabel)}</p>
@@ -173,8 +174,8 @@ export function ChatRoom({
               {channel.progress}% done
             </span>
           )}
-          {channel.burning ? <span className="chat-pill chat-pill--burning">🔥 {channel.burning} burning</span> : null}
-          {context.boardHref && <Link className="chat-pill chat-pill--link" href={context.boardHref}>Open board →</Link>}
+          {channel.burning ? <span className="chat-pill chat-pill--burning"><Icon name="flame" size={12} /> {channel.burning} due soon</span> : null}
+          {context.boardHref && <Link className="chat-pill chat-pill--link" href={context.boardHref}>Open board <Icon name="arrowRight" size={14} /></Link>}
           <span className={`chat-live ${connected ? "chat-live--on" : ""}`} title={connected ? "Live" : "Reconnecting…"} />
         </div>
       </header>

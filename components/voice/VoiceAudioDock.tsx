@@ -1,6 +1,7 @@
 "use client";
 
 import { useVoice } from "./VoiceContext";
+import { Icon } from "@/components/ui/Icon";
 
 export function VoiceAudioDock() {
   const {
@@ -24,7 +25,7 @@ export function VoiceAudioDock() {
         <span className="voice-audio-dock__signal-dot" />
         <div className="voice-audio-dock__text">
           <strong title={currentRoomName || "Voice Room"}>
-            🔊 #{currentRoomName || "Voice Room"}
+            #{currentRoomName || "Voice Room"}
           </strong>
           <small>
             RTC 24ms &bull; <span className="voice-audio-dock__state">Voice Connected</span>
@@ -42,7 +43,7 @@ export function VoiceAudioDock() {
           title={isMuted ? "Unmute microphone (Ctrl+Shift+M)" : "Mute microphone (Ctrl+Shift+M)"}
           aria-label={isMuted ? "Unmute" : "Mute"}
         >
-          <span>{isMuted ? "🎤❌" : "🎙️"}</span>
+          <Icon name={isMuted ? "micOff" : "mic"} />
           <span className="dock-btn-label">{isMuted ? "Muted" : "Mute"}</span>
         </button>
 
@@ -54,7 +55,7 @@ export function VoiceAudioDock() {
           title={isDeafened ? "Undeafen headphones (Ctrl+Shift+D)" : "Deafen headphones (Ctrl+Shift+D)"}
           aria-label={isDeafened ? "Undeafen" : "Deafen"}
         >
-          <span>{isDeafened ? "🔇" : "🎧"}</span>
+          <Icon name={isDeafened ? "headphonesOff" : "headphones"} />
           <span className="dock-btn-label">{isDeafened ? "Deafened" : "Deafen"}</span>
         </button>
 
@@ -66,7 +67,7 @@ export function VoiceAudioDock() {
           title={isScreenSharing ? "Stop screen share" : "Share screen"}
           aria-label={isScreenSharing ? "Stop screen sharing" : "Share screen"}
         >
-          <span>🖥️</span>
+          <Icon name="screen" />
           <span className="dock-btn-label">{isScreenSharing ? "Sharing" : "Share"}</span>
         </button>
 
@@ -78,7 +79,7 @@ export function VoiceAudioDock() {
           title="Disconnect from voice lounge"
           aria-label="Disconnect"
         >
-          <span>📞</span>
+          <Icon name="phoneOff" />
           <span className="dock-btn-label">Disconnect</span>
         </button>
       </div>

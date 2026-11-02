@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { deleteTaskAction } from "@/app/projects/[projectId]/actions";
+import { Icon } from "@/components/ui/Icon";
 
 interface DeleteTaskModalProps {
   isOpen: boolean;
@@ -46,7 +47,6 @@ export function DeleteTaskModal({
       <div className="modal-card" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
           <div>
-            <span className="eyebrow eyebrow--danger">Permanent action</span>
             <h2 id="delete-task-modal-title">Delete task</h2>
           </div>
           <button
@@ -54,14 +54,12 @@ export function DeleteTaskModal({
             className="modal-close-btn"
             onClick={onClose}
             aria-label="Close modal"
-          >
-            ✕
-          </button>
+          ><Icon name="close" /></button>
         </div>
 
         {error && (
           <div className="auth-banner-error" role="alert" style={{ marginBottom: 18 }}>
-            <span>⚠️</span>
+            <Icon name="alert" />
             <span>{error}</span>
           </div>
         )}

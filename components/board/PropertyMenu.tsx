@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
+import { Icon } from "@/components/ui/Icon";
 
 export type MenuOption<T extends string> = {
   value: T;
@@ -88,7 +89,7 @@ export function PropertyMenu<T extends string>({
             {display}
           </span>
           <span className="board-prop__chevron" aria-hidden="true">
-            ▾
+            <Icon name="chevronDown" size={14} />
           </span>
         </button>
         {open && (
@@ -111,7 +112,7 @@ export function PropertyMenu<T extends string>({
                 {option.hint && <span className="board-menu__hint board-mono">{option.hint}</span>}
                 {option.value === selected && (
                   <span className="board-menu__check" aria-hidden="true">
-                    ✓
+                    <Icon name="check" size={14} />
                   </span>
                 )}
               </button>

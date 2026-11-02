@@ -19,7 +19,7 @@ import {
   updateTaskFieldsAction,
 } from "@/app/projects/[projectId]/actions";
 import { ModuleAssignees } from "@/components/modules/ModuleAssignees";
-import { RadialProgressRing } from "@/components/modules/RadialProgressRing";
+import { TestStrip } from "@/components/ui/TestStrip";
 import { DeleteTaskModal } from "@/components/tasks/DeleteTaskModal";
 import { EditTaskModal } from "@/components/tasks/EditTaskModal";
 import { useVoice } from "@/components/voice/VoiceContext";
@@ -44,6 +44,8 @@ import { Avatar, KanbanCard, type DropEdge } from "./KanbanCard";
 import { QuickAdd } from "./QuickAdd";
 import { TaskInspector, type TaskFieldsPatch } from "./TaskInspector";
 import { useBoardLive } from "./useBoardLive";
+import { Icon } from "@/components/ui/Icon";
+import { ModuleIcon } from "@/components/ui/ModuleIcon";
 
 type OptimisticAction =
   | { type: "move"; taskId: string; status: TaskStatus; orderKey?: string }
@@ -437,11 +439,10 @@ export function KanbanBoard({
     <>
       <header className="topbar">
         <div>
-          <span className="eyebrow">{scopedModule ? "Module board" : "Board"}</span>
           <strong>{breadcrumb}</strong>
         </div>
         <label className="search">
-          <span aria-hidden="true">⌕</span>
+          <Icon name="search" />
           <input
             aria-label="Filter tasks"
             placeholder="Filter by title or ID"
@@ -483,7 +484,7 @@ export function KanbanBoard({
         <section className="board" aria-label={scopedModule ? `${scopedModule.name} task board` : "Board"}>
           <div className="board-head">
             <div>
-              <h1>{scopedModule && <span aria-hidden="true">{scopedModule.icon} </span>}{boardTitle}</h1>
+              <h1>{scopedModule && <span className="board-head__icon" aria-hidden="true"><ModuleIcon glyph={scopedModule.icon} size={22} /></span>}{boardTitle}</h1>
               {scopedModule?.description && <p className="module-board-description">{scopedModule.description}</p>}
               <p className="board-mono" suppressHydrationWarning>
                 {openCount} open · {burningCount} burning · {overdueCount} overdue · {calculateProgress(tasks)}% shipped
@@ -517,7 +518,7 @@ export function KanbanBoard({
 
           {scopedModule && <div className="module-board-overview">
             <ModuleAssignees moduleId={scopedModule.id} assignees={scopedModule.assignees || []} people={members} canEdit={canEdit} />
-            <RadialProgressRing percentage={calculateProgress(tasks)} />
+            <div className="module-board-overview__strip"><TestStrip percentage={calculateProgress(tasks)} size="md" /></div>
           </div>}
           {!canEdit && <p className="module-readonly">Sign in as a workspace member to manage tasks.</p>}
           {!scopedModule && <div className="board-tabs" role="group" aria-label="Filter by module">

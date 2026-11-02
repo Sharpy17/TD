@@ -5,6 +5,7 @@ import { findChannel, getChatDirectory, getMessages } from "@/lib/chat/service";
 import type { ChannelSummary } from "@/lib/chat/types";
 import { ChannelList } from "./ChannelList";
 import { ChatRoom } from "./ChatRoom";
+import { Icon } from "@/components/ui/Icon";
 
 /**
  * The two-pane chat: channel list + conversation.
@@ -37,7 +38,6 @@ export async function ChatScreen({
     <div className="chat-layout">
       <aside className="chat-sidebar">
         <div className="chat-sidebar__head">
-          <span className="eyebrow">{scope.kind === "project" ? "Project" : "Workspace"}</span>
           <strong>Channels</strong>
         </div>
         <ChannelList
@@ -64,25 +64,31 @@ export async function ChatScreen({
 
 export function ChatSignInPrompt() {
   return (
-    <div className="main-content">
-      <div className="empty-state">
-        <span>#</span>
-        <strong>Sign in to see your team&apos;s channels</strong>
-        <p>Channels are only visible to workspace members.</p>
-        <Link className="primary-button button-link" href="/login">Sign in</Link>
+    <>
+      <header className="main-topbar"><div><strong>Chats</strong></div></header>
+      <div className="main-content">
+        <div className="empty-state">
+          <span><Icon name="hash" size={22} /></span>
+          <strong>Sign in to see your team&apos;s channels</strong>
+          <p>Channels are only visible to workspace members.</p>
+          <Link className="primary-button button-link" href="/login">Sign in</Link>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
 export function ChatNoAccess() {
   return (
-    <div className="main-content">
-      <div className="empty-state">
-        <span>#</span>
-        <strong>No channels yet</strong>
-        <p>You&apos;re not a member of this workspace, or there are no channels you can see.</p>
+    <>
+      <header className="main-topbar"><div><strong>Chats</strong></div></header>
+      <div className="main-content">
+        <div className="empty-state">
+          <span><Icon name="hash" size={22} /></span>
+          <strong>No channels yet</strong>
+          <p>You&apos;re not a member of this workspace, or there are no channels you can see.</p>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

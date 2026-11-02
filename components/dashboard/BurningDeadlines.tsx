@@ -6,6 +6,7 @@ import type { Module, Task } from "@/lib/domain/types";
 import { DeleteTaskModal } from "@/components/tasks/DeleteTaskModal";
 import { EditTaskModal } from "@/components/tasks/EditTaskModal";
 import { renameTaskAction } from "@/app/projects/[projectId]/actions";
+import { Icon } from "@/components/ui/Icon";
 
 type UrgentTask = { task: Task; moduleName: string; moduleId: string };
 
@@ -60,7 +61,6 @@ export function BurningDeadlines({
       <section className="burning-panel" aria-labelledby="burning-title">
         <div className="section-heading">
           <div>
-            <span className="eyebrow eyebrow--danger">Attention required</span>
             <h2 id="burning-title">Burning deadlines</h2>
           </div>
           <span className="live-count">
@@ -99,7 +99,7 @@ export function BurningDeadlines({
                 </span>
                 <span className="burning-task__time">{formatDeadline(task.dueAt, nowMs)}</span>
                 <span className="avatar">{task.assignee?.initials ?? "?"}</span>
-                <div className="task-row-actions">
+                <div className="task-row-actions task-row-actions--apart">
                   <button
                     type="button"
                     className="task-row-btn"
@@ -107,7 +107,7 @@ export function BurningDeadlines({
                     aria-label={`Edit task ${task.title}`}
                     onClick={() => setTaskToEdit({ task, moduleId })}
                   >
-                    ✎
+                    <Icon name="pencil" size={15} />
                   </button>
                   <button
                     type="button"
@@ -116,7 +116,7 @@ export function BurningDeadlines({
                     aria-label={`Delete task ${task.title}`}
                     onClick={() => setTaskToDelete({ id: task.id, title: task.title })}
                   >
-                    🗑
+                    <Icon name="trash" size={15} />
                   </button>
                 </div>
               </div>

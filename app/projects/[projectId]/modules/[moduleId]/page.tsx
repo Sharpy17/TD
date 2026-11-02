@@ -32,7 +32,7 @@ export default async function ModulePage({ params }: {
 
   return (
     <main className="app-shell project-shell">
-      <ProjectSidebar projectId={projectId} projectName={project.name} account={account} />
+      <ProjectSidebar projectId={projectId} projectName={project.name} active="modules" account={account} />
       <div className="workspace route-enter">
         <ModuleDetail project={project} moduleId={moduleId} routeProjectId={projectId} people={people} canEdit={canEdit} nowMs={nowMs}
           currentUser={currentUser ? { id: currentUser.id, name: currentUser.name, initials: currentUser.name.slice(0, 2).toUpperCase() } : null}

@@ -5,8 +5,10 @@ import Link from "next/link";
 import { isUrgentTask } from "@/lib/domain/deadlines";
 import { calculateProgress, countCompleted } from "@/lib/domain/progress";
 import type { Module, Task } from "@/lib/domain/types";
-import { RadialProgressRing } from "./RadialProgressRing";
+import { TestStrip } from "@/components/ui/TestStrip";
 import { renameTaskAction } from "@/app/projects/[projectId]/actions";
+import { Icon } from "@/components/ui/Icon";
+import { ModuleIcon } from "@/components/ui/ModuleIcon";
 
 export function ModuleCard({
   module,
@@ -59,29 +61,17 @@ export function ModuleCard({
     <article className={`module-card ${burningCount ? "module-card--burning" : ""}`}>
       <Link className="module-card__head module-card__link" href={`/projects/${projectId}/modules/${module.id}`} aria-label={`Open ${module.name}`}>
         <span className="module-card__icon" aria-hidden="true">
-          {module.icon}
+          <ModuleIcon glyph={module.icon} />
         </span>
         <div>
           <h3>{module.name}</h3>
           <p>{module.description}</p>
         </div>
-        <RadialProgressRing percentage={progress} />
       </Link>
+      <TestStrip percentage={progress} size="md" />
       <div className="module-card__meta">
-        <button
-          type="button"
-          onClick={() => setExpanded(!expanded)}
-          style={{
-            background: "none",
-            border: "none",
-            color: "var(--secondary)",
-            cursor: "pointer",
-            padding: 0,
-            fontSize: 11,
-            textDecoration: "underline",
-          }}
-        >
-          {completed}/{module.tasks.length} tasks {expanded ? "▲" : "▼"}
+        <button type="button" className="module-card__toggle" aria-expanded={expanded} onClick={() => setExpanded(!expanded)}>
+          {completed}/{module.tasks.length} tasks <Icon name={expanded ? "chevronUp" : "chevronDown"} size={14} />
         </button>
         <span>{module.assignees?.length ? module.assignees.map((person) => person.name).join(", ") : "Everyone"}</span>
       </div>
@@ -98,7 +88,6 @@ export function ModuleCard({
           <button
             type="button"
             className="channel-pill"
-            style={{ marginLeft: 6, color: "var(--text)", border: "1px solid var(--border)" }}
             onClick={() => onAddTask(module.id)}
           >
             + Task
@@ -114,7 +103,7 @@ export function ModuleCard({
       {expanded && (
         <div className="module-tasks-container">
           {module.tasks.length === 0 ? (
-            <small style={{ color: "var(--muted)", padding: "6px 0" }}>
+            <small className="module-tasks-empty">
               No tasks in this module yet. Click &quot;+ Task&quot; to add one.
             </small>
           ) : (
@@ -157,7 +146,7 @@ export function ModuleCard({
                       aria-label={`Edit task ${task.title}`}
                       onClick={() => onEditTask(task, module.id)}
                     >
-                      ✎
+                      <Icon name="pencil" size={15} />
                     </button>
                   )}
                   {onDeleteTask && (
@@ -168,7 +157,7 @@ export function ModuleCard({
                       aria-label={`Delete task ${task.title}`}
                       onClick={() => onDeleteTask(task.id, task.title)}
                     >
-                      🗑
+                      <Icon name="trash" size={15} />
                     </button>
                   )}
                 </div>

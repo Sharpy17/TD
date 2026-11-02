@@ -3,6 +3,8 @@
 import { useActionState, useEffect, useState } from "react";
 import { createModuleAction, type ModuleActionState } from "@/app/projects/[projectId]/actions";
 import { PRESET_MODULE_ICONS } from "@/lib/modules/constants";
+import { Icon } from "@/components/ui/Icon";
+import { ModuleIcon, moduleIconName } from "@/components/ui/ModuleIcon";
 
 interface CreateModuleModalProps {
   isOpen: boolean;
@@ -46,7 +48,6 @@ export function CreateModuleModal({ isOpen, onClose, projectId }: CreateModuleMo
       <div className="modal-card" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
           <div>
-            <span className="eyebrow">Project breakdown</span>
             <h2 id="create-module-title">Create module</h2>
           </div>
           <button
@@ -54,14 +55,12 @@ export function CreateModuleModal({ isOpen, onClose, projectId }: CreateModuleMo
             className="modal-close-btn"
             onClick={onClose}
             aria-label="Close modal"
-          >
-            ✕
-          </button>
+          ><Icon name="close" /></button>
         </div>
 
         {state?.error && (
           <div className="auth-banner-error" role="alert" style={{ marginBottom: 18 }}>
-            <span>⚠️</span>
+            <Icon name="alert" />
             <span>{state.error}</span>
           </div>
         )}
@@ -117,8 +116,9 @@ export function CreateModuleModal({ isOpen, onClose, projectId }: CreateModuleMo
                   onClick={() => setSelectedIcon(icon)}
                   aria-checked={selectedIcon === icon}
                   role="radio"
+                  aria-label={moduleIconName(icon)}
                 >
-                  {icon}
+                  <ModuleIcon glyph={icon} size={18} />
                 </button>
               ))}
             </div>
@@ -139,7 +139,7 @@ export function CreateModuleModal({ isOpen, onClose, projectId }: CreateModuleMo
               style={{ minWidth: 140 }}
               disabled={isPending}
             >
-              {isPending ? "Creating..." : "Create module →"}
+              {isPending ? "Creating..." : "Create module"}
             </button>
           </div>
         </form>

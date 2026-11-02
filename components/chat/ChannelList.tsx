@@ -1,5 +1,7 @@
 import Link from "next/link";
 import type { ChannelSummary, ChatDirectory } from "@/lib/chat/types";
+import { Icon } from "@/components/ui/Icon";
+import { ModuleIcon } from "@/components/ui/ModuleIcon";
 
 export type ChannelHref = (channel: ChannelSummary, projectSlug: string | null) => string;
 
@@ -10,9 +12,9 @@ function ChannelLink({ channel, href, active }: { channel: ChannelSummary; href:
       href={href}
       aria-current={active ? "page" : undefined}
     >
-      <span className="chat-channel__hash">{channel.kind === "module" ? channel.icon || "#" : "#"}</span>
+      <span className="chat-channel__hash">{channel.kind === "module" ? <ModuleIcon glyph={channel.icon} size={14} /> : "#"}</span>
       <span className="chat-channel__name">{channel.name}</span>
-      {channel.burning ? <span className="chat-channel__burning" title={`${channel.burning} burning`}>🔥{channel.burning}</span> : null}
+      {channel.burning ? <span className="chat-channel__burning" title={`${channel.burning} burning`}><Icon name="flame" size={12} />{channel.burning}</span> : null}
       {channel.kind === "module" && channel.progress !== undefined ? (
         <span className="chat-channel__progress">{channel.progress}%</span>
       ) : null}
@@ -58,7 +60,7 @@ export function ChannelList({
       ))}
 
       {onlyProjectId && (
-        <Link className="chat-channels__all" href="/chats">All workspace chats →</Link>
+        <Link className="chat-channels__all" href="/chats">All workspace chats <Icon name="arrowRight" size={14} /></Link>
       )}
     </nav>
   );

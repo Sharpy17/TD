@@ -2,6 +2,7 @@
 
 import { useActionState, useEffect } from "react";
 import { createProjectAction, type ProjectActionState } from "@/app/(main)/projects/actions";
+import { Icon } from "@/components/ui/Icon";
 
 interface CreateProjectModalProps {
   isOpen: boolean;
@@ -36,7 +37,6 @@ export function CreateProjectModal({ isOpen, onClose }: CreateProjectModalProps)
       <div className="modal-card" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
           <div>
-            <span className="eyebrow">New initiative</span>
             <h2 id="modal-title">Create project</h2>
           </div>
           <button
@@ -44,14 +44,12 @@ export function CreateProjectModal({ isOpen, onClose }: CreateProjectModalProps)
             className="modal-close-btn"
             onClick={onClose}
             aria-label="Close modal"
-          >
-            ✕
-          </button>
+          ><Icon name="close" /></button>
         </div>
 
         {state?.error && (
           <div className="auth-banner-error" role="alert" style={{ marginBottom: 18 }}>
-            <span>⚠️</span>
+            <Icon name="alert" />
             <span>{state.error}</span>
           </div>
         )}
@@ -128,7 +126,7 @@ export function CreateProjectModal({ isOpen, onClose }: CreateProjectModalProps)
               style={{ minWidth: 140 }}
               disabled={isPending}
             >
-              {isPending ? "Creating..." : "Create project →"}
+              {isPending ? "Creating..." : "Create project"}
             </button>
           </div>
         </form>

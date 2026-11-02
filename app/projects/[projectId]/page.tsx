@@ -9,6 +9,9 @@ import { calculateProjectProgress } from "@/lib/domain/progress";
 import { getProjectById } from "@/lib/projects/service";
 import { getVoiceRooms } from "@/lib/voice/service";
 import { getSidebarAccount } from "@/lib/auth/account";
+import { Icon } from "@/components/ui/Icon";
+import { TestStrip } from "@/components/ui/TestStrip";
+import { ProjectDangerZone } from "@/components/projects/ProjectDangerZone";
 
 export const dynamicParams = true;
 
@@ -46,11 +49,10 @@ export default async function ProjectPage({
       <div className="workspace route-enter">
         <header className="topbar">
           <div>
-            <span className="eyebrow">Active project</span>
             <strong>{project.name}</strong>
           </div>
           <label className="search">
-            <span>⌕</span>
+            <Icon name="search" />
             <input aria-label="Search project" placeholder="Search this project" />
             <kbd>⌘ K</kbd>
           </label>
@@ -65,7 +67,6 @@ export default async function ProjectPage({
           <div className="main-column">
             <section className="hero">
               <div>
-                <span className="eyebrow">Project pulse</span>
                 <h1>{project.name}</h1>
                 <p>
                   {project.description ||
@@ -73,11 +74,7 @@ export default async function ProjectPage({
                 </p>
               </div>
               <div className="project-progress">
-                <strong>{projectProgress}%</strong>
-                <span>overall progress</span>
-                <div>
-                  <i style={{ width: `${projectProgress}%` }} />
-                </div>
+                <TestStrip percentage={projectProgress} label="Overall progress" />
               </div>
             </section>
 
@@ -92,6 +89,8 @@ export default async function ProjectPage({
               nowMs={demoNowMs}
               projectId={project.id}
             />
+
+            <ProjectDangerZone projectId={project.id} projectName={project.name} />
           </div>
 
           <aside className="right-column" id="voice-lounges">
@@ -99,7 +98,6 @@ export default async function ProjectPage({
             <section className="side-card focus-card">
               <div className="section-heading section-heading--compact">
                 <div>
-                  <span className="eyebrow">Personal queue</span>
                   <h2>Today&apos;s focus</h2>
                 </div>
                 <span className="focus-count">
@@ -116,14 +114,8 @@ export default async function ProjectPage({
                 </label>
               ))}
               {project.modules.flatMap((m) => m.tasks).length === 0 && (
-                <small style={{ color: "var(--muted)" }}>No tasks in queue</small>
+                <small className="focus-card__empty">No tasks in queue</small>
               )}
-            </section>
-            <section className="side-card dispatch-card">
-              <span className="dispatch-card__icon">↗</span>
-              <span className="eyebrow">Weekly velocity</span>
-              <strong>Active tracking</strong>
-              <p>Keep the loop tight. Ship early and often.</p>
             </section>
           </aside>
         </div>

@@ -4,6 +4,7 @@ import { useState } from "react";
 import type { VoiceRoom } from "@/lib/domain/types";
 import { useVoice } from "@/components/voice/VoiceContext";
 import { CreateVoiceRoomModal } from "@/components/voice/CreateVoiceRoomModal";
+import { Icon } from "@/components/ui/Icon";
 
 export function VoiceLounges({
   rooms,
@@ -29,7 +30,6 @@ export function VoiceLounges({
       <section className="side-card" aria-labelledby="voice-title">
         <div className="section-heading section-heading--compact">
           <div>
-            <span className="eyebrow">Presence</span>
             <h2 id="voice-title">Voice lounges</h2>
           </div>
           <button
@@ -61,14 +61,14 @@ export function VoiceLounges({
 
             return (
               <button
-                className={`voice-room ${isCurrentRoom ? "voice-room--active" : ""}`}
+                className={`voice-room ${isCurrentRoom ? "voice-room--active" : displayMembers.length > 0 ? "voice-room--occupied" : ""}`}
                 type="button"
                 key={room.id}
                 onClick={() => handleRoomClick(room)}
                 title={isCurrentRoom ? "Click to disconnect" : `Join #${room.name}`}
               >
                 <span className="voice-room__signal">
-                  {isCurrentRoom ? "🔊" : "◖))"}
+                  <Icon name="speaker" />
                 </span>
                 <span className="voice-room__copy">
                   <div style={{ display: "flex", alignItems: "center", gap: 6 }}>

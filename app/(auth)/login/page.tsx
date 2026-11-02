@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import Link from "next/link";
 import { loginAction, type AuthActionState } from "@/app/(auth)/actions";
+import { Icon } from "@/components/ui/Icon";
 
 const initialState: AuthActionState = {};
 
@@ -11,16 +12,16 @@ export default function LoginPage() {
 
   return (
     <div>
-      <div style={{ textAlign: "center", marginBottom: 24 }}>
-        <h1 style={{ margin: "0 0 6px", fontSize: 24, fontWeight: 800 }}>Welcome back</h1>
-        <p style={{ margin: 0, color: "var(--secondary)", fontSize: 13 }}>
+      <div className="auth-header">
+        <h1>Welcome back</h1>
+        <p>
           Log in to your startup workspace
         </p>
       </div>
 
       {state?.error && (
-        <div className="auth-banner-error" role="alert" style={{ marginBottom: 18 }}>
-          <span>⚠️</span>
+        <div className="auth-banner-error auth-banner-error--spaced" role="alert">
+          <Icon name="alert" />
           <span>{state.error}</span>
         </div>
       )}
@@ -67,10 +68,10 @@ export default function LoginPage() {
         <button type="submit" className="auth-submit" disabled={isPending}>
           {isPending ? (
             <>
-              <span>⚡</span> Signing in...
+              Signing in...
             </>
           ) : (
-            "Sign In →"
+            "Sign in"
           )}
         </button>
       </form>

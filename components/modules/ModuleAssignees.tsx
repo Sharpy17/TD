@@ -42,7 +42,7 @@ export function ModuleAssignees({ moduleId, assignees, people, canEdit }: {
         <div className="module-person-chips">
           {assignees.length ? assignees.map((person) => (
             <span key={person.id} className="module-person-chip"><span className="avatar">{person.initials}</span>{person.name}</span>
-          )) : <span className="module-person-chip">◎ Everyone</span>}
+          )) : <span className="module-person-chip">Everyone</span>}
         </div>
       ) : (
         <div>

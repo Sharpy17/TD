@@ -3,6 +3,7 @@
 import { useActionState, useEffect, useState } from "react";
 import { updateTaskAction, type TaskActionState } from "@/app/projects/[projectId]/actions";
 import type { Task } from "@/lib/domain/types";
+import { Icon } from "@/components/ui/Icon";
 
 interface EditTaskModalProps {
   isOpen: boolean;
@@ -88,7 +89,6 @@ export function EditTaskModal({
       <div className="modal-card" style={{ maxWidth: 520 }} onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
           <div>
-            <span className="eyebrow">Task Settings</span>
             <h2 id="edit-task-title">Edit task</h2>
           </div>
           <button
@@ -96,14 +96,12 @@ export function EditTaskModal({
             className="modal-close-btn"
             onClick={onClose}
             aria-label="Close modal"
-          >
-            ✕
-          </button>
+          ><Icon name="close" /></button>
         </div>
 
         {state?.error && (
           <div className="auth-banner-error" role="alert" style={{ marginBottom: 18 }}>
-            <span>⚠️</span>
+            <Icon name="alert" />
             <span>{state.error}</span>
           </div>
         )}
@@ -165,7 +163,7 @@ export function EditTaskModal({
             >
               {modules.map((mod) => (
                 <option key={mod.id} value={mod.id} style={{ background: "var(--surface-1)" }}>
-                  {mod.icon ? `${mod.icon} ` : ""}
+                  
                   {mod.name}
                 </option>
               ))}
@@ -184,21 +182,21 @@ export function EditTaskModal({
                 className={`chip-btn ${selectedPreset === "today" ? "chip-btn--active chip-btn--burning" : ""}`}
                 onClick={() => applyPresetDeadline("today", 8)}
               >
-                🔥 Today (8h)
+                Today (8h)
               </button>
               <button
                 type="button"
                 className={`chip-btn ${selectedPreset === "2days" ? "chip-btn--active chip-btn--warning" : ""}`}
                 onClick={() => applyPresetDeadline("2days", 48)}
               >
-                ⏳ In 2 days
+                In 2 days
               </button>
               <button
                 type="button"
                 className={`chip-btn ${selectedPreset === "1week" ? "chip-btn--active" : ""}`}
                 onClick={() => applyPresetDeadline("1week", 168)}
               >
-                📅 In 1 week
+                In 1 week
               </button>
               {dueAt && (
                 <button
@@ -238,7 +236,7 @@ export function EditTaskModal({
                   className={`chip-btn ${status === s ? (s === "DONE" ? "chip-btn--active" : "chip-btn--active") : ""}`}
                   onClick={() => setStatus(s)}
                 >
-                  {s === "DONE" ? "✓ Done" : s === "IN_PROGRESS" ? "In Progress" : s === "REVIEW" ? "Review" : "Backlog"}
+                  {s === "DONE" ? "Done" : s === "IN_PROGRESS" ? "In Progress" : s === "REVIEW" ? "Review" : "Backlog"}
                 </button>
               ))}
             </div>
@@ -257,7 +255,7 @@ export function EditTaskModal({
                   className={`chip-btn ${priority === p ? (p === "CRITICAL" ? "chip-btn--active chip-btn--burning" : p === "HIGH" ? "chip-btn--active chip-btn--warning" : "chip-btn--active") : ""}`}
                   onClick={() => setPriority(p)}
                 >
-                  {p === "CRITICAL" ? "🔥 Critical" : p === "HIGH" ? "⚡ High" : p === "MEDIUM" ? "Medium" : "Low"}
+                  {p === "CRITICAL" ? "Critical" : p === "HIGH" ? "High" : p === "MEDIUM" ? "Medium" : "Low"}
                 </button>
               ))}
             </div>
@@ -278,7 +276,7 @@ export function EditTaskModal({
               style={{ minWidth: 140 }}
               disabled={isPending}
             >
-              {isPending ? "Saving..." : "Save changes →"}
+              {isPending ? "Saving..." : "Save changes"}
             </button>
           </div>
         </form>

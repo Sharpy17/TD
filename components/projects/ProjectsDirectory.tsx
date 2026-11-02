@@ -5,6 +5,7 @@ import type { Project } from "@/lib/domain/types";
 import { ProjectCard } from "@/components/projects/ProjectCard";
 import { CreateProjectModal } from "./CreateProjectModal";
 import { DeleteProjectModal } from "./DeleteProjectModal";
+import { Icon } from "@/components/ui/Icon";
 
 interface ProjectsDirectoryProps {
   initialProjects: Array<{ project: Project; slug: string }>;
@@ -28,11 +29,10 @@ export function ProjectsDirectory({ initialProjects }: ProjectsDirectoryProps) {
     <div className="route-enter">
       <header className="main-topbar">
         <div>
-          <span className="eyebrow">Workspace</span>
           <strong>Projects</strong>
         </div>
         <label className="search">
-          <span>⌕</span>
+          <Icon name="search" />
           <input
             aria-label="Search projects"
             placeholder="Search projects..."
@@ -52,14 +52,13 @@ export function ProjectsDirectory({ initialProjects }: ProjectsDirectoryProps) {
 
       <div className="main-content">
         <section className="page-heading">
-          <span className="eyebrow">Project directory</span>
           <h1>Choose where to work.</h1>
           <p>Each project has its own modules, tasks, channels, and voice rooms.</p>
         </section>
 
         {filteredProjects.length === 0 ? (
           <div className="empty-state">
-            <span>▦</span>
+            <Icon name="projects" />
             <strong>No matching projects found</strong>
             <p>
               {searchQuery

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { logoutAction } from "@/app/(auth)/actions";
+import { Icon } from "@/components/ui/Icon";
 
 export type SidebarAccount = { name: string; email: string } | null;
 
@@ -73,12 +74,12 @@ export function AccountMenu({ account, extraItems }: { account: SidebarAccount; 
       {open && (
         <div className="account__menu" role="menu">
           <Link className="account__item" role="menuitem" href="/login" onClick={() => setOpen(false)}>
-            <span aria-hidden="true">⇄</span> Switch account
+            <Icon name="user" /> Switch account
           </Link>
           {extraItems}
           <form action={logoutAction}>
             <button type="submit" className="account__item account__item--danger" role="menuitem">
-              <span aria-hidden="true">⎋</span> Log out
+              <Icon name="logout" /> Log out
             </button>
           </form>
         </div>

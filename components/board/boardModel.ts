@@ -5,11 +5,11 @@ import type { Task, TaskPriority, TaskStatus } from "@/lib/domain/types";
 export type BoardTask = Task & { moduleId: string; moduleName: string; code: string | null; pending?: boolean };
 
 export const BOARD_COLUMNS: Array<{ status: TaskStatus; label: string; short: string; color: string }> = [
-  { status: "BACKLOG", label: "Backlog", short: "Backlog", color: "#6b7280" },
-  { status: "IN_PROGRESS", label: "In progress", short: "Doing", color: "#7c71ff" },
+  { status: "BACKLOG", label: "Backlog", short: "Backlog", color: "#8a7a6b" },
+  { status: "IN_PROGRESS", label: "In progress", short: "Doing", color: "#f07a1a" },
   // Sky, not amber: amber is reserved for "due in 1–3 days".
-  { status: "REVIEW", label: "Review", short: "Review", color: "#38bdf8" },
-  { status: "DONE", label: "Done", short: "Done", color: "#10b981" },
+  { status: "REVIEW", label: "Review", short: "Review", color: "#c9a27e" },
+  { status: "DONE", label: "Done", short: "Done", color: "#5fae7e" },
 ];
 
 export const WIP_LIMIT = 6;

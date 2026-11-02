@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { DeleteProjectModal } from "@/components/projects/DeleteProjectModal";
 import { AccountMenu, type SidebarAccount } from "./AccountMenu";
+import { Icon } from "@/components/ui/Icon";
 
 export function ProjectSidebar({
   projectId,
@@ -13,7 +14,7 @@ export function ProjectSidebar({
 }: {
   projectId: string;
   projectName: string;
-  active?: "overview" | "board" | "channels";
+  active?: "overview" | "modules" | "board" | "channels";
   account: SidebarAccount;
 }) {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -23,12 +24,12 @@ export function ProjectSidebar({
     <>
       <aside className="sidebar project-sidebar">
         <Link className="brand" href="/">
-          <span>⚡</span>
+          <span className="brand__lamp" aria-hidden="true" />
           <strong>DaiHub</strong>
         </Link>
 
         <Link className="back-link" href="/projects">
-          ← All projects
+          <Icon name="arrowLeft" size={14} /> <span>All projects</span>
         </Link>
         <div className="project-identity">
           <span className="project-identity__mark">
@@ -47,43 +48,30 @@ export function ProjectSidebar({
             href={projectHref}
             aria-current={active === "overview" ? "page" : undefined}
           >
-            <span>⌂</span> Overview
+            <Icon name="home" /> <span className="nav-item__label">Overview</span>
           </Link>
-          <Link className="nav-item" href={`${projectHref}#modules`}>
-            <span>▦</span> Modules
+          <Link
+            className={`nav-item ${active === "modules" ? "nav-item--active" : ""}`}
+            href={`${projectHref}#modules`}
+            aria-current={active === "modules" ? "page" : undefined}
+          >
+            <Icon name="projects" /> <span className="nav-item__label">Modules</span>
           </Link>
           <Link
             className={`nav-item ${active === "board" ? "nav-item--active" : ""}`}
             href={`${projectHref}/board`}
             aria-current={active === "board" ? "page" : undefined}
           >
-            <span>✓</span> Board
+            <Icon name="board" /> <span className="nav-item__label">Board</span>
           </Link>
           <Link
             className={`nav-item ${active === "channels" ? "nav-item--active" : ""}`}
             href={`${projectHref}/channels`}
             aria-current={active === "channels" ? "page" : undefined}
           >
-            <span>#</span> Channels
+            <Icon name="hash" /> <span className="nav-item__label">Channels</span>
           </Link>
         </nav>
-
-        <div className="sidebar-label" style={{ marginTop: 20 }}>Manage</div>
-        <button
-          type="button"
-          className="nav-item"
-          onClick={() => setDeleteModalOpen(true)}
-          style={{
-            border: 0,
-            background: "transparent",
-            color: "#ff708f",
-            width: "100%",
-            textAlign: "left",
-            cursor: "pointer",
-          }}
-        >
-          <span>🗑</span> Delete project
-        </button>
 
         <AccountMenu
           account={account}
@@ -94,7 +82,7 @@ export function ProjectSidebar({
               role="menuitem"
               onClick={() => setDeleteModalOpen(true)}
             >
-              <span aria-hidden="true">🗑</span> Delete project
+              <Icon name="trash" size={15} /> Delete project
             </button>
           }
         />

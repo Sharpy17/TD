@@ -2,6 +2,7 @@
 
 import { useActionState, useEffect, useState } from "react";
 import { createVoiceRoomAction, type VoiceActionState } from "@/app/voice/actions";
+import { Icon } from "@/components/ui/Icon";
 
 interface CreateVoiceRoomModalProps {
   isOpen: boolean;
@@ -58,7 +59,6 @@ export function CreateVoiceRoomModal({
       <div className="modal-card" style={{ maxWidth: 460 }} onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
           <div>
-            <span className="eyebrow">Voice Presence</span>
             <h2 id="create-voice-room-title">Create voice lounge</h2>
           </div>
           <button
@@ -66,14 +66,12 @@ export function CreateVoiceRoomModal({
             className="modal-close-btn"
             onClick={onClose}
             aria-label="Close modal"
-          >
-            ✕
-          </button>
+          ><Icon name="close" /></button>
         </div>
 
         {state?.error && (
           <div className="auth-banner-error" role="alert" style={{ marginBottom: 18 }}>
-            <span>⚠️</span>
+            <Icon name="alert" />
             <span>{state.error}</span>
           </div>
         )}
@@ -154,7 +152,7 @@ export function CreateVoiceRoomModal({
               style={{ minWidth: 140 }}
               disabled={isPending}
             >
-              {isPending ? "Creating..." : "Create lounge →"}
+              {isPending ? "Creating..." : "Create lounge"}
             </button>
           </div>
         </form>

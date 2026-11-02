@@ -20,6 +20,7 @@ import {
 import { Avatar } from "./KanbanCard";
 import { PriorityBars } from "./icons";
 import { PropertyMenu } from "./PropertyMenu";
+import { Icon } from "@/components/ui/Icon";
 
 function timeAgo(iso: string, nowMs: number): string {
   const minutes = Math.max(0, Math.floor((nowMs - Date.parse(iso)) / 60_000));
@@ -81,9 +82,7 @@ function Checklist({
             aria-label={`Remove “${item.text}”`}
             disabled={disabled}
             onClick={() => onChange(items.filter((i) => i.id !== item.id))}
-          >
-            ✕
-          </button>
+          ><Icon name="close" /></button>
         </div>
       ))}
       {items.length === 0 && <p className="board-muted">Break the task into steps; progress shows on the card.</p>}
@@ -307,9 +306,7 @@ export function TaskInspector({
           {task.code && <span className="board-mono board-inspector__code">{task.code}</span>}
           {task.moduleName}
         </span>
-        <button type="button" className="board-icon-button" aria-label="Close details" onClick={onClose}>
-          ✕
-        </button>
+        <button type="button" className="board-icon-button" aria-label="Close details" onClick={onClose}><Icon name="close" /></button>
       </div>
 
       <h2>{task.title}</h2>

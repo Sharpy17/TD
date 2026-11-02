@@ -8,16 +8,12 @@ export default function AuthLayout({
   return (
     <div className="auth-shell">
       <div className="auth-card">
-        <div className="auth-header">
-          <Link href="/" className="brand" style={{ padding: 0, justifyContent: "center" }}>
-            <span>⚡</span>
-            <strong>DaiHub</strong>
-          </Link>
-          <span className="auth-badge">Anti-Bitrix Startup Hub</span>
-        </div>
+        <Link href="/" className="auth-brand">
+          <span className="brand__lamp" aria-hidden="true" />
+          DaiHub
+        </Link>
         {children}
       </div>
     </div>
   );
 }
-
