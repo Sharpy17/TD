@@ -82,3 +82,7 @@ date: 2026-10-29
 ## Team Git workflow
 
 Follow [Team Git Workflow](Team_Git_Workflow.md) for feature branches, push approval, synchronization with main, and local/GitHub branch cleanup.
+
+## Design workflow
+
+Follow [Design Workflow](Design_Workflow.md) for every design-related task: taste for direction, impeccable for review and quality, unslop for the final anti-slop audit.

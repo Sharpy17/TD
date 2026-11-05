@@ -11,3 +11,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 ## Team Git workflow
 
 Follow [Team Git Workflow](instructions/04_AI_Developer_Instructions/Team_Git_Workflow.md) for every feature, push, and branch cleanup.
+
+## Design workflow
+
+Follow [Design Workflow](instructions/04_AI_Developer_Instructions/Design_Workflow.md) for every design-related task: `taste` for initial direction, `impeccable` for review and quality, `unslop` only for the final anti-slop audit.
