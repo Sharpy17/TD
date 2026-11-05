@@ -1,69 +1,611 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-02T00:00:00Z",
+  "generatedAt": "2026-11-05T13:03:43.423Z",
   "title": "Design System: DaiHub",
   "extensions": {
     "colorMeta": {
-      "room-black": { "role": "neutral", "displayName": "Room Black", "canonical": "#0f0b09", "tonalRamp": ["#0f0b09", "#18120e", "#211913", "#2a211a", "#3d3027", "#968676", "#b3a493", "#ece0cf"] },
-      "tray-1": { "role": "neutral", "displayName": "Tray 1", "canonical": "#18120e", "tonalRamp": ["#0f0b09", "#18120e", "#211913", "#2a211a", "#3d3027", "#968676", "#b3a493", "#ece0cf"] },
-      "tray-2": { "role": "neutral", "displayName": "Tray 2", "canonical": "#211913", "tonalRamp": ["#0f0b09", "#18120e", "#211913", "#2a211a", "#3d3027", "#968676", "#b3a493", "#ece0cf"] },
-      "tray-3": { "role": "neutral", "displayName": "Tray 3", "canonical": "#2a211a", "tonalRamp": ["#0f0b09", "#18120e", "#211913", "#2a211a", "#3d3027", "#968676", "#b3a493", "#ece0cf"] },
-      "seam": { "role": "neutral", "displayName": "Seam", "canonical": "#2e241d" },
-      "seam-strong": { "role": "neutral", "displayName": "Strong Seam", "canonical": "#3d3027" },
-      "print-white": { "role": "neutral", "displayName": "Print White", "canonical": "#ece0cf" },
-      "print-grey": { "role": "neutral", "displayName": "Print Grey", "canonical": "#b3a493" },
-      "print-muted": { "role": "neutral", "displayName": "Print Muted", "canonical": "#968676" },
-      "safelight": { "role": "primary", "displayName": "Daidai Safelight", "canonical": "#f07a1a", "tonalRamp": ["#2a1407", "#4a2510", "#7a3a12", "#b85512", "#f07a1a", "#f58a33", "#f7a35c", "#fde3c8"] },
-      "safelight-hover": { "role": "primary", "displayName": "Safelight Hover", "canonical": "#f58a33" },
-      "safelight-ink": { "role": "primary", "displayName": "Safelight Ink", "canonical": "#1d0e03" },
-      "safelight-text": { "role": "primary", "displayName": "Safelight Text", "canonical": "#f7a35c" },
-      "safelight-wash": { "role": "primary", "displayName": "Safelight Wash", "canonical": "rgba(240, 122, 26, 0.09)" },
-      "safelight-line": { "role": "primary", "displayName": "Safelight Line", "canonical": "rgba(240, 122, 26, 0.42)" },
-      "exposure-1": { "role": "secondary", "displayName": "Exposure Step 1", "canonical": "#4a2510" },
-      "exposure-2": { "role": "secondary", "displayName": "Exposure Step 2", "canonical": "#7a3a12" },
-      "exposure-3": { "role": "secondary", "displayName": "Exposure Step 3", "canonical": "#b85512" },
-      "developed-green": { "role": "tertiary", "displayName": "Developed Green", "canonical": "#6fbf8d", "tonalRamp": ["#10221a", "#1a3a2a", "#2a5a40", "#3f7f5c", "#57a175", "#6fbf8d", "#a3d8b7", "#dcf1e4"] },
-      "danger": { "role": "tertiary", "displayName": "Danger Red", "canonical": "#e5484d", "tonalRamp": ["#2a0e0f", "#4a1719", "#7a2427", "#b8323a", "#e5484d", "#f28b8e", "#f6c4c5", "#fde8e8"] },
-      "danger-text": { "role": "tertiary", "displayName": "Danger Text", "canonical": "#f28b8e" },
-      "danger-fill": { "role": "tertiary", "displayName": "Danger Fill", "canonical": "#b8323a" },
-      "danger-fill-hover": { "role": "tertiary", "displayName": "Danger Fill Hover", "canonical": "#c93a42" },
-      "caution": { "role": "tertiary", "displayName": "Caution Amber", "canonical": "#e2b340", "tonalRamp": ["#271d08", "#45340e", "#6e5417", "#a07b23", "#e2b340", "#edd081", "#f5e3b0", "#fbf3dc"] }
+      "bg": {
+        "role": "neutral",
+        "displayName": "Night Leaf",
+        "canonical": "#0d1a12",
+        "tonalRamp": [
+          "#070d09",
+          "#1f2621",
+          "#35443a",
+          "#536258",
+          "#728277",
+          "#93a398",
+          "#c1cac4",
+          "#e8f1eb"
+        ]
+      },
+      "rail": {
+        "role": "neutral",
+        "displayName": "Deep Rail",
+        "canonical": "#0a150e",
+        "tonalRamp": [
+          "#070d09",
+          "#202622",
+          "#37433b",
+          "#546158",
+          "#748178",
+          "#94a399",
+          "#c2cac4",
+          "#e9f1eb"
+        ]
+      },
+      "well": {
+        "role": "neutral",
+        "displayName": "Well",
+        "canonical": "#0b170f",
+        "tonalRamp": [
+          "#070d09",
+          "#1f2621",
+          "#36443a",
+          "#546258",
+          "#738277",
+          "#94a398",
+          "#c1cac3",
+          "#e8f1eb"
+        ]
+      },
+      "surface-1": {
+        "role": "neutral",
+        "displayName": "Surface 1",
+        "canonical": "#13241a",
+        "tonalRamp": [
+          "#060d08",
+          "#1e2721",
+          "#33453a",
+          "#506357",
+          "#6f8376",
+          "#90a497",
+          "#bfcbc3",
+          "#e6f2ea"
+        ]
+      },
+      "surface-1-hover": {
+        "role": "neutral",
+        "displayName": "Surface 1 Hover",
+        "canonical": "#172b1f",
+        "tonalRamp": [
+          "#050e08",
+          "#1d2720",
+          "#314538",
+          "#4e6456",
+          "#6d8475",
+          "#8ea596",
+          "#becbc2",
+          "#e5f3e9"
+        ]
+      },
+      "surface-2": {
+        "role": "neutral",
+        "displayName": "Surface 2",
+        "canonical": "#1b3324",
+        "tonalRamp": [
+          "#040e07",
+          "#1b271f",
+          "#2e4636",
+          "#4b6554",
+          "#6a8573",
+          "#8ba694",
+          "#bcccc1",
+          "#e3f3e8"
+        ]
+      },
+      "surface-3": {
+        "role": "neutral",
+        "displayName": "Surface 3",
+        "canonical": "#244030",
+        "tonalRamp": [
+          "#030e07",
+          "#1a281f",
+          "#2b4737",
+          "#486554",
+          "#678673",
+          "#88a794",
+          "#bbccc1",
+          "#e2f4e8"
+        ]
+      },
+      "border": {
+        "role": "neutral",
+        "displayName": "Seam",
+        "canonical": "#203629",
+        "tonalRamp": [
+          "#050e08",
+          "#1c2720",
+          "#2f4638",
+          "#4d6456",
+          "#6c8475",
+          "#8ca696",
+          "#bdcbc2",
+          "#e4f3e9"
+        ]
+      },
+      "seam-strong": {
+        "role": "neutral",
+        "displayName": "Strong Seam",
+        "canonical": "#31503d",
+        "tonalRamp": [
+          "#030e07",
+          "#19281f",
+          "#294835",
+          "#466652",
+          "#668671",
+          "#86a892",
+          "#bacdc0",
+          "#e1f4e7"
+        ]
+      },
+      "text": {
+        "role": "neutral",
+        "displayName": "Pale Leaf",
+        "canonical": "#eef2e8",
+        "tonalRamp": [
+          "#0a0c08",
+          "#232521",
+          "#3e4139",
+          "#5c5f57",
+          "#7b7f76",
+          "#9ca097",
+          "#c6c8c3",
+          "#edefea"
+        ]
+      },
+      "secondary": {
+        "role": "neutral",
+        "displayName": "Sage",
+        "canonical": "#b4c2b2",
+        "tonalRamp": [
+          "#080d07",
+          "#20261f",
+          "#384436",
+          "#556254",
+          "#758273",
+          "#95a393",
+          "#c2cac1",
+          "#e9f1e8"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Moss",
+        "canonical": "#8fa390",
+        "tonalRamp": [
+          "#060d07",
+          "#1e271e",
+          "#344535",
+          "#516352",
+          "#708371",
+          "#91a592",
+          "#c0cbc0",
+          "#e6f2e7"
+        ]
+      },
+      "fruit": {
+        "role": "primary",
+        "displayName": "Daidai Orange",
+        "canonical": "#ff8126",
+        "tonalRamp": [
+          "#170600",
+          "#3c1801",
+          "#662d02",
+          "#934401",
+          "#c25c04",
+          "#f37611",
+          "#fcb58d",
+          "#feeadf"
+        ]
+      },
+      "fruit-hover": {
+        "role": "primary",
+        "displayName": "Fruit Hover",
+        "canonical": "#ff934a",
+        "tonalRamp": [
+          "#170600",
+          "#3c1901",
+          "#652e01",
+          "#914502",
+          "#c05e04",
+          "#e87e32",
+          "#f5b894",
+          "#ffeade"
+        ]
+      },
+      "fruit-ink": {
+        "role": "primary",
+        "displayName": "Fruit Ink",
+        "canonical": "#132008",
+        "tonalRamp": [
+          "#070d04",
+          "#1f271a",
+          "#36452c",
+          "#546349",
+          "#738367",
+          "#94a588",
+          "#c1cbba",
+          "#e8f2e1"
+        ]
+      },
+      "fruit-text": {
+        "role": "primary",
+        "displayName": "Fruit Text",
+        "canonical": "#ffa263",
+        "tonalRamp": [
+          "#170600",
+          "#3b1900",
+          "#642f02",
+          "#904702",
+          "#ba631d",
+          "#df8545",
+          "#efbb9a",
+          "#ffeadd"
+        ]
+      },
+      "fruit-wash": {
+        "role": "primary",
+        "displayName": "Fruit Wash",
+        "canonical": "rgba(255, 129, 38, 0.1)",
+        "tonalRamp": [
+          "#170600",
+          "#3c1801",
+          "#662d02",
+          "#934401",
+          "#c25c04",
+          "#f37611",
+          "#fcb58d",
+          "#feeadf"
+        ]
+      },
+      "fruit-line": {
+        "role": "primary",
+        "displayName": "Fruit Line",
+        "canonical": "rgba(255, 129, 38, 0.45)",
+        "tonalRamp": [
+          "#170600",
+          "#3c1801",
+          "#662d02",
+          "#934401",
+          "#c25c04",
+          "#f37611",
+          "#fcb58d",
+          "#feeadf"
+        ]
+      },
+      "ripen-1": {
+        "role": "secondary",
+        "displayName": "Leaf Step",
+        "canonical": "#5f8f3a",
+        "tonalRamp": [
+          "#050f00",
+          "#152b02",
+          "#274b00",
+          "#3e6c11",
+          "#5d8d38",
+          "#7eaf5a",
+          "#b5d2a3",
+          "#dcf9ca"
+        ]
+      },
+      "ripen-2": {
+        "role": "secondary",
+        "displayName": "Olive Step",
+        "canonical": "#b9a32c",
+        "tonalRamp": [
+          "#0e0b00",
+          "#2b2400",
+          "#4a4001",
+          "#6c5d04",
+          "#917d01",
+          "#b49e25",
+          "#d4c891",
+          "#fbf0b7"
+        ]
+      },
+      "sprout": {
+        "role": "tertiary",
+        "displayName": "Sprout Green",
+        "canonical": "#8fd16f",
+        "tonalRamp": [
+          "#030f00",
+          "#102c01",
+          "#214c02",
+          "#336e01",
+          "#51902e",
+          "#72b351",
+          "#b0d4a0",
+          "#d6fcc6"
+        ]
+      },
+      "burning": {
+        "role": "tertiary",
+        "displayName": "Burning Red",
+        "canonical": "#e5484d",
+        "tonalRamp": [
+          "#1f0002",
+          "#4b0009",
+          "#7c0015",
+          "#b10122",
+          "#d83b43",
+          "#fe6364",
+          "#feb0ab",
+          "#ffe9e7"
+        ]
+      },
+      "danger-text": {
+        "role": "tertiary",
+        "displayName": "Danger Text",
+        "canonical": "#f28b8e",
+        "tonalRamp": [
+          "#1e0003",
+          "#3f1317",
+          "#741724",
+          "#973a41",
+          "#bc5b60",
+          "#e27c80",
+          "#f1b6b6",
+          "#fee9e8"
+        ]
+      },
+      "danger-soft": {
+        "role": "tertiary",
+        "displayName": "Danger Soft",
+        "canonical": "#f4a0a2",
+        "tonalRamp": [
+          "#1d0104",
+          "#3a181a",
+          "#6b242b",
+          "#8d4348",
+          "#b16366",
+          "#d68487",
+          "#e9baba",
+          "#fee9e9"
+        ]
+      },
+      "danger-fill": {
+        "role": "tertiary",
+        "displayName": "Danger Fill",
+        "canonical": "#b8323a",
+        "tonalRamp": [
+          "#1e0002",
+          "#47070d",
+          "#7c0117",
+          "#a9212e",
+          "#cf484d",
+          "#f66c6d",
+          "#ffafac",
+          "#fee9e7"
+        ]
+      },
+      "danger-fill-hover": {
+        "role": "tertiary",
+        "displayName": "Danger Fill Hover",
+        "canonical": "#c93a42",
+        "tonalRamp": [
+          "#1e0002",
+          "#49040c",
+          "#7b0218",
+          "#ac182b",
+          "#d3434a",
+          "#fa686a",
+          "#feb0ac",
+          "#ffe8e7"
+        ]
+      },
+      "danger-ink": {
+        "role": "tertiary",
+        "displayName": "Danger Ink",
+        "canonical": "#fff4f0",
+        "tonalRamp": [
+          "#0e0a09",
+          "#272321",
+          "#463e3a",
+          "#645b58",
+          "#857b77",
+          "#a69c98",
+          "#ccc6c4",
+          "#f3edeb"
+        ]
+      },
+      "warning": {
+        "role": "tertiary",
+        "displayName": "Warning Amber",
+        "canonical": "#e2b340",
+        "tonalRamp": [
+          "#110a00",
+          "#2f2201",
+          "#513c01",
+          "#765904",
+          "#9d7708",
+          "#c59715",
+          "#dec48e",
+          "#ffedc6"
+        ]
+      },
+      "warning-text": {
+        "role": "tertiary",
+        "displayName": "Warning Text",
+        "canonical": "#e8c25e",
+        "tonalRamp": [
+          "#100a00",
+          "#2e2201",
+          "#503d02",
+          "#745a00",
+          "#9a7802",
+          "#be9930",
+          "#dac694",
+          "#ffedc2"
+        ]
+      },
+      "scrim": {
+        "role": "neutral",
+        "displayName": "Scrim",
+        "canonical": "rgba(4, 10, 6, 0.78)",
+        "tonalRamp": [
+          "#080c0a",
+          "#212522",
+          "#39423c",
+          "#57605a",
+          "#768079",
+          "#97a29a",
+          "#c3c9c5",
+          "#eaf0ec"
+        ]
+      }
     },
     "typographyMeta": {
-      "display": { "displayName": "Display", "purpose": "One page heading per screen (Home greeting, Projects, project overview)." },
-      "headline": { "displayName": "Headline", "purpose": "Project frame titles and the chat channel heading." },
-      "title": { "displayName": "Title", "purpose": "Section headings; modal titles 18px, module card titles 15px, compact headings 14px." },
-      "body": { "displayName": "Body", "purpose": "App default text." },
-      "body-secondary": { "displayName": "Body Secondary", "purpose": "Descriptions and supporting copy in Print Grey; hero copy capped at 640px." },
-      "label": { "displayName": "Label", "purpose": "Sidebar group labels, column-block headings, form labels; sentence case, never tracked." },
-      "data": { "displayName": "Data", "purpose": "Task codes, counts, percentages, deadlines, kbd and status pills; tabular figures." },
-      "data-figure": { "displayName": "Data Figure", "purpose": "The percentage under a test strip." },
-      "edge-print": { "displayName": "Edge Print", "purpose": "Uppercase mono edge row on project frames (code and counts) in exposure-3; the only uppercase-tracked style, data only." }
+      "display": {
+        "displayName": "Display",
+        "purpose": "One page heading per screen."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "The lead project card title."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Project card titles; modal and inspector titles at 600."
+      },
+      "section": {
+        "displayName": "Section",
+        "purpose": "Section headings, with a 14px compact variant."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "The app default."
+      },
+      "body-secondary": {
+        "displayName": "Body Secondary",
+        "purpose": "Descriptions and supporting copy in Sage."
+      },
+      "button": {
+        "displayName": "Button",
+        "purpose": "Buttons and short actions."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Sidebar groups, column headings, form labels and status tags; sentence case."
+      },
+      "data": {
+        "displayName": "Data",
+        "purpose": "Percentages, counts, task codes, dates, times, shortcuts and code."
+      },
+      "data-figure": {
+        "displayName": "Data Figure",
+        "purpose": "The percentage beside a block row."
+      }
     },
     "shadows": [
-      { "name": "menu-drop", "value": "0 12px 32px rgba(0, 0, 0, .5)", "purpose": "Account menu; board property menus use 0 16px 40px rgba(0,0,0,.45)." },
-      { "name": "dialog-drop", "value": "0 24px 64px rgba(0, 0, 0, 0.6)", "purpose": "Modals; auth card uses the same drop at 0.5." },
-      { "name": "dock-drop", "value": "0 16px 40px rgba(0, 0, 0, 0.6)", "purpose": "Floating voice dock." },
-      { "name": "focus-halo", "value": "0 0 0 3px rgba(240, 122, 26, 0.18)", "purpose": "Input focus, paired with a safelight border." },
-      { "name": "active-marker", "value": "inset 2px 0 0 var(--safe)", "purpose": "Active nav item left edge; a mark, not depth." }
+      {
+        "name": "hover-tray",
+        "value": "0 8px 20px rgba(0,0,0,.35)",
+        "purpose": "The message action tray in chat."
+      },
+      {
+        "name": "menu-drop",
+        "value": "0 12px 32px rgba(0, 0, 0, .5)",
+        "purpose": "Account menu."
+      },
+      {
+        "name": "property-menu-drop",
+        "value": "0 16px 40px rgba(0,0,0,.45)",
+        "purpose": "Board property menus."
+      },
+      {
+        "name": "toast-drop",
+        "value": "0 18px 50px rgba(0,0,0,.5)",
+        "purpose": "Board toasts."
+      },
+      {
+        "name": "dock-drop",
+        "value": "0 16px 40px rgba(0, 0, 0, 0.6)",
+        "purpose": "The voice dock."
+      },
+      {
+        "name": "drawer-drop",
+        "value": "-24px 0 48px rgba(0,0,0,.45)",
+        "purpose": "The board drawer."
+      },
+      {
+        "name": "dialog-drop",
+        "value": "0 24px 64px rgba(0, 0, 0, 0.6)",
+        "purpose": "Modals; the auth card uses the same drop at 0.5."
+      },
+      {
+        "name": "focus-halo",
+        "value": "0 0 0 3px rgba(255,129,38, 0.18)",
+        "purpose": "Input focus, with an orange border; a mark, not depth."
+      }
     ],
     "motion": [
-      { "name": "ease-develop", "value": "cubic-bezier(0.22, 1, 0.36, 1)", "purpose": "The one entrance curve: strip bands, route entry, modals, voice dock." },
-      { "name": "develop-band", "value": "640ms ease-develop, stagger 55ms per band; opacity 0 + brightness(.35) to 1", "purpose": "Test strip bands developing in turn." },
-      { "name": "route-enter", "value": "420ms ease-develop; opacity 0 + brightness(.6) to 1", "purpose": "Page and auth card entry." },
-      { "name": "modal-in", "value": "260ms ease-develop; translateY(8px) to 0", "purpose": "Modal card rise; scrim fades in 180ms ease." },
-      { "name": "dock-in", "value": "320ms ease-develop; translateY(12px) to 0", "purpose": "Voice dock entry." },
-      { "name": "hover", "value": "140ms ease (160ms on frames and room rows)", "purpose": "Background, border and color state changes." },
-      { "name": "live-pulse", "value": "2.4s ease-in-out infinite; opacity to .35 at 50%", "purpose": "Live voice lamps and live tags only." },
-      { "name": "reduced-motion", "value": "prefers-reduced-motion: reduce cuts animation and transition durations to .01ms", "purpose": "Every animation is cut under reduced motion." }
+      {
+        "name": "ease-ripen",
+        "value": "cubic-bezier(0.22, 1, 0.36, 1)",
+        "purpose": "The ripening curve."
+      },
+      {
+        "name": "ripen-block",
+        "value": "640ms ease-ripen, 40ms stagger per block; surface-3 to stage colour",
+        "purpose": "The only entrance in page content."
+      },
+      {
+        "name": "ripen-change",
+        "value": "480ms ease-ripen on background",
+        "purpose": "A block moving to a later stage."
+      },
+      {
+        "name": "floating-arrival",
+        "value": "140 to 320ms fade and short rise",
+        "purpose": "Modals, the voice dock, menus, toasts and the board drawer as they open; never page content."
+      },
+      {
+        "name": "hover",
+        "value": "120 to 160ms ease",
+        "purpose": "Background, border and colour state changes."
+      },
+      {
+        "name": "live-pulse",
+        "value": "2.4s ease-in-out infinite; opacity to .35 at 50%",
+        "purpose": "The connected-room dot and the dock's signal dot."
+      },
+      {
+        "name": "speaking-ring",
+        "value": "1.6s ease-in-out infinite; 2px to 3px sprout ring",
+        "purpose": "Speaking avatars."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "prefers-reduced-motion: reduce cuts animation and transition durations to .01ms",
+        "purpose": "All motion is cut under reduced motion."
+      }
     ],
     "breakpoints": [
-      { "name": "board-inspector-docked", "value": "1440px" },
-      { "name": "side-column-drops", "value": "1200px" },
-      { "name": "single-column-frames", "value": "1040px" },
-      { "name": "icon-rail", "value": "820px" },
-      { "name": "dock-full-width", "value": "640px" },
-      { "name": "compact", "value": "560px" }
+      {
+        "name": "board-drawer",
+        "value": "1439px"
+      },
+      {
+        "name": "side-column-drops",
+        "value": "1200px"
+      },
+      {
+        "name": "single-column-cards",
+        "value": "1040px"
+      },
+      {
+        "name": "icon-rail",
+        "value": "820px"
+      },
+      {
+        "name": "dock-full-width",
+        "value": "640px"
+      },
+      {
+        "name": "compact",
+        "value": "560px"
+      }
     ]
   },
   "components": [
@@ -71,108 +613,154 @@
       "name": "Primary Button",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "The single bright action on a screen; safelight fill with ink label.",
+      "description": "The main action on a screen; orange fill with a dark ink label.",
       "html": "<button class=\"ds-btn-primary\"><svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 5v14M5 12h14\"/></svg>New project</button>",
-      "css": ".ds-btn-primary { display: inline-flex; gap: 6px; align-items: center; height: 34px; padding: 0 14px; border: 0; border-radius: 6px; background: var(--safe, #f07a1a); color: var(--safe-ink, #1d0e03); font: 600 13px var(--font-ui, Geist, system-ui, sans-serif); cursor: pointer; transition: background 140ms ease; } .ds-btn-primary:hover { background: var(--safe-hover, #f58a33); } .ds-btn-primary:focus-visible { outline: 2px solid var(--safe, #f07a1a); outline-offset: 2px; } .ds-btn-primary:disabled { opacity: .5; cursor: not-allowed; }"
+      "css": ".ds-btn-primary { display: inline-flex; gap: 6px; align-items: center; justify-content: center; height: 34px; padding: 0 14px; border: 0; border-radius: 8px; background: var(--fruit, #ff8126); color: var(--fruit-ink, #132008); font: 600 13px var(--font-ui, Urbanist, system-ui, sans-serif); cursor: pointer; transition: background 140ms ease; } .ds-btn-primary:hover { background: var(--fruit-hover, #ff934a); } .ds-btn-primary:focus-visible { outline: 2px solid var(--fruit, #ff8126); outline-offset: 2px; } .ds-btn-primary:disabled { opacity: .5; cursor: not-allowed; }"
     },
     {
       "name": "Secondary Button",
       "kind": "button",
       "refersTo": "button-secondary",
-      "description": "Everyday secondary action on a tray with a strong seam.",
+      "description": "Everyday secondary action on surface 1 with a strong seam.",
       "html": "<button class=\"ds-btn-secondary\"><svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"9\" cy=\"8.5\" r=\"3.5\"/><path d=\"M3 20a6 6 0 0 1 12 0M16 5.2a3.5 3.5 0 0 1 0 6.6M18 14.2a6 6 0 0 1 3 5.8\"/></svg>Invite</button>",
-      "css": ".ds-btn-secondary { display: inline-flex; gap: 6px; align-items: center; height: 34px; padding: 0 14px; border: 1px solid var(--seam-strong, #3d3027); border-radius: 6px; background: var(--surface-1, #18120e); color: var(--text, #ece0cf); font: 600 13px var(--font-ui, Geist, system-ui, sans-serif); cursor: pointer; transition: background 140ms ease; } .ds-btn-secondary:hover { background: var(--surface-2, #211913); } .ds-btn-secondary:focus-visible { outline: 2px solid var(--safe, #f07a1a); outline-offset: 2px; }"
+      "css": ".ds-btn-secondary { display: inline-flex; gap: 6px; align-items: center; justify-content: center; height: 34px; padding: 0 14px; border: 1px solid var(--seam-strong, #31503d); border-radius: 8px; background: var(--surface-1, #13241a); color: var(--text, #eef2e8); font: 600 13px var(--font-ui, Urbanist, system-ui, sans-serif); cursor: pointer; transition: background 140ms ease; } .ds-btn-secondary:hover { background: var(--surface-2, #1b3324); } .ds-btn-secondary:focus-visible { outline: 2px solid var(--fruit, #ff8126); outline-offset: 2px; }"
     },
     {
       "name": "Destructive Outline Button",
       "kind": "button",
       "refersTo": "button-danger-outline",
-      "description": "In-page destructive action: neutral and outlined until hovered or focused, placed apart from status.",
+      "description": "In-page destructive action: neutral and outlined until hovered or focused.",
       "html": "<button class=\"ds-btn-danger-outline\"><svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4.5 7h15M9.5 7V4.5h5V7M6.5 7l1 13h9l1-13M10 11v5.5M14 11v5.5\"/></svg>Delete project</button>",
-      "css": ".ds-btn-danger-outline { display: inline-flex; gap: 6px; align-items: center; height: 34px; padding: 0 14px; border: 1px solid var(--seam-strong, #3d3027); border-radius: 6px; background: transparent; color: var(--secondary, #b3a493); font: 600 13px var(--font-ui, Geist, system-ui, sans-serif); cursor: pointer; transition: color 140ms ease, border-color 140ms ease; } .ds-btn-danger-outline:hover, .ds-btn-danger-outline:focus-visible { border-color: rgba(229, 72, 77, 0.6); color: #f28b8e; outline: none; }"
+      "css": ".ds-btn-danger-outline { display: inline-flex; gap: 6px; align-items: center; height: 34px; padding: 0 14px; border: 1px solid var(--seam-strong, #31503d); border-radius: 8px; background: transparent; color: var(--secondary, #b4c2b2); font: 600 13px var(--font-ui, Urbanist, system-ui, sans-serif); white-space: nowrap; cursor: pointer; transition: color 140ms ease, border-color 140ms ease; } .ds-btn-danger-outline:hover, .ds-btn-danger-outline:focus-visible { border-color: rgba(229, 72, 77, 0.6); color: #f28b8e; }"
     },
     {
       "name": "Text Input",
       "kind": "input",
       "refersTo": "input",
-      "description": "Form field on room black; safelight border and halo on focus.",
+      "description": "Form field on the ground colour; orange border and halo on focus.",
       "html": "<label class=\"ds-field\"><span>Project name</span><input class=\"ds-input\" placeholder=\"DaiHub Core\" /></label>",
-      "css": ".ds-field { display: grid; gap: 6px; color: var(--text, #ece0cf); font: 500 13px var(--font-ui, Geist, system-ui, sans-serif); } .ds-input { width: 100%; height: 40px; padding: 0 12px; border: 1px solid var(--seam-strong, #3d3027); border-radius: 6px; background: var(--bg, #0f0b09); color: var(--text, #ece0cf); font: 400 14px var(--font-ui, Geist, system-ui, sans-serif); caret-color: var(--safe, #f07a1a); outline: none; transition: border-color 140ms ease, box-shadow 140ms ease; } .ds-input::placeholder { color: var(--muted, #968676); } .ds-input:focus { border-color: var(--safe, #f07a1a); box-shadow: 0 0 0 3px rgba(240, 122, 26, 0.18); }"
+      "css": ".ds-field { display: grid; gap: 6px; width: 280px; color: var(--text, #eef2e8); font: 500 13px var(--font-ui, Urbanist, system-ui, sans-serif); } .ds-input { width: 100%; height: 40px; padding: 0 12px; border: 1px solid var(--seam-strong, #31503d); border-radius: 8px; background: var(--bg, #0d1a12); color: var(--text, #eef2e8); font: 450 14px var(--font-ui, Urbanist, system-ui, sans-serif); caret-color: var(--fruit, #ff8126); outline: none; transition: border-color 140ms ease, box-shadow 140ms ease; } .ds-input::placeholder { color: var(--muted, #8fa390); } .ds-input:focus { border-color: var(--fruit, #ff8126); box-shadow: 0 0 0 3px rgba(255,129,38, 0.18); }"
     },
     {
       "name": "Rail Navigation",
       "kind": "nav",
       "refersTo": "nav-item",
-      "description": "232px rail items; the active item carries a 2px safelight edge and safelight icon.",
-      "html": "<nav class=\"ds-nav\"><a class=\"ds-nav-item ds-nav-item--active\" href=\"#\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-4.5v-6h-5v6H5a1 1 0 0 1-1-1z\"/></svg>Home</a><a class=\"ds-nav-item\" href=\"#\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3.5\" y=\"4.5\" width=\"17\" height=\"15\" rx=\"1.5\"/><path d=\"M3.5 9.5h17M9.5 9.5v10\"/></svg>Projects<small>4</small></a><a class=\"ds-nav-item\" href=\"#\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M9 4 7 20M17 4l-2 16M4.5 9h16M3.5 15h16\"/></svg>Chats</a></nav>",
-      "css": ".ds-nav { display: grid; gap: 2px; width: 208px; padding: 12px; background: var(--bg, #0f0b09); } .ds-nav-item { display: flex; align-items: center; gap: 10px; min-height: 36px; padding: 0 10px; border-radius: 6px; color: var(--secondary, #b3a493); text-decoration: none; font: 500 14px var(--font-ui, Geist, system-ui, sans-serif); transition: background 140ms ease, color 140ms ease; } .ds-nav-item svg { color: var(--muted, #968676); flex-shrink: 0; } .ds-nav-item small { margin-left: auto; color: var(--muted, #968676); font: 500 12px var(--font-mono, 'JetBrains Mono', ui-monospace, monospace); } .ds-nav-item:hover { color: var(--text, #ece0cf); background: var(--surface-1, #18120e); } .ds-nav-item:focus-visible { outline: 2px solid var(--safe, #f07a1a); outline-offset: 2px; } .ds-nav-item--active { color: var(--text, #ece0cf); background: var(--surface-2, #211913); box-shadow: inset 2px 0 0 var(--safe, #f07a1a); } .ds-nav-item--active svg { color: var(--safe, #f07a1a); }"
+      "description": "Rail with the three-bar brand mark; the active item takes surface 2 and an orange icon.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-brand\" href=\"#\"><span class=\"ds-brand__mark\"></span><strong>DaiHub</strong></a><a class=\"ds-nav-item ds-nav-item--active\" href=\"#\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-4.5v-6h-5v6H5a1 1 0 0 1-1-1z\"/></svg>Home</a><a class=\"ds-nav-item\" href=\"#\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3.5\" y=\"4.5\" width=\"17\" height=\"15\" rx=\"1.5\"/><path d=\"M3.5 9.5h17M9.5 9.5v10\"/></svg>Projects</a><a class=\"ds-nav-item\" href=\"#\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M9 4 7 20M17 4l-2 16M4.5 9h16M3.5 15h16\"/></svg>Chats</a></nav>",
+      "css": ".ds-nav { display: grid; gap: 2px; width: 208px; padding: 20px 12px 16px; background: var(--rail, #0a150e); } .ds-brand { display: flex; gap: 10px; align-items: center; margin-bottom: 20px; padding: 0 8px; color: var(--text, #eef2e8); text-decoration: none; font: 700 17px var(--font-ui, Urbanist, system-ui, sans-serif); letter-spacing: -0.01em; } .ds-brand__mark { width: 18px; height: 18px; flex-shrink: 0; border-radius: 2px; background: linear-gradient(90deg, var(--ripen-1, #5f8f3a) 0 4px, transparent 4px 7px, var(--ripen-2, #b9a32c) 7px 11px, transparent 11px 14px, var(--fruit, #ff8126) 14px 18px); } .ds-nav-item { display: flex; align-items: center; gap: 10px; min-height: 36px; padding: 0 10px; border-radius: 8px; color: var(--secondary, #b4c2b2); text-decoration: none; font: 500 14px var(--font-ui, Urbanist, system-ui, sans-serif); transition: background 140ms ease, color 140ms ease; } .ds-nav-item svg { color: var(--muted, #8fa390); flex-shrink: 0; } .ds-nav-item:hover { color: var(--text, #eef2e8); background: var(--surface-1, #13241a); } .ds-nav-item:focus-visible { outline: 2px solid var(--fruit, #ff8126); outline-offset: 2px; } .ds-nav-item--active { color: var(--text, #eef2e8); background: var(--surface-2, #1b3324); } .ds-nav-item--active svg { color: var(--fruit, #ff8126); }"
     },
     {
       "name": "Filter Chip",
       "kind": "chip",
       "refersTo": "chip",
-      "description": "Outlined selection chip; selected state takes the safelight wash.",
-      "html": "<div class=\"ds-chips\"><button class=\"ds-chip ds-chip--active\">Medium</button><button class=\"ds-chip\">Low</button><span class=\"ds-pill\">In progress</span></div>",
-      "css": ".ds-chips { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; } .ds-chip { display: inline-flex; align-items: center; height: 30px; padding: 0 12px; border: 1px solid var(--seam-strong, #3d3027); border-radius: 6px; background: transparent; color: var(--secondary, #b3a493); font: 500 13px var(--font-ui, Geist, system-ui, sans-serif); cursor: pointer; transition: background 140ms ease, color 140ms ease; } .ds-chip:hover { color: var(--text, #ece0cf); background: var(--surface-2, #211913); } .ds-chip:focus-visible { outline: 2px solid var(--safe, #f07a1a); outline-offset: 2px; } .ds-chip--active { border-color: var(--safe, #f07a1a); background: rgba(240, 122, 26, 0.09); color: var(--safe-text, #f7a35c); } .ds-pill { padding: 2px 6px; border-radius: 4px; background: rgba(240, 122, 26, 0.09); color: var(--safe-text, #f7a35c); font: 500 11px var(--font-mono, 'JetBrains Mono', ui-monospace, monospace); text-transform: uppercase; }"
+      "description": "Outlined selection chip with a status tag; selected and Done both take the orange wash.",
+      "html": "<div class=\"ds-chips\"><button class=\"ds-chip ds-chip--active\">Medium</button><button class=\"ds-chip\">Low</button><span class=\"ds-tag ds-tag--done\">Done</span><span class=\"ds-tag\">Backlog</span></div>",
+      "css": ".ds-chips { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; } .ds-chip { display: inline-flex; align-items: center; height: 30px; padding: 0 12px; border: 1px solid var(--seam-strong, #31503d); border-radius: 8px; background: transparent; color: var(--secondary, #b4c2b2); font: 500 13px var(--font-ui, Urbanist, system-ui, sans-serif); cursor: pointer; transition: background 140ms ease, color 140ms ease; } .ds-chip:hover { color: var(--text, #eef2e8); background: var(--surface-2, #1b3324); } .ds-chip:focus-visible { outline: 2px solid var(--fruit, #ff8126); outline-offset: 2px; } .ds-chip--active { border-color: var(--fruit, #ff8126); background: var(--fruit-wash, rgba(255, 129, 38, 0.1)); color: var(--fruit-text, #ffa263); } .ds-tag { padding: 2px 6px; border-radius: 4px; background: var(--surface-2, #1b3324); color: var(--muted, #8fa390); font: 600 12px var(--font-ui, Urbanist, system-ui, sans-serif); white-space: nowrap; } .ds-tag--done { background: var(--fruit-wash, rgba(255, 129, 38, 0.1)); color: var(--fruit-text, #ffa263); }"
     },
     {
-      "name": "Test Strip",
+      "name": "Ripening Blocks",
       "kind": "custom",
-      "refersTo": "test-strip",
-      "description": "Signature progress: ten bands lit from exposure-1 to full safelight, developing in turn; green when complete.",
-      "html": "<div class=\"ds-strip\"><div class=\"ds-strip__bands\" role=\"img\" aria-label=\"60% complete\"><i class=\"e1\" style=\"--i:0\"></i><i class=\"e1\" style=\"--i:1\"></i><i class=\"e1\" style=\"--i:2\"></i><i class=\"e2\" style=\"--i:3\"></i><i class=\"e3\" style=\"--i:4\"></i><i class=\"e4\" style=\"--i:5\"></i><i></i><i></i><i></i><i></i></div><div class=\"ds-strip__label\"><span>Progress</span><strong>60%</strong></div></div>",
-      "css": ".ds-strip { display: grid; gap: 8px; width: 320px; } .ds-strip__bands { display: grid; grid-template-columns: repeat(10, 1fr); gap: 2px; height: 24px; } .ds-strip__bands i { background: var(--surface-2, #211913); } .ds-strip__bands i.e1 { background: var(--exposure-1, #4a2510); } .ds-strip__bands i.e2 { background: var(--exposure-2, #7a3a12); } .ds-strip__bands i.e3 { background: var(--exposure-3, #b85512); } .ds-strip__bands i.e4 { background: var(--exposure-4, #f07a1a); } .ds-strip__bands i[class] { animation: ds-develop 640ms cubic-bezier(0.22, 1, 0.36, 1) both; animation-delay: calc(var(--i) * 55ms); } .ds-strip__label { display: flex; justify-content: space-between; align-items: baseline; color: var(--muted, #968676); font: 400 12px var(--font-ui, Geist, system-ui, sans-serif); } .ds-strip__label strong { color: var(--text, #ece0cf); font: 600 14px var(--font-mono, 'JetBrains Mono', ui-monospace, monospace); font-variant-numeric: tabular-nums; } @keyframes ds-develop { from { opacity: 0; filter: brightness(.35); } to { opacity: 1; filter: brightness(1); } } @media (prefers-reduced-motion: reduce) { .ds-strip__bands i[class] { animation: none; } }"
+      "refersTo": "ripeness-block",
+      "description": "Signature progress: one block per module or task, stepping empty, leaf, olive, orange, finished blocks first.",
+      "html": "<div class=\"ds-ripeness\"><div class=\"ds-blocks\" role=\"img\" aria-label=\"58% complete\"><i class=\"ripe\" style=\"--i:0\"></i><i class=\"ripe\" style=\"--i:1\"></i><i class=\"ripe\" style=\"--i:2\"></i><i class=\"turning\" style=\"--i:3\"></i><i class=\"turning\" style=\"--i:4\"></i><i class=\"growing\" style=\"--i:5\"></i><i class=\"growing\" style=\"--i:6\"></i><i style=\"--i:7\"></i><i style=\"--i:8\"></i><i style=\"--i:9\"></i></div><div class=\"ds-ripeness__label\"><span>In progress</span><strong>58%</strong></div></div>",
+      "css": ".ds-ripeness { display: grid; gap: 8px; width: 360px; } .ds-blocks { display: flex; gap: 3px; height: 22px; } .ds-blocks i { flex: 1 1 0; min-width: 0; border-radius: 3px; background: var(--surface-3, #244030); transition: background 480ms cubic-bezier(0.22, 1, 0.36, 1); } .ds-blocks i.growing { background: var(--ripen-1, #5f8f3a); } .ds-blocks i.turning { background: var(--ripen-2, #b9a32c); } .ds-blocks i.ripe { background: var(--fruit, #ff8126); } .ds-blocks i[class] { animation: ds-ripen 640ms cubic-bezier(0.22, 1, 0.36, 1) both; animation-delay: calc(var(--i) * 40ms); } .ds-ripeness__label { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; color: var(--muted, #8fa390); font: 450 13px var(--font-ui, Urbanist, system-ui, sans-serif); } .ds-ripeness__label strong { color: var(--text, #eef2e8); font: 500 14px var(--font-mono, 'DM Mono', ui-monospace, monospace); font-variant-numeric: tabular-nums; } @keyframes ds-ripen { from { background: var(--surface-3, #244030); } } @media (prefers-reduced-motion: reduce) { .ds-blocks i[class], .ds-card__blocks i[class] { animation: none; } }"
     },
     {
-      "name": "Project Frame",
+      "name": "Lead Project Card",
       "kind": "card",
-      "refersTo": "project-frame",
-      "description": "A project as one print on the contact sheet: mono edge row, title, description, test strip, meta.",
-      "html": "<a class=\"ds-frame\" href=\"#\"><div class=\"ds-frame__edge\"><span>DAI</span><span>20 modules · 9 tasks</span></div><div class=\"ds-frame__body\"><h3>DaiHub Core</h3><p>The shared command center for the team's product, tasks, conversations, and live rooms.</p><div class=\"ds-frame__strip\"><i class=\"e4\"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class=\"ds-frame__meta\"><span>Team Lead</span><span class=\"ds-frame__open\">Open <svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12h14M13 6l6 6-6 6\"/></svg></span></div></div></a>",
-      "css": ".ds-frame { display: grid; width: 420px; border: 1px solid var(--border, #2e241d); border-radius: 8px; background: var(--surface-1, #18120e); color: var(--text, #ece0cf); text-decoration: none; overflow: hidden; font-family: var(--font-ui, Geist, system-ui, sans-serif); transition: border-color 160ms ease, background 160ms ease; } .ds-frame:hover { border-color: var(--seam-strong, #3d3027); background: #1b140f; } .ds-frame:focus-visible { outline: 2px solid var(--safe, #f07a1a); outline-offset: 2px; } .ds-frame__edge { display: flex; justify-content: space-between; gap: 16px; padding: 8px 16px; border-bottom: 1px solid var(--border, #2e241d); background: #130e0b; color: var(--exposure-3, #b85512); font: 500 11px/1.4 var(--font-mono, 'JetBrains Mono', ui-monospace, monospace); letter-spacing: 0.06em; text-transform: uppercase; } .ds-frame__edge span:last-child { color: var(--muted, #968676); } .ds-frame__body { padding: 16px 20px 20px; } .ds-frame h3 { margin: 0 0 4px; font-size: 20px; font-weight: 600; letter-spacing: -0.015em; } .ds-frame p { margin: 0; color: var(--secondary, #b3a493); font-size: 13px; line-height: 1.55; } .ds-frame__strip { display: grid; grid-template-columns: repeat(10, 1fr); gap: 2px; height: 16px; margin-top: 20px; } .ds-frame__strip i { background: var(--surface-2, #211913); } .ds-frame__strip i.e4 { background: var(--safe, #f07a1a); } .ds-frame__meta { display: flex; gap: 16px; align-items: center; margin-top: 16px; color: var(--muted, #968676); font-size: 12px; } .ds-frame__open { margin-left: auto; display: inline-flex; gap: 4px; align-items: center; color: var(--secondary, #b3a493); font-size: 13px; } .ds-frame:hover .ds-frame__open { color: var(--safe-text, #f7a35c); }"
+      "refersTo": "project-card",
+      "description": "A project in the fixed order: copy, block row, modules, people.",
+      "html": "<a class=\"ds-card\" href=\"#\"><div><h3>DaiHub Core</h3><p>The shared command center for the team's product, tasks, conversations and live rooms.</p></div><div class=\"ds-card__strip\"><div class=\"ds-card__blocks\" role=\"img\" aria-label=\"62% complete\"><i class=\"ripe\" style=\"--i:0\"></i><i class=\"ripe\" style=\"--i:1\"></i><i class=\"turning\" style=\"--i:2\"></i><i class=\"growing\" style=\"--i:3\"></i><i style=\"--i:4\"></i></div><div class=\"ds-card__label\"><span>DAI · 5 modules · 24 tasks</span><strong>62%</strong></div></div><ul class=\"ds-card__modules\"><li><span>Board</span><em>100%</em></li><li><span>Voice rooms</span><em>67%</em></li></ul><div class=\"ds-card__meta\"><span class=\"ds-avatar\">DA</span><span>Dastan</span><span class=\"ds-card__open\">Open <svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12h14M13 6l6 6-6 6\"/></svg></span></div></a>",
+      "css": ".ds-card { display: grid; gap: 16px; width: 520px; padding: 20px; border: 1px solid var(--border, #203629); border-radius: 12px; background: var(--surface-1, #13241a); color: var(--text, #eef2e8); text-decoration: none; font-family: var(--font-ui, Urbanist, system-ui, sans-serif); transition: border-color 160ms ease, background 160ms ease; } .ds-card:hover { border-color: var(--seam-strong, #31503d); background: var(--surface-1-hover, #172b1f); } .ds-card:focus-visible { outline: 2px solid var(--fruit, #ff8126); outline-offset: 2px; } .ds-card h3 { margin: 0 0 4px; font-size: 26px; font-weight: 500; letter-spacing: -0.015em; } .ds-card p { margin: 0; color: var(--secondary, #b4c2b2); font-size: 13px; line-height: 1.55; } .ds-card__strip { display: grid; gap: 8px; } .ds-card__blocks { display: flex; gap: 3px; height: 22px; } .ds-card__blocks i { flex: 1 1 0; min-width: 0; border-radius: 3px; background: var(--surface-3, #244030); transition: background 480ms cubic-bezier(0.22, 1, 0.36, 1); } .ds-card__blocks i.growing { background: var(--ripen-1, #5f8f3a); } .ds-card__blocks i.turning { background: var(--ripen-2, #b9a32c); } .ds-card__blocks i.ripe { background: var(--fruit, #ff8126); } .ds-card__blocks i[class] { animation: ds-ripen 640ms cubic-bezier(0.22, 1, 0.36, 1) both; animation-delay: calc(var(--i) * 40ms); } .ds-card__label { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; color: var(--muted, #8fa390); font-size: 13px; } .ds-card__label strong { color: var(--text, #eef2e8); font: 500 14px var(--font-mono, 'DM Mono', ui-monospace, monospace); } .ds-card__modules { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 32px; margin: 0; padding: 0; list-style: none; } .ds-card__modules li { display: flex; justify-content: space-between; gap: 12px; color: var(--secondary, #b4c2b2); font-size: 13px; } .ds-card__modules em { color: var(--muted, #8fa390); font: 500 12px var(--font-mono, 'DM Mono', ui-monospace, monospace); font-style: normal; } .ds-card__meta { display: flex; gap: 16px; align-items: center; color: var(--muted, #8fa390); font-size: 12px; } .ds-avatar { display: grid; width: 24px; height: 24px; place-items: center; border-radius: 50%; background: var(--surface-3, #244030); color: var(--text, #eef2e8); font-size: 10px; font-weight: 600; } .ds-card__open { margin-left: auto; display: inline-flex; gap: 4px; align-items: center; color: var(--secondary, #b4c2b2); font-size: 13px; } .ds-card:hover .ds-card__open { color: var(--fruit-text, #ffa263); }"
     },
     {
-      "name": "Voice Room Row (live)",
+      "name": "Voice Room Row",
       "kind": "custom",
       "refersTo": "room-row-live",
-      "description": "Room list; the connected room is washed in safelight with a pulsing lamp and a Leave action.",
-      "html": "<ul class=\"ds-rooms\"><li class=\"ds-room ds-room--live\"><i class=\"ds-room__lamp\"></i><div><strong>Dev-General</strong><small>You are connected</small></div><button class=\"ds-room__action ds-room__action--leave\">Leave</button></li><li class=\"ds-room\"><i class=\"ds-room__lamp\"></i><div><strong>Chill Lounge</strong><small>Quiet</small></div><button class=\"ds-room__action\">Join</button></li></ul>",
-      "css": ".ds-rooms { width: 312px; margin: 0; padding: 0; list-style: none; border: 1px solid var(--border, #2e241d); border-radius: 8px; background: var(--surface-1, #18120e); overflow: hidden; font-family: var(--font-ui, Geist, system-ui, sans-serif); } .ds-room { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 10px 12px 10px 14px; border-top: 1px solid var(--border, #2e241d); color: var(--text, #ece0cf); transition: background 160ms ease; } .ds-room:first-child { border-top: 0; } .ds-room:hover { background: var(--surface-2, #211913); } .ds-room div { display: grid; gap: 1px; } .ds-room strong { font-size: 13px; font-weight: 600; } .ds-room small { color: var(--muted, #968676); font-size: 12px; } .ds-room__lamp { width: 8px; height: 8px; border-radius: 50%; background: var(--seam-strong, #3d3027); } .ds-room__action { height: 28px; padding: 0 10px; border: 1px solid var(--seam-strong, #3d3027); border-radius: 6px; background: transparent; color: var(--text, #ece0cf); font: 600 12px var(--font-ui, Geist, system-ui, sans-serif); cursor: pointer; } .ds-room__action:hover { background: var(--surface-3, #2a211a); } .ds-room__action:focus-visible { outline: 2px solid var(--safe, #f07a1a); outline-offset: 2px; } .ds-room--live { background: linear-gradient(90deg, rgba(240, 122, 26, 0.16), rgba(240, 122, 26, 0.03)); } .ds-room--live .ds-room__lamp { background: var(--safe, #f07a1a); animation: ds-pulse 2.4s ease-in-out infinite; } .ds-room--live small { color: var(--safe-text, #f7a35c); } .ds-room__action--leave { border-color: rgba(240, 122, 26, 0.42); color: var(--safe-text, #f7a35c); } @keyframes ds-pulse { 50% { opacity: .35; } } @media (prefers-reduced-motion: reduce) { .ds-room--live .ds-room__lamp { animation: none; } }"
+      "description": "Room list; the connected room takes the orange wash, a pulsing dot and a Leave action.",
+      "html": "<ul class=\"ds-rooms\"><li class=\"ds-room ds-room--live\"><i class=\"ds-room__dot\"></i><div><strong>Dev-General</strong><small>You are connected</small></div><button class=\"ds-room__action ds-room__action--leave\">Leave</button></li><li class=\"ds-room\"><i class=\"ds-room__dot\"></i><div><strong>Chill Lounge</strong><small>Quiet</small></div><button class=\"ds-room__action\">Join</button></li></ul>",
+      "css": ".ds-rooms { width: 312px; margin: 0; padding: 0; list-style: none; border: 1px solid var(--border, #203629); border-radius: 12px; background: var(--surface-1, #13241a); overflow: hidden; font-family: var(--font-ui, Urbanist, system-ui, sans-serif); } .ds-room { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 10px 12px 10px 14px; border-top: 1px solid var(--border, #203629); color: var(--text, #eef2e8); transition: background 160ms ease; } .ds-room:first-child { border-top: 0; } .ds-room:hover { background: var(--surface-2, #1b3324); } .ds-room div { display: grid; gap: 1px; } .ds-room strong { font-size: 13px; font-weight: 600; } .ds-room small { color: var(--muted, #8fa390); font-size: 12px; } .ds-room__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--seam-strong, #31503d); } .ds-room__action { height: 28px; padding: 0 10px; border: 1px solid var(--seam-strong, #31503d); border-radius: 8px; background: transparent; color: var(--text, #eef2e8); font: 600 12px var(--font-ui, Urbanist, system-ui, sans-serif); cursor: pointer; } .ds-room__action:hover { background: var(--surface-3, #244030); } .ds-room__action:focus-visible { outline: 2px solid var(--fruit, #ff8126); outline-offset: 2px; } .ds-room--live { background: var(--fruit-wash, rgba(255, 129, 38, 0.1)); } .ds-room--live:hover { background: rgba(255, 129, 38, 0.15); } .ds-room--live .ds-room__dot { background: var(--fruit, #ff8126); animation: ds-pulse 2.4s ease-in-out infinite; } .ds-room--live small { color: var(--fruit-text, #ffa263); } .ds-room__action--leave { border-color: var(--fruit-line, rgba(255, 129, 38, 0.45)); color: var(--fruit-text, #ffa263); } @keyframes ds-pulse { 50% { opacity: .35; } } @media (prefers-reduced-motion: reduce) { .ds-room--live .ds-room__dot { animation: none; } }"
     }
   ],
   "narrative": {
-    "northStar": "The Darkroom Safelight",
-    "overview": "DaiHub is a darkroom. The room is warm black, work lies in trays one step lighter, text is print white, and a single daidai-orange safelight is the only lamp in the room. The safelight is not decoration: it marks what is live right now, such as the primary action, the page you are on, the voice room you are in, or the card you have selected. Everything else stays in the dark, and that restraint is what lets a founder read the room at a glance.\n\nProgress is drawn as a darkroom test strip: ten stepped exposure bands that come up from deep amber to full safelight as a project or module develops, and turn green when the print is finished. The strip is the system's signature and its one motion idea. Bands develop one after another with a single slow fade-up, and the same develop curve carries route entry, modals and the voice dock.\n\nThe room is dense but quiet. It is built for a startup team at desktop monitors all day: a 232px rail, a 56px top bar, a main column of frames and a 312px side column for rooms and attention. Surfaces are separated by 1px warm seams rather than shadows. The world rejects the category default of navy-black panels with a violet or blue accent and glowing glass cards.",
+    "northStar": "The Daidai Tree at Night",
+    "overview": "DaiHub is a daidai tree after dark. The ground is leaf green rather than black, surfaces are lighter layers of the same foliage, and text is a pale leaf tone. Against that canopy one colour stands out: the ripe bitter orange the product is named after. Orange marks the thing you act on, the thing you have selected, the room you are in and the work that is finished. A founder can scan a screen for fruit and know what is done and what is live.\n\nProgress is the signature. Each project and module draws a row of blocks, one per module or task, and every block steps from empty through leaf and olive to orange. Finished blocks lead the row, so it also reads as a fill. Those blocks are what moves when a page opens: they ripen in sequence with one slow colour change, while the page around them is simply there.\n\nThe interface is dense and calm, built for a startup team at desktop monitors all day: a 232px darker rail, a 56px top bar, a main column and a 312px side column. Surfaces are flat fills divided by 1px seams, with no glass and no blur. The world refuses the near-black panel with a single accent, which is what it replaced. The tree is a design idea, not a costume. It lives in colour and in the blocks, and it stays out of the words on screen.",
     "keyCharacteristics": [
-      "Warm black room with three tray tones and 1px warm seams; no glass, no blur.",
-      "One safelight orange, reserved for what is live.",
-      "Geist for the interface; JetBrains Mono only for data (codes, counts, percentages, times).",
-      "Progress as a 10-band test strip, lighting from exposure-1 to full safelight and turning green when complete.",
-      "Small radii (4 to 8px) on everything in the page; 12px only on floating overlays.",
-      "One motion curve (`cubic-bezier(0.22, 1, 0.36, 1)`), and every animation is cut under reduced motion."
+      "Leaf-green ground, three flat surface steps and 1px seams; no glass, no blur, no blended gradients.",
+      "Orange for the primary action, current selection, connected room and finished work.",
+      "Sprout green for presence, speaking and valid states only.",
+      "Urbanist for every word; DM Mono for figures and data only; no uppercase styling.",
+      "Radii of 8 and 12px with 2 to 4px details; no pills.",
+      "Progress as ripening blocks, one per module or task, and the blocks are the page's only entrance motion."
     ],
     "rules": [
-      { "name": "The Safelight Rule", "body": "Full orange appears only on what is live: the primary action, the active location, the room you are connected to, the current selection and the focus ring. If nothing on a screen is live, the only orange on it is the primary button.", "section": "colors" },
-      { "name": "The Three-Value Rule", "body": "Room, tray and print carry the whole interface. Green, red and amber may enter only to report a state (done, danger or late, near or review).", "section": "colors" },
-      { "name": "The Mono-Is-Data Rule", "body": "JetBrains Mono sets only machine facts: codes, counts, percentages, times and shortcuts. Prose, labels and buttons stay in Geist.", "section": "typography" },
-      { "name": "The Seam-Not-Shadow Rule", "body": "Anything that sits in the page is separated by a 1px seam and a tray step. A shadow means the element is floating above the page.", "section": "elevation" }
+      {
+        "name": "The Earned Orange Rule",
+        "body": "Orange means one of four things: this is the primary action, this is selected, you are connected here, or this is finished. Focus and caret count as selection. Work that is merely in progress never turns orange.",
+        "section": "colors"
+      },
+      {
+        "name": "The Living Sprout Rule",
+        "body": "Sprout green reports that something is alive or valid: someone is present, someone is speaking, a value checks out. It never marks finished work, which is orange, and it never decorates.",
+        "section": "colors"
+      },
+      {
+        "name": "The Ladder Rule",
+        "body": "Leaf, olive and orange are read in that order and always mean progress. Red and amber report state only.",
+        "section": "colors"
+      },
+      {
+        "name": "The Mono Is For Figures Rule",
+        "body": "DM Mono sets figures and data: percentages, counts, codes, times, shortcuts and code snippets. A word label is Urbanist even when it sits next to a figure.",
+        "section": "typography"
+      },
+      {
+        "name": "The Sentence Case Rule",
+        "body": "No text is styled uppercase and no word label is tracked. Labels read Not started, In progress, Done. Task codes and avatar initials are uppercase because that is the data itself.",
+        "section": "typography"
+      },
+      {
+        "name": "The Plain Words Rule",
+        "body": "Fruit language stays out of UI copy. Ripe, ripen, fruit, grove and sprout are names for tokens and documentation; users read Not started, In progress and Done.",
+        "section": "typography"
+      },
+      {
+        "name": "The Seam Rule",
+        "body": "Anything in the page is separated by a 1px seam and a flat tone step. If a surface has a drop shadow, it is floating above the page.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Flat Fill Rule",
+        "body": "Surfaces are solid. Glass, backdrop blur and blended gradients do not exist in this world. The brand mark's hard colour stops draw bars and blend nothing, so they are not an exception.",
+        "section": "elevation"
+      },
+      {
+        "name": "The One Entrance Rule",
+        "body": "Page content does not arrive; blocks ripen. Routes, the auth card, cards and lists never fade, slide or stagger in. Do not add entrance motion to anything in the page.",
+        "section": "components"
+      }
     ],
     "dos": [
-      "**Do** keep full safelight (#f07a1a) for what is live: the primary action, the active location, the connected room, the current selection and focus.",
-      "**Do** separate in-page surfaces with a 1px seam and one tray step, and save shadows for floating overlays.",
-      "**Do** draw project and module progress as the 10-band test strip at lg, md or sm, never as a ring, and let it turn developed green only at 100%.",
-      "**Do** set codes, counts, percentages and times in JetBrains Mono with tabular figures; everything else is Geist.",
-      "**Do** use the authored 1.75-stroke icon set at 14 to 16px, and map stored module glyphs through it.",
-      "**Do** keep destructive actions outlined and neutral until hovered or focused, placed apart from status, with the filled red button only inside the confirm step.",
-      "**Do** animate entrances with the develop curve (`cubic-bezier(0.22, 1, 0.36, 1)`), and keep hover transitions at 140 to 160ms."
+      "**Do** keep orange for the primary action, current selection, connected room and finished work.",
+      "**Do** keep sprout green for presence, speaking and valid states.",
+      "**Do** draw project and module progress as ripening blocks at 22, 14 or 8px, one block per module or task, with finished blocks first.",
+      "**Do** set figures and data in DM Mono, and every word label in Urbanist.",
+      "**Do** separate in-page surfaces with a 1px seam and a flat tone step, and save drop shadows for floating elements.",
+      "**Do** keep the lead project card in the order copy, block row, modules, people at every width.",
+      "**Do** use the authored 1.75-stroke icon set, and map stored module glyphs through it.",
+      "**Do** keep in-page destructive actions outlined and neutral until hovered or focused.",
+      "**Do** keep hover transitions between 120 and 160ms, and cut all motion under reduced motion."
     ],
     "donts": [
-      "**Don't** introduce navy-black panels, a violet or blue accent, or glowing glass cards; that is the category default this world rejects.",
-      "**Don't** use glass, backdrop blur or colored glow halos on any surface.",
-      "**Don't** add a second accent hue; green, red and amber appear only as state.",
-      "**Don't** use radii above 8px on in-page surfaces, or pill shapes on buttons.",
-      "**Don't** render emoji or text characters as interface icons.",
-      "**Don't** set uppercase tracked labels above headings; the edge-print row is the only uppercase style, and it carries data."
+      "**Don't** use a near-black ground with one accent; this world's ground is leaf green.",
+      "**Don't** use glass, backdrop blur, blended gradients or coloured glow on any surface.",
+      "**Don't** turn work orange before it is finished, or use sprout green to mark finished work.",
+      "**Don't** use red or amber for anything except state.",
+      "**Don't** use radii other than 8 and 12px on surfaces and controls, or 2 to 4px on small details, and don't make pill shapes.",
+      "**Don't** style text uppercase, or track word labels.",
+      "**Don't** add route, auth or card entrance fades; blocks ripening is the only entrance in the page.",
+      "**Don't** put fruit language in UI copy.",
+      "**Don't** render emoji or text characters as interface icons."
     ]
   }
 }

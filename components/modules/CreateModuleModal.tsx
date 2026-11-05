@@ -97,7 +97,7 @@ export function CreateModuleModal({ isOpen, onClose, projectId }: CreateModuleMo
               id="module-desc"
               name="description"
               type="text"
-              placeholder="What core capability does this module deliver?"
+              placeholder="What does this module do?"
               className="form-input"
               disabled={isPending}
             />

@@ -9,7 +9,7 @@ export default function AuthLayout({
     <div className="auth-shell">
       <div className="auth-card">
         <Link href="/" className="auth-brand">
-          <span className="brand__lamp" aria-hidden="true" />
+          <span className="brand__mark" aria-hidden="true" />
           DaiHub
         </Link>
         {children}

@@ -4,7 +4,7 @@ import type { VoiceRoom } from "@/lib/domain/types";
 import { useVoice } from "@/components/voice/VoiceContext";
 import { Icon } from "@/components/ui/Icon";
 
-/** Voice rooms on Home: one list, and the room you are in is lit by the safelight. */
+/** Voice rooms on Home: one list, and the room you are in is highlighted. */
 export function HomeRooms({ rooms }: { rooms: VoiceRoom[] }) {
   const { currentRoomId, joinRoom, leaveRoom } = useVoice();
 
@@ -19,7 +19,7 @@ export function HomeRooms({ rooms }: { rooms: VoiceRoom[] }) {
         const count = room.members.length + (live ? 1 : 0);
         return (
           <li className={`room-row ${live ? "room-row--live" : ""}`} key={room.id}>
-            <i className="room-row__lamp" aria-hidden="true" />
+            <i className="room-row__dot" aria-hidden="true" />
             <div className="room-row__copy">
               <strong>{room.name}</strong>
               <small>{live ? "You are connected" : count > 0 ? `${count} in room` : "Quiet"}</small>

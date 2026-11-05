@@ -29,7 +29,7 @@ describe("Module Kanban scope", () => {
     const html = renderBoard("auth");
     expect(html).toContain("Build login");
     expect(html).not.toContain("Fix audio");
-    expect(html).toContain("0% shipped");
+    expect(html).toContain("0 of 1 task shipped");
     expect(html).toContain("Sign-in flows");
     expect(html).toContain("Everyone");
     expect(html).not.toContain("All modules");
@@ -42,7 +42,7 @@ describe("Module Kanban scope", () => {
     expect(html).toContain("Build login");
     expect(html).toContain("Fix audio");
     expect(html).toContain("All modules");
-    expect(html).toContain("50% shipped");
+    expect(html).toContain("1 of 2 tasks shipped");
   });
 
   it("does not expose other modules when the requested module is missing", () => {

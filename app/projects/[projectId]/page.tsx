@@ -4,16 +4,20 @@ import { VoiceLounges } from "@/components/dashboard/VoiceLounges";
 import { ProjectSidebar } from "@/components/navigation/ProjectSidebar";
 import { ModulesSection } from "@/components/modules/ModulesSection";
 import { ProjectHeaderActions } from "@/components/projects/ProjectHeaderActions";
-import { demoNowMs, demoProjectSlug, demoVoiceRooms } from "@/lib/data/demo";
-import { calculateProjectProgress } from "@/lib/domain/progress";
+import { demoProjectSlug } from "@/lib/data/demo";
+import { calculateProgress, calculateProjectProgress } from "@/lib/domain/progress";
 import { getProjectById } from "@/lib/projects/service";
 import { getVoiceRooms } from "@/lib/voice/service";
 import { getSidebarAccount } from "@/lib/auth/account";
 import { Icon } from "@/components/ui/Icon";
-import { TestStrip } from "@/components/ui/TestStrip";
+import { Ripeness } from "@/components/ui/Ripeness";
 import { ProjectDangerZone } from "@/components/projects/ProjectDangerZone";
 
 export const dynamicParams = true;
+
+function requestTimeMs(): number {
+  return Date.now();
+}
 
 export function generateStaticParams() {
   return [{ projectId: demoProjectSlug }];
@@ -25,7 +29,7 @@ export default async function ProjectPage({
   params: Promise<{ projectId: string }>;
 }) {
   const { projectId } = await params;
-  const [project, dbVoiceRooms, account] = await Promise.all([
+  const [project, voiceRooms, account] = await Promise.all([
     getProjectById(projectId),
     getVoiceRooms(),
     getSidebarAccount(),
@@ -33,15 +37,8 @@ export default async function ProjectPage({
 
   if (!project) notFound();
 
-  const voiceRooms = dbVoiceRooms.map((r) => {
-    const demoMatch = demoVoiceRooms.find((d) => d.name.toLowerCase() === r.name.toLowerCase());
-    return {
-      ...r,
-      members: demoMatch ? demoMatch.members : r.members,
-    };
-  });
-
   const projectProgress = calculateProjectProgress(project);
+  const nowMs = requestTimeMs();
 
   return (
     <main className="app-shell project-shell">
@@ -70,23 +67,27 @@ export default async function ProjectPage({
                 <h1>{project.name}</h1>
                 <p>
                   {project.description ||
-                    "The shared command center for the team's product, tasks, and live rooms."}
+                    "Modules, tasks, channels and voice rooms for this project."}
                 </p>
               </div>
               <div className="project-progress">
-                <TestStrip percentage={projectProgress} label="Overall progress" />
+                <Ripeness
+                  values={project.modules.map((module) => calculateProgress(module.tasks))}
+                  percentage={projectProgress}
+                  label="Overall progress"
+                />
               </div>
             </section>
 
-            <BurningDeadlines
+            <ModulesSection
               modules={project.modules}
-              nowMs={demoNowMs}
+              nowMs={nowMs}
               projectId={project.id}
             />
 
-            <ModulesSection
+            <BurningDeadlines
               modules={project.modules}
-              nowMs={demoNowMs}
+              nowMs={nowMs}
               projectId={project.id}
             />
 

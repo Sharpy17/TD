@@ -142,7 +142,7 @@ export function EditTaskModal({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               className="form-input"
-              placeholder="Add brief task scope or context..."
+              placeholder="Add task context..."
               disabled={isPending}
               style={{ resize: "vertical", minHeight: 56, fontFamily: "inherit" }}
             />
@@ -236,7 +236,7 @@ export function EditTaskModal({
                   className={`chip-btn ${status === s ? (s === "DONE" ? "chip-btn--active" : "chip-btn--active") : ""}`}
                   onClick={() => setStatus(s)}
                 >
-                  {s === "DONE" ? "Done" : s === "IN_PROGRESS" ? "In Progress" : s === "REVIEW" ? "Review" : "Backlog"}
+                  {s === "DONE" ? "Done" : s === "IN_PROGRESS" ? "In progress" : s === "REVIEW" ? "Review" : "Backlog"}
                 </button>
               ))}
             </div>

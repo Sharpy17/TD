@@ -60,7 +60,7 @@ export function ModulesSection({ modules, nowMs, projectId }: ModulesSectionProp
         <div className="empty-state empty-state--compact">
           <Icon name="projects" size={22} />
           <strong>No modules created yet</strong>
-          <p>Decompose this project into logical modules to track progress and assign tasks.</p>
+          <p>Split this project into modules to track progress and assign tasks.</p>
           <button
             className="primary-button"
             type="button"

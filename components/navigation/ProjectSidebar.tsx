@@ -24,7 +24,7 @@ export function ProjectSidebar({
     <>
       <aside className="sidebar project-sidebar">
         <Link className="brand" href="/">
-          <span className="brand__lamp" aria-hidden="true" />
+          <span className="brand__mark" aria-hidden="true" />
           <strong>DaiHub</strong>
         </Link>
 

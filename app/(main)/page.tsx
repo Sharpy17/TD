@@ -85,7 +85,7 @@ export default async function HomePage() {
                 <span>
                   <Icon name="projects" size={22} />
                 </span>
-                <strong>Nothing in the tray yet</strong>
+                <strong>No projects yet</strong>
                 <p>Create a project to start tracking modules, tasks and progress.</p>
                 <Link className="primary-button button-link" href="/projects">
                   Create a project

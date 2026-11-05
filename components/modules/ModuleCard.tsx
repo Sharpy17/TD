@@ -5,7 +5,8 @@ import Link from "next/link";
 import { isUrgentTask } from "@/lib/domain/deadlines";
 import { calculateProgress, countCompleted } from "@/lib/domain/progress";
 import type { Module, Task } from "@/lib/domain/types";
-import { TestStrip } from "@/components/ui/TestStrip";
+import { BOARD_COLUMNS } from "@/components/board/boardModel";
+import { Ripeness, taskStages } from "@/components/ui/Ripeness";
 import { renameTaskAction } from "@/app/projects/[projectId]/actions";
 import { Icon } from "@/components/ui/Icon";
 import { ModuleIcon } from "@/components/ui/ModuleIcon";
@@ -68,7 +69,7 @@ export function ModuleCard({
           <p>{module.description}</p>
         </div>
       </Link>
-      <TestStrip percentage={progress} size="md" />
+      <Ripeness values={taskStages(module.tasks)} percentage={progress} size="md" />
       <div className="module-card__meta">
         <button type="button" className="module-card__toggle" aria-expanded={expanded} onClick={() => setExpanded(!expanded)}>
           {completed}/{module.tasks.length} tasks <Icon name={expanded ? "chevronUp" : "chevronDown"} size={14} />
@@ -113,7 +114,7 @@ export function ModuleCard({
                   <span
                     className={`task-status-pill task-status-pill--${task.status.toLowerCase()}`}
                   >
-                    {task.status.replace("_", " ")}
+                    {BOARD_COLUMNS.find((column) => column.status === task.status)?.label}
                   </span>
 
                   {editingTaskId === task.id ? (

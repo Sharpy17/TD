@@ -20,7 +20,7 @@ export function GlobalSidebar({ account, rooms = [] }: { account: SidebarAccount
   return (
     <aside className="sidebar global-sidebar">
       <Link className="brand" href="/">
-        <span className="brand__lamp" aria-hidden="true" />
+        <span className="brand__mark" aria-hidden="true" />
         <strong>DaiHub</strong>
       </Link>
 

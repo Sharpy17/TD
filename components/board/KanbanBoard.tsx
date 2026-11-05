@@ -19,7 +19,7 @@ import {
   updateTaskFieldsAction,
 } from "@/app/projects/[projectId]/actions";
 import { ModuleAssignees } from "@/components/modules/ModuleAssignees";
-import { TestStrip } from "@/components/ui/TestStrip";
+import { Ripeness, taskStages } from "@/components/ui/Ripeness";
 import { DeleteTaskModal } from "@/components/tasks/DeleteTaskModal";
 import { EditTaskModal } from "@/components/tasks/EditTaskModal";
 import { useVoice } from "@/components/voice/VoiceContext";
@@ -430,9 +430,14 @@ export function KanbanBoard({
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [editing, deleting, orderedIds, selectedId]);
 
+  const shippedCount = (list: BoardTask[]) => `${list.filter((task) => task.status === "DONE").length}/${list.length}`;
   const moduleTabs = [
-    { id: "all", name: "All modules", progress: calculateProgress(tasks) },
-    ...boardModules.map((module) => ({ id: module.id, name: module.name, progress: moduleProgress(module.id, tasks) })),
+    { id: "all", name: "All modules", count: shippedCount(tasks) },
+    ...boardModules.map((module) => ({
+      id: module.id,
+      name: module.name,
+      count: shippedCount(tasks.filter((task) => task.moduleId === module.id)),
+    })),
   ];
 
   return (
@@ -487,7 +492,7 @@ export function KanbanBoard({
               <h1>{scopedModule && <span className="board-head__icon" aria-hidden="true"><ModuleIcon glyph={scopedModule.icon} size={22} /></span>}{boardTitle}</h1>
               {scopedModule?.description && <p className="module-board-description">{scopedModule.description}</p>}
               <p className="board-mono" suppressHydrationWarning>
-                {openCount} open · {burningCount} burning · {overdueCount} overdue · {calculateProgress(tasks)}% shipped
+                {openCount} open · {burningCount} burning · {overdueCount} overdue · {tasks.length - openCount} of {tasks.length} {tasks.length === 1 ? "task" : "tasks"} shipped
               </p>
             </div>
             <div className="board-filters">
@@ -518,7 +523,7 @@ export function KanbanBoard({
 
           {scopedModule && <div className="module-board-overview">
             <ModuleAssignees moduleId={scopedModule.id} assignees={scopedModule.assignees || []} people={members} canEdit={canEdit} />
-            <div className="module-board-overview__strip"><TestStrip percentage={calculateProgress(tasks)} size="md" /></div>
+            <div className="module-board-overview__strip"><Ripeness values={taskStages(tasks)} percentage={calculateProgress(tasks)} size="md" /></div>
           </div>}
           {!canEdit && <p className="module-readonly">Sign in as a workspace member to manage tasks.</p>}
           {!scopedModule && <div className="board-tabs" role="group" aria-label="Filter by module">
@@ -531,7 +536,7 @@ export function KanbanBoard({
                 onClick={() => setModuleFilter(tab.id)}
               >
                 {tab.name}
-                <span className="board-mono">{tab.progress}%</span>
+                <span className="board-mono">{tab.count}</span>
               </button>
             ))}
           </div>}

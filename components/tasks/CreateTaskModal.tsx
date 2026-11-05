@@ -217,7 +217,7 @@ export function CreateTaskModal({
           {/* Initial Status */}
           <div className="form-group">
             <label className="form-label">
-              <span>Initial Stage</span>
+              <span>Status</span>
             </label>
             <div className="chip-group">
               <button
@@ -232,7 +232,7 @@ export function CreateTaskModal({
                 className={`chip-btn ${selectedStatus === "IN_PROGRESS" ? "chip-btn--active" : ""}`}
                 onClick={() => setSelectedStatus("IN_PROGRESS")}
               >
-                In Progress
+                In progress
               </button>
             </div>
           </div>

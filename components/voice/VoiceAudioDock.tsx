@@ -28,7 +28,7 @@ export function VoiceAudioDock() {
             #{currentRoomName || "Voice Room"}
           </strong>
           <small>
-            RTC 24ms &bull; <span className="voice-audio-dock__state">Voice Connected</span>
+            RTC 24ms &bull; <span className="voice-audio-dock__state">Connected</span>
           </small>
         </div>
       </div>

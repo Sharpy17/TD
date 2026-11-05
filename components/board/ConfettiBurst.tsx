@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, type CSSProperties } from "react";
 
 /** Muted brand hues — reads as a quiet sparkle against the dark board, not a party. */
-const COLORS = ["#f07a1a", "#5fae7e", "#c9a27e", "#f7a35c", "#7cc496"];
+const COLORS = ["#ff8126", "#ffa263", "#b9a32c", "#8fd16f", "#5f8f3a"];
 const PIECES = 14;
 const DURATION_MS = 750;
 

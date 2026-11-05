@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Geist, JetBrains_Mono } from "next/font/google";
+import { DM_Mono, Urbanist } from "next/font/google";
 import "./globals.css";
 import { VoiceProvider } from "@/components/voice/VoiceContext";
 import { VoiceAudioDock } from "@/components/voice/VoiceAudioDock";
 
-const geist = Geist({ subsets: ["latin"], variable: "--font-geist" });
-const jetbrains = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains" });
+const urbanist = Urbanist({ subsets: ["latin"], variable: "--font-urbanist" });
+const dmMono = DM_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-dm-mono" });
 
 export const metadata: Metadata = {
   title: "DaiHub",
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${geist.variable} ${jetbrains.variable}`}>
+    <html lang="en" className={`${urbanist.variable} ${dmMono.variable}`}>
       <body>
         <VoiceProvider>
           {children}
