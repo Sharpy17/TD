@@ -74,7 +74,7 @@ export function VoiceLounges({
                   <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                     <strong>{room.name}</strong>
                     {isCurrentRoom && (
-                      <span className="voice-badge voice-badge--live">LIVE</span>
+                      <span className="voice-badge voice-badge--live">Live</span>
                     )}
                   </div>
                   <small>
