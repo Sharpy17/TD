@@ -10,6 +10,7 @@ function ChannelLink({ channel, href, active }: { channel: ChannelSummary; href:
     <Link
       className={`chat-channel ${active ? "chat-channel--active" : ""}`}
       href={href}
+      prefetch={false}
       aria-current={active ? "page" : undefined}
     >
       <span className="chat-channel__hash">{channel.kind === "module" ? <ModuleIcon glyph={channel.icon} size={14} /> : "#"}</span>
@@ -58,6 +59,7 @@ export function ChannelList({
               key={person.userId}
               className={`chat-channel ${person.channelId === activeId ? "chat-channel--active" : ""}`}
               href={person.channelId ? `/chats/${person.channelId}` : `/chats/dm/${person.userId}`}
+              prefetch={false}
               aria-current={person.channelId === activeId ? "page" : undefined}
             >
               <span className="avatar avatar--small chat-channel__avatar">{person.initials}</span>

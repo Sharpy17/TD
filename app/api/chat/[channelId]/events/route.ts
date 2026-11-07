@@ -21,6 +21,9 @@ export async function GET(request: NextRequest, ctx: { params: Promise<{ channel
       const unsubscribe = subscribe(chatTopic(channelId), send);
       const keepalive = setInterval(() => controller.enqueue(encoder.encode(": keepalive\n\n")), KEEPALIVE_MS);
 
+      // Nothing reaches the browser, headers included, until the first write. Without this the stream looks closed.
+      controller.enqueue(encoder.encode(": connected\n\n"));
+
       cleanup = () => {
         clearInterval(keepalive);
         unsubscribe();

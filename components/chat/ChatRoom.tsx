@@ -78,12 +78,10 @@ export function ChatRoom({
 
   useEffect(() => {
     const source = new EventSource(`/api/chat/${encodeURIComponent(channel.id)}/events`);
-    let opened = false;
     source.onopen = () => {
       setConnected(true);
-      // Catch up on anything sent while we were disconnected.
-      if (opened) void refetch();
-      opened = true;
+      // Catch up on anything sent before this stream opened, or while it was down.
+      void refetch();
     };
     source.onerror = () => setConnected(false);
     source.onmessage = (message) => {
