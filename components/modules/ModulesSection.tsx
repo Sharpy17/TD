@@ -85,19 +85,20 @@ export function ModulesSection({ modules, nowMs, projectId }: ModulesSectionProp
         </div>
       )}
 
-      <CreateModuleModal
-        isOpen={isModuleModalOpen}
-        onClose={() => setIsModuleModalOpen(false)}
-        projectId={projectId}
-      />
+      {/* Mounted only while open: these keep the last result, which would close them again on reopen. */}
+      {isModuleModalOpen && (
+        <CreateModuleModal isOpen onClose={() => setIsModuleModalOpen(false)} projectId={projectId} />
+      )}
 
-      <CreateTaskModal
-        isOpen={isTaskModalOpen}
-        onClose={() => setIsTaskModalOpen(false)}
-        projectId={projectId}
-        modules={modules}
-        defaultModuleId={taskModuleId}
-      />
+      {isTaskModalOpen && (
+        <CreateTaskModal
+          isOpen
+          onClose={() => setIsTaskModalOpen(false)}
+          projectId={projectId}
+          modules={modules}
+          defaultModuleId={taskModuleId}
+        />
+      )}
 
       <DeleteTaskModal
         isOpen={!!taskToDelete}

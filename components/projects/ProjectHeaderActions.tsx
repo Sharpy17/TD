@@ -26,12 +26,10 @@ export function ProjectHeaderActions({
         </button>
       </div>
 
-      <CreateTaskModal
-        isOpen={taskModalOpen}
-        onClose={() => setTaskModalOpen(false)}
-        projectId={projectId}
-        modules={modules}
-      />
+      {/* Mounted only while open: it keeps the last result, which would close it again on reopen. */}
+      {taskModalOpen && (
+        <CreateTaskModal isOpen onClose={() => setTaskModalOpen(false)} projectId={projectId} modules={modules} />
+      )}
     </>
   );
 }
