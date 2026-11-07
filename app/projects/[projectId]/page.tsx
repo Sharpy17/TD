@@ -8,7 +8,7 @@ import { demoProjectSlug } from "@/lib/data/demo";
 import { calculateProgress, calculateProjectProgress } from "@/lib/domain/progress";
 import { getProjectById } from "@/lib/projects/service";
 import { getVoiceRooms } from "@/lib/voice/service";
-import { getSidebarAccount } from "@/lib/auth/account";
+import { getSidebarAccount, getViewerWorkspace } from "@/lib/auth/account";
 import { Icon } from "@/components/ui/Icon";
 import { Ripeness } from "@/components/ui/Ripeness";
 import { ProjectDangerZone } from "@/components/projects/ProjectDangerZone";
@@ -29,9 +29,10 @@ export default async function ProjectPage({
   params: Promise<{ projectId: string }>;
 }) {
   const { projectId } = await params;
+  const viewer = await getViewerWorkspace();
   const [project, voiceRooms, account] = await Promise.all([
     getProjectById(projectId),
-    getVoiceRooms(),
+    getVoiceRooms(viewer?.workspaceId),
     getSidebarAccount(),
   ]);
 

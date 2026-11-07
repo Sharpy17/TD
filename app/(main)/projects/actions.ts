@@ -2,6 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { getViewerWorkspace } from "@/lib/auth/account";
+import { canEditProject } from "@/lib/auth/project-access";
 import { createProject, deleteProject } from "@/lib/projects/service";
 
 export interface ProjectActionState {
@@ -25,10 +27,14 @@ export async function createProjectAction(
     };
   }
 
+  const viewer = await getViewerWorkspace();
+  if (!viewer || viewer.role === "GUEST") return { error: "You don't have permission to create projects here." };
+
   const result = await createProject({
     name,
     description,
     createDefaultModules,
+    workspaceId: viewer.workspaceId,
   });
 
   if (!result.success || !result.projectId) {
@@ -41,6 +47,8 @@ export async function createProjectAction(
 }
 
 export async function deleteProjectAction(projectId: string): Promise<ProjectActionState> {
+  if (!(await canEditProject(projectId))) return { error: "You don't have permission to delete this project." };
+
   const result = await deleteProject(projectId);
   if (!result.success) {
     return { error: result.error || "Failed to delete project." };

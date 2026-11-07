@@ -87,7 +87,7 @@ describe("Text channels (lib/chat/service)", () => {
   });
 
   it("keeps outsiders out", async () => {
-    expect(await getChatDirectory(ids.outsider)).toEqual({ workspace: [], projects: [] });
+    expect(await getChatDirectory(ids.outsider)).toEqual({ workspace: [], projects: [], people: [] });
     const result = await createMessage({ channelId: projectChannelId(projectId), authorId: ids.outsider, content: "hi" });
     expect(result.success).toBe(false);
   });

@@ -23,6 +23,7 @@ export type ChatRoomContext = {
 };
 
 function describe(channel: ChannelSummary, scopeLabel: string) {
+  if (channel.kind === "direct") return `Your private conversation with ${channel.name}.`;
   if (channel.kind === "workspace") return "Team-wide announcements, wins and async standups.";
   if (channel.kind === "project") return `Anything that spans ${scopeLabel}'s modules.`;
   return `Everything about ${channel.moduleName ?? "this module"}. Task comments land here too.`;
@@ -56,6 +57,8 @@ export function ChatRoom({
   initialMessages: ChatMessage[];
   currentUser: UserSummary;
 }) {
+  const isDirect = channel.kind === "direct";
+  const title = isDirect ? channel.name : `#${channel.name}`;
   const [messages, setMessages] = useState(initialMessages);
   const [pending, setPending] = useState<Pending[]>([]);
   const [draft, setDraft] = useState("");
@@ -156,7 +159,7 @@ export function ChatRoom({
   ];
 
   return (
-    <section className="chat-room" aria-label={`#${channel.name}`}>
+    <section className="chat-room" aria-label={title}>
       <header className="chat-header">
         <div className="chat-header__title">
           {context.scopeHref ? (
@@ -164,7 +167,7 @@ export function ChatRoom({
           ) : (
             <span className="crumb">{context.scopeLabel}</span>
           )}
-          <h1><span>#</span>{channel.name}</h1>
+          <h1>{!isDirect && <span>#</span>}{channel.name}</h1>
           <p>{describe(channel, context.scopeLabel)}</p>
         </div>
         <div className="chat-header__meta">
@@ -183,8 +186,8 @@ export function ChatRoom({
       <div className="chat-messages" ref={listRef} onScroll={onScroll} aria-live="polite">
         {rows.length === 0 ? (
           <div className="chat-empty">
-            <span>#</span>
-            <strong>Welcome to #{channel.name}</strong>
+            <span>{isDirect ? <Icon name="user" size={20} /> : "#"}</span>
+            <strong>{isDirect ? channel.name : `Welcome to #${channel.name}`}</strong>
             <p>{describe(channel, context.scopeLabel)} Say hi to get it started.</p>
           </div>
         ) : (
@@ -272,8 +275,8 @@ export function ChatRoom({
             value={draft}
             onChange={(event) => setDraft(event.target.value)}
             onKeyDown={onKeyDown}
-            placeholder={`Message #${channel.name}`}
-            aria-label={`Message #${channel.name}`}
+            placeholder={`Message ${title}`}
+            aria-label={`Message ${title}`}
             rows={1}
             maxLength={MAX_MESSAGE_LENGTH}
           />

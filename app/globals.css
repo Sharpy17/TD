@@ -825,3 +825,35 @@ select.form-input { cursor: pointer; }
   .chat-day { margin-inline: 16px; }
 }
 @media (prefers-reduced-motion: reduce) { .chat-reaction { animation: none; } }
+
+/* Voice overlay: notices, shared screens and the dock stack from the bottom of the screen. */
+.voice-overlay { position: fixed; z-index: 1000; bottom: 24px; left: 50%; display: flex; flex-direction: column; gap: 10px; align-items: center; max-width: calc(100vw - 32px); transform: translateX(-50%); pointer-events: none; }
+.voice-overlay > * { pointer-events: auto; }
+.voice-overlay .voice-audio-dock { position: static; transform: none; animation: none; }
+.voice-audio-dock__signal-dot--waiting { background: var(--warning); }
+.voice-audio-dock__people { margin-left: 4px; }
+.dock-action-btn:disabled { opacity: .5; cursor: not-allowed; }
+.dock-mic-select { max-width: 130px; height: 32px; padding: 0 6px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface-2); color: var(--text); font-size: 12px; }
+.voice-notice { display: flex; gap: 8px; align-items: center; max-width: 480px; padding: 8px 12px; border: 1px solid rgba(229, 72, 77, 0.45); border-radius: var(--radius-sm); background: var(--surface-2); color: var(--text); font-size: 13px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45); }
+.voice-notice button { display: inline-flex; padding: 2px; border: 0; background: none; color: var(--muted); cursor: pointer; }
+.voice-notice--action { border-color: var(--fruit-line); cursor: pointer; }
+.voice-screens { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+.voice-screen { width: 420px; max-width: calc(100vw - 32px); margin: 0; overflow: hidden; border: 1px solid var(--seam-strong); border-radius: var(--radius-sm); background: #000; box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6); }
+.voice-screen--expanded { width: min(1280px, calc(100vw - 32px)); }
+.voice-screen video { display: block; width: 100%; max-height: calc(100vh - 160px); }
+.voice-screen figcaption { display: flex; justify-content: space-between; gap: 8px; padding: 6px 10px; background: var(--surface-2); color: var(--secondary); font-size: 12px; }
+.voice-screen figcaption button { border: 0; background: none; color: var(--fruit-text); font-size: 12px; font-weight: 600; cursor: pointer; }
+@media (max-width: 640px) { .voice-overlay { left: 16px; right: 16px; bottom: 16px; max-width: none; transform: none; } .voice-overlay .voice-audio-dock { width: 100%; } }
+
+/* Direct messages */
+.unread-badge { display: inline-grid; place-items: center; min-width: 18px; height: 18px; margin-left: auto; padding: 0 5px; border-radius: 9px; background: var(--fruit); color: var(--fruit-ink); font: 600 11px var(--font-mono); }
+.chat-channel__avatar { flex-shrink: 0; }
+
+/* Invites */
+.invite-hint { color: var(--muted); font-size: 12px; }
+.invite-link { display: flex; gap: 8px; }
+.invite-link .form-input { flex: 1; min-width: 0; }
+.invite-list { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.invite-list li { display: flex; gap: 12px; align-items: center; justify-content: space-between; color: var(--secondary); font-size: 13px; }
+.invite-list .text-link { border: 0; background: none; cursor: pointer; }
+.invite-switch { margin-left: 6px; padding: 0; border: 0; background: none; color: var(--fruit-text); font: inherit; font-weight: 600; cursor: pointer; }

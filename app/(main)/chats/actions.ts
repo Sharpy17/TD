@@ -1,6 +1,7 @@
 "use server";
 
 import { getCurrentUser } from "@/lib/auth/service";
+import { isDirectChannelId, notifyDirectMessage } from "@/lib/chat/direct";
 import { createMessage, toggleReaction } from "@/lib/chat/service";
 import type { ChatMessage } from "@/lib/chat/types";
 import { chatTopic, publish } from "@/lib/realtime/hub";
@@ -14,7 +15,10 @@ export async function sendMessageAction(
   if (typeof channelId !== "string" || typeof content !== "string") return { success: false, error: "Invalid message." };
 
   const result = await createMessage({ channelId, authorId: user.id, content });
-  if (result.success) publish(chatTopic(channelId), { type: "messages", channelId });
+  if (result.success) {
+    publish(chatTopic(channelId), { type: "messages", channelId });
+    if (isDirectChannelId(channelId)) await notifyDirectMessage(channelId, user.id);
+  }
   return result;
 }
 

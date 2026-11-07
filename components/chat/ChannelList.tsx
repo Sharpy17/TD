@@ -50,6 +50,24 @@ export function ChannelList({
         </div>
       )}
 
+      {!onlyProjectId && directory.people.length > 0 && (
+        <div className="chat-channels__group">
+          <div className="sidebar-label">Direct messages</div>
+          {directory.people.map((person) => (
+            <Link
+              key={person.userId}
+              className={`chat-channel ${person.channelId === activeId ? "chat-channel--active" : ""}`}
+              href={person.channelId ? `/chats/${person.channelId}` : `/chats/dm/${person.userId}`}
+              aria-current={person.channelId === activeId ? "page" : undefined}
+            >
+              <span className="avatar avatar--small chat-channel__avatar">{person.initials}</span>
+              <span className="chat-channel__name">{person.name}</span>
+              {person.unread > 0 && <span className="unread-badge">{person.unread}</span>}
+            </Link>
+          ))}
+        </div>
+      )}
+
       {projects.map((project) => (
         <div className="chat-channels__group" key={project.id}>
           <div className="sidebar-label" title={project.name}>{onlyProjectId ? "Project channels" : project.name}</div>

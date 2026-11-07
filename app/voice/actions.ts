@@ -1,6 +1,8 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { getViewerWorkspace } from "@/lib/auth/account";
+import { prisma } from "@/lib/prisma";
 import { createVoiceRoom, deleteVoiceRoom } from "@/lib/voice/service";
 
 export interface VoiceActionState {
@@ -25,9 +27,13 @@ export async function createVoiceRoomAction(
     };
   }
 
+  const viewer = await getViewerWorkspace();
+  if (!viewer || viewer.role === "GUEST") return { error: "You don't have permission to create rooms here." };
+
   const result = await createVoiceRoom({
     name: name.trim(),
     maxUsers: isNaN(maxUsers) ? 10 : maxUsers,
+    workspaceId: viewer.workspaceId,
   });
 
   if (!result.success) {
@@ -50,6 +56,12 @@ export async function deleteVoiceRoomAction(
 ): Promise<{ success: boolean; error?: string }> {
   if (!roomId) {
     return { success: false, error: "Missing room ID." };
+  }
+
+  const viewer = await getViewerWorkspace();
+  const room = await prisma.voiceRoom.findUnique({ where: { id: roomId }, select: { workspaceId: true } });
+  if (!viewer || viewer.role === "GUEST" || room?.workspaceId !== viewer.workspaceId) {
+    return { success: false, error: "You don't have permission to delete this room." };
   }
 
   const result = await deleteVoiceRoom(roomId);

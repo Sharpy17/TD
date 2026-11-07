@@ -4,7 +4,7 @@ const PUBLIC_PATHS = new Set(["/login", "/signup"]);
 
 /** The only routes a visitor without a session may reach. */
 export function isPublicPath(pathname: string): boolean {
-  return PUBLIC_PATHS.has(pathname.replace(/\/+$/, "") || "/");
+  return PUBLIC_PATHS.has(pathname.replace(/\/+$/, "") || "/") || pathname.startsWith("/invite/");
 }
 
 /**

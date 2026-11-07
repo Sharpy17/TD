@@ -80,6 +80,7 @@ export async function getVoiceRooms(workspaceId?: string): Promise<VoiceRoom[]> 
     return dbRooms.map((r) => ({
       id: r.id,
       name: r.name,
+      maxUsers: r.maxUsers,
       members: [],
     }));
   } catch (err) {

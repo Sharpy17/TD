@@ -1,9 +1,10 @@
 import { GlobalSidebar } from "@/components/navigation/GlobalSidebar";
-import { getSidebarAccount } from "@/lib/auth/account";
+import { getSidebarAccount, getViewerWorkspace } from "@/lib/auth/account";
 import { getVoiceRooms } from "@/lib/voice/service";
 
 export default async function MainWorkspaceLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const [account, rooms] = await Promise.all([getSidebarAccount(), getVoiceRooms()]);
+  const viewer = await getViewerWorkspace();
+  const [account, rooms] = await Promise.all([getSidebarAccount(), getVoiceRooms(viewer?.workspaceId)]);
 
   return (
     <main className="app-shell">

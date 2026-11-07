@@ -58,5 +58,6 @@ export type Project = {
 export type VoiceRoom = {
   id: string;
   name: string;
+  maxUsers?: number;
   members: Array<UserSummary & { muted?: boolean; speaking?: boolean }>;
 };
