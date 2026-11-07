@@ -111,7 +111,7 @@ describe("Text channels (lib/chat/service)", () => {
     const channelId = projectChannelId(projectId);
     const [message] = await getMessages(channelId, ids.member);
 
-    expect((await toggleReaction({ messageId: message.id, userId: ids.member, emoji: "🦄" })).success).toBe(false);
+    expect((await toggleReaction({ messageId: message.id, userId: ids.member, emoji: "not an emoji" })).success).toBe(false);
     const on = await toggleReaction({ messageId: message.id, userId: ids.member, emoji: "🔥" });
     expect(on.success && on.active).toBe(true);
     expect((await getMessages(channelId, ids.member))[0].reactions).toEqual([{ emoji: "🔥", count: 1, mine: true }]);

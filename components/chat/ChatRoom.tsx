@@ -2,17 +2,26 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type KeyboardEvent } from "react";
-import { sendMessageAction, toggleReactionAction } from "@/app/(main)/chats/actions";
+import { sendMessageAction, sendStickerAction, toggleReactionAction } from "@/app/(main)/chats/actions";
 import { MAX_MESSAGE_LENGTH, QUICK_REACTIONS, type ChannelSummary, type ChatMessage } from "@/lib/chat/types";
 import type { BoardEvent } from "@/lib/realtime/hub";
 import type { UserSummary } from "@/lib/domain/types";
+import type { StickerSummary } from "@/lib/stickers/service";
+import { EmojiPopover } from "./EmojiPopover";
 import { MessageContent } from "./MessageContent";
+import { StickerPopover } from "./StickerPopover";
 import { Icon } from "@/components/ui/Icon";
 
 const GROUP_WINDOW_MS = 5 * 60 * 1000;
 const NEAR_BOTTOM_PX = 120;
 
 type Pending = { tempId: string; content: string; createdAt: string };
+
+/** Which picker is open, and the button it hangs from. */
+type OpenPicker =
+  | { kind: "composer-emoji"; anchor: DOMRect }
+  | { kind: "reaction-emoji"; anchor: DOMRect; messageId: string }
+  | { kind: "sticker"; anchor: DOMRect };
 
 export type ChatRoomContext = {
   /** e.g. "Workspace" or the project name. */
@@ -64,7 +73,10 @@ export function ChatRoom({
   const [draft, setDraft] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [connected, setConnected] = useState(false);
+  const [picker, setPicker] = useState<OpenPicker | null>(null);
+  const closePicker = useCallback(() => setPicker(null), []);
   const listRef = useRef<HTMLDivElement>(null);
+  const draftRef = useRef<HTMLTextAreaElement>(null);
   const nearBottom = useRef(true);
 
   const refetch = useCallback(async () => {
@@ -141,6 +153,32 @@ export function ChatRoom({
     }
   };
 
+  /** Puts the emoji where the cursor is, and leaves the cursor just after it. */
+  const insertEmoji = (emoji: string) => {
+    const box = draftRef.current;
+    const start = box?.selectionStart ?? draft.length;
+    const end = box?.selectionEnd ?? draft.length;
+    setDraft(draft.slice(0, start) + emoji + draft.slice(end));
+    setPicker(null);
+    requestAnimationFrame(() => {
+      box?.focus();
+      box?.setSelectionRange(start + emoji.length, start + emoji.length);
+    });
+  };
+
+  const sendSticker = async (sticker: StickerSummary) => {
+    setPicker(null);
+    setError(null);
+    nearBottom.current = true;
+    const result = await sendStickerAction(channel.id, sticker.id);
+    if (result.success) {
+      const sent = result.message;
+      setMessages((items) => (items.some((m) => m.id === sent.id) ? items : [...items, sent]));
+    } else {
+      setError(result.error);
+    }
+  };
+
   const rows = [
     ...messages.map((message) => ({ message, pending: false })),
     ...pending.map((item) => ({
@@ -151,6 +189,7 @@ export function ChatRoom({
         createdAt: item.createdAt,
         author: currentUser,
         task: null,
+        sticker: null,
         reactions: [],
       } satisfies ChatMessage,
     })),
@@ -227,7 +266,18 @@ export function ChatRoom({
                         )}
                       </div>
                     )}
-                    <MessageContent content={message.content} />
+                    {message.sticker ? (
+                      // eslint-disable-next-line @next/next/no-img-element -- served by our own authenticated route
+                      <img
+                        className="chat-sticker"
+                        src={`/api/stickers/${encodeURIComponent(message.sticker.id)}`}
+                        alt={message.sticker.name}
+                        title={message.sticker.name}
+                        loading="lazy"
+                      />
+                    ) : (
+                      <MessageContent content={message.content} />
+                    )}
                     {message.reactions.length > 0 && (
                       <div className="chat-reactions">
                         {message.reactions.map((reaction) => (
@@ -251,6 +301,16 @@ export function ChatRoom({
                           {emoji}
                         </button>
                       ))}
+                      <button
+                        type="button"
+                        aria-label="More reactions"
+                        title="More reactions"
+                        onClick={(event) =>
+                          setPicker({ kind: "reaction-emoji", messageId: message.id, anchor: event.currentTarget.getBoundingClientRect() })
+                        }
+                      >
+                        <Icon name="smile" size={15} />
+                      </button>
                     </div>
                   )}
                 </article>
@@ -270,6 +330,7 @@ export function ChatRoom({
         {error && <p className="chat-composer__error" role="alert">{error}</p>}
         <div className="chat-composer__box">
           <textarea
+            ref={draftRef}
             value={draft}
             onChange={(event) => setDraft(event.target.value)}
             onKeyDown={onKeyDown}
@@ -278,12 +339,46 @@ export function ChatRoom({
             rows={1}
             maxLength={MAX_MESSAGE_LENGTH}
           />
+          <button
+            type="button"
+            className="chat-composer__tool"
+            aria-label="Add emoji"
+            title="Add emoji"
+            onClick={(event) => setPicker({ kind: "composer-emoji", anchor: event.currentTarget.getBoundingClientRect() })}
+          >
+            <Icon name="smile" size={18} />
+          </button>
+          <button
+            type="button"
+            className="chat-composer__tool"
+            aria-label="Stickers"
+            title="Stickers"
+            onClick={(event) => setPicker({ kind: "sticker", anchor: event.currentTarget.getBoundingClientRect() })}
+          >
+            <Icon name="sticker" size={18} />
+          </button>
           <button type="submit" className="primary-button" disabled={!draft.trim()}>Send</button>
         </div>
         <small>
           <kbd>Enter</kbd> to send · <kbd>Shift</kbd>+<kbd>Enter</kbd> for a new line · <code>`code`</code>, <code>```blocks```</code>, <strong>**bold**</strong>
         </small>
       </form>
+
+      {picker?.kind === "composer-emoji" && (
+        <EmojiPopover anchor={picker.anchor} label="Add emoji" onPick={insertEmoji} onClose={closePicker} />
+      )}
+      {picker?.kind === "reaction-emoji" && (
+        <EmojiPopover
+          anchor={picker.anchor}
+          label="Add a reaction"
+          onPick={(emoji) => {
+            setPicker(null);
+            void react(picker.messageId, emoji);
+          }}
+          onClose={closePicker}
+        />
+      )}
+      {picker?.kind === "sticker" && <StickerPopover anchor={picker.anchor} onPick={sendSticker} onClose={closePicker} />}
     </section>
   );
 }

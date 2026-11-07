@@ -857,3 +857,34 @@ select.form-input { cursor: pointer; }
 .invite-list li { display: flex; gap: 12px; align-items: center; justify-content: space-between; color: var(--secondary); font-size: 13px; }
 .invite-list .text-link { border: 0; background: none; cursor: pointer; }
 .invite-switch { margin-left: 6px; padding: 0; border: 0; background: none; color: var(--fruit-text); font: inherit; font-weight: 600; cursor: pointer; }
+
+/* Chat pickers. Fixed so the message list can't clip them; menu drop per DESIGN.md. */
+.chat-popover { position: fixed; z-index: 900; width: min(340px, calc(100vw - 16px)); border: 1px solid var(--seam-strong); border-radius: var(--radius); background: var(--surface-2); box-shadow: 0 12px 32px rgba(0, 0, 0, .5); }
+.chat-composer__tool { display: inline-grid; place-items: center; flex-shrink: 0; width: 34px; height: 34px; border: 0; border-radius: var(--radius-sm); background: none; color: var(--muted); cursor: pointer; transition: background 140ms ease, color 140ms ease; }
+.chat-composer__tool:hover { background: var(--surface-2); color: var(--text); }
+.chat-sticker { display: block; width: 128px; height: 128px; margin-top: 4px; border-radius: var(--radius-sm); object-fit: contain; }
+
+.emoji-picker { display: flex; flex-direction: column; height: 360px; max-height: calc(100vh - 16px); isolation: isolate; }
+.emoji-picker__search { flex-shrink: 0; width: auto; margin: 10px 10px 6px; }
+.emoji-picker__viewport { position: relative; flex: 1; outline: none; overflow-y: auto; }
+.emoji-picker__status { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); font-size: 13px; }
+.emoji-picker__list { padding-bottom: 8px; user-select: none; }
+.emoji-picker [frimousse-category-header] { padding: 8px 12px 4px; background: var(--surface-2); color: var(--muted); font-size: 12px; font-weight: 500; }
+.emoji-picker [frimousse-row] { padding: 0 8px; scroll-margin-block: 8px; }
+.emoji-picker [frimousse-emoji] { display: grid; place-items: center; width: 39px; height: 36px; border: 0; border-radius: 6px; background: none; font-size: 20px; cursor: pointer; }
+.emoji-picker [frimousse-emoji][data-active] { background: var(--surface-3); }
+
+.sticker-panel { display: grid; gap: 10px; padding: 12px; }
+.sticker-panel__head { display: flex; align-items: center; justify-content: space-between; min-height: 34px; }
+.sticker-panel__head strong { font-size: 14px; font-weight: 600; }
+.sticker-panel__status { margin: 0; padding: 24px 8px; color: var(--muted); font-size: 13px; text-align: center; }
+.sticker-panel__error { margin: 0; color: #ee7275; font-size: 12px; }
+.sticker-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; max-height: 280px; margin: 0; padding: 0; overflow-y: auto; list-style: none; }
+.sticker-grid li { position: relative; }
+.sticker-grid__send { display: block; width: 100%; aspect-ratio: 1; padding: 4px; border: 0; border-radius: var(--radius-sm); background: none; cursor: pointer; }
+.sticker-grid__send:hover { background: var(--surface-3); }
+.sticker-grid__send img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.sticker-grid__delete { position: absolute; top: 2px; right: 2px; display: none; place-items: center; width: 20px; height: 20px; border: 0; border-radius: 6px; background: var(--surface-1); color: var(--secondary); cursor: pointer; }
+.sticker-grid li:hover .sticker-grid__delete, .sticker-grid__delete:focus-visible { display: grid; }
+.sticker-grid__delete:hover { color: #f4a0a2; }
+@media (hover: none) { .sticker-grid__delete { display: grid; } }

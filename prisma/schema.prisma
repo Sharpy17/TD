@@ -45,6 +45,7 @@ model User {
   directChannels Channel[]        @relation("DirectParticipants")
   directReads DirectRead[]
   createdInvites WorkspaceInvite[]
+  stickers    Sticker[]
   createdAt   DateTime            @default(now())
   updatedAt   DateTime            @updatedAt
 }
@@ -86,6 +87,7 @@ model Workspace {
   voiceRooms      VoiceRoom[]
   soundboardClips SoundboardClip[]
   invites         WorkspaceInvite[]
+  stickers        Sticker[]
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
 }
@@ -193,6 +195,9 @@ model Message {
   /// Set when the message is a comment on a task; it still lives in the module's channel.
   taskId    String?
   task      Task?      @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  /// Set when the message is a sticker; `content` keeps its name for when the image is deleted.
+  stickerId String?
+  sticker   Sticker?   @relation(fields: [stickerId], references: [id], onDelete: SetNull)
   reactions Reaction[]
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
@@ -261,4 +266,19 @@ model WorkspaceInvite {
   createdAt   DateTime      @default(now())
 
   @@index([workspaceId])
+}
+
+model Sticker {
+  id           String    @id @default(cuid())
+  name         String
+  storageKey   String    @unique
+  mimeType     String
+  workspaceId  String
+  workspace    Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  uploadedById String?
+  uploadedBy   User?     @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
+  messages     Message[]
+  createdAt    DateTime  @default(now())
+
+  @@index([workspaceId, createdAt])
 }

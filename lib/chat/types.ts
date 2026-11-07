@@ -62,5 +62,7 @@ export type ChatMessage = {
   author: UserSummary;
   /** Present when the message is a comment posted from a task card. */
   task: { id: string; code: string | null; title: string } | null;
+  /** Present when the message is a sticker that still exists. */
+  sticker: { id: string; name: string } | null;
   reactions: ChatReaction[];
 };

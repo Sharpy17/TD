@@ -6,6 +6,7 @@ import { getDeadlineStatus } from "@/lib/domain/deadlines";
 import { taskCode } from "@/lib/domain/taskCodes";
 import { getActiveMembership } from "@/lib/workspaces/service";
 import { directChannelId, getDirectUnread } from "./direct";
+import { isSingleEmoji } from "./emoji";
 import type { TaskStatus } from "@/lib/domain/types";
 import {
   PROJECT_CHANNEL_NAME,
@@ -279,6 +280,7 @@ const messageSelect = {
   createdAt: true,
   author: { select: { id: true, name: true } },
   task: { select: { id: true, title: true, number: true, module: { select: { name: true } } } },
+  sticker: { select: { id: true, name: true } },
   reactions: { select: { emoji: true, userId: true } },
 } as const;
 
@@ -288,6 +290,7 @@ type MessageRow = {
   createdAt: Date;
   author: { id: string; name: string };
   task: { id: string; title: string; number: number | null; module: { name: string } } | null;
+  sticker: { id: string; name: string } | null;
   reactions: Array<{ emoji: string; userId: string }>;
 };
 
@@ -312,6 +315,7 @@ function toChatMessage(row: MessageRow, viewerId: string | null): ChatMessage {
     task: row.task
       ? { id: row.task.id, title: row.task.title, code: taskCode(row.task.module.name, row.task.number) }
       : null,
+    sticker: row.sticker,
     reactions: [...counts.entries()]
       .sort(([a], [b]) => order(a) - order(b))
       .map(([emoji, entry]) => ({ emoji, count: entry.count, mine: entry.mine })),
@@ -359,13 +363,47 @@ export async function createMessage(input: {
   }
 }
 
+/** Posts a sticker from the channel's own workspace. */
+export async function createStickerMessage(input: {
+  channelId: string;
+  authorId: string;
+  stickerId: string;
+}): Promise<Result<{ message: ChatMessage }>> {
+  try {
+    if (!(await canAccessChannel(input.channelId, input.authorId))) {
+      return { success: false, error: "You don't have access to this channel." };
+    }
+    const [channel, sticker] = await Promise.all([
+      prisma.channel.findUnique({ where: { id: input.channelId }, select: { workspaceId: true } }),
+      prisma.sticker.findUnique({ where: { id: input.stickerId }, select: { id: true, name: true, workspaceId: true } }),
+    ]);
+    if (!channel || !sticker || sticker.workspaceId !== channel.workspaceId) {
+      return { success: false, error: "That sticker isn't available here." };
+    }
+
+    const row = await prisma.message.create({
+      data: {
+        content: `Sticker: ${sticker.name}`,
+        channelId: input.channelId,
+        authorId: input.authorId,
+        stickerId: sticker.id,
+      },
+      select: messageSelect,
+    });
+    return { success: true, message: toChatMessage(row, input.authorId) };
+  } catch (err) {
+    console.error(`[createStickerMessage] Failed for channel ${input.channelId}:`, err);
+    return { success: false, error: "Failed to send sticker." };
+  }
+}
+
 /** Adds the reaction, or removes it when the user already reacted with that emoji. */
 export async function toggleReaction(input: {
   messageId: string;
   userId: string;
   emoji: string;
 }): Promise<Result<{ channelId: string; active: boolean }>> {
-  if (!(QUICK_REACTIONS as readonly string[]).includes(input.emoji)) {
+  if (!isSingleEmoji(input.emoji)) {
     return { success: false, error: "Unsupported reaction." };
   }
 
