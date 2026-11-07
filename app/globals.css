@@ -888,3 +888,4 @@ select.form-input { cursor: pointer; }
 .sticker-grid li:hover .sticker-grid__delete, .sticker-grid__delete:focus-visible { display: grid; }
 .sticker-grid__delete:hover { color: #f4a0a2; }
 @media (hover: none) { .sticker-grid__delete { display: grid; } }
+@media (max-width: 640px) { .chat-composer { padding-inline: 12px; } .chat-composer__box { gap: 2px; padding-left: 10px; } .chat-composer .primary-button { padding-inline: 10px; } .chat-composer__tool { width: 32px; } }
