@@ -119,6 +119,16 @@ export function VoiceProvider({ children }: { children: React.ReactNode }) {
       setCurrentRoomName(target.name);
       setStatus("connecting");
 
+      // A join can stall without ever failing, so the whole attempt gets a deadline.
+      const deadline = setTimeout(() => {
+        if (!isCurrent()) return;
+        attemptRef.current += 1;
+        const stalled = roomRef.current;
+        resetCall();
+        void stalled?.disconnect();
+        setError("Voice took too long to connect. Check your connection and try again.");
+      }, CONNECT_TIMEOUT_MS);
+
       try {
         const response = await fetch("/api/voice/token", {
           method: "POST",
@@ -184,13 +194,8 @@ export function VoiceProvider({ children }: { children: React.ReactNode }) {
           });
 
         roomRef.current = room;
-        // On a bad network a join can stall without failing, so it gets a deadline.
-        await Promise.race([
-          room.connect(pass.url, pass.token),
-          new Promise((_, reject) =>
-            setTimeout(() => reject(new Error("Voice took too long to connect. Check your connection and try again.")), CONNECT_TIMEOUT_MS),
-          ),
-        ]);
+        await room.connect(pass.url, pass.token);
+        clearTimeout(deadline);
         if (!isCurrent()) {
           leavingRef.current = true;
           await room.disconnect();
@@ -216,12 +221,11 @@ export function VoiceProvider({ children }: { children: React.ReactNode }) {
         }
         await refreshMicrophones(room);
       } catch (err) {
+        clearTimeout(deadline);
         if (!isCurrent()) return;
         const failed = roomRef.current;
-        leavingRef.current = true;
-        await failed?.disconnect().catch(() => {});
-        leavingRef.current = false;
         resetCall();
+        void failed?.disconnect().catch(() => {});
         setError(err instanceof Error ? err.message : "Couldn't join voice.");
       }
     },

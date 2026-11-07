@@ -5,6 +5,7 @@ import { directChannelId, getDirectUnread, getOrCreateDirectChannel, markDirectR
 import { canAccessChannel, createMessage, findChannel, getChatDirectory } from "../lib/chat/service";
 import { getProjects } from "../lib/projects/service";
 import { dropVoiceMember, listVoiceMembers, touchVoiceMember } from "../lib/realtime/hub";
+import { getVoiceRooms } from "../lib/voice/service";
 import {
   acceptInvite,
   createInvite,
@@ -130,6 +131,11 @@ describe("Workspaces, invites and direct messages", () => {
 
     await markDirectRead(channelId, ids.member);
     expect((await getDirectUnread(ids.member, workspaceId))[channelId]).toBe(0);
+  });
+
+  it("seeds default voice rooms once, even when requested at the same moment", async () => {
+    await Promise.all([getVoiceRooms(workspaceId), getVoiceRooms(workspaceId), getVoiceRooms(workspaceId)]);
+    expect(await getVoiceRooms(workspaceId)).toHaveLength(4);
   });
 
   it("tracks voice rosters per workspace", () => {
