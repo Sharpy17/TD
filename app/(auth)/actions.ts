@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { authenticateWithPassword, registerUser, logout } from "@/lib/auth/service";
+import { isValidSignupCode } from "@/lib/auth/access";
 import { LoginSchema, SignUpSchema } from "@/lib/auth/validations";
 
 export interface AuthActionState {
@@ -56,6 +57,13 @@ export async function signupAction(
       fieldErrors[field] = issue.message;
     }
     return { fieldErrors, error: "Please provide valid registration details." };
+  }
+
+  if (!isValidSignupCode(formData.get("inviteCode"), process.env.SIGNUP_CODE, process.env.NODE_ENV === "production")) {
+    return {
+      fieldErrors: { inviteCode: "That invite code isn't valid." },
+      error: "Signing up needs a valid invite code.",
+    };
   }
 
   const result = await registerUser(parsed.data);

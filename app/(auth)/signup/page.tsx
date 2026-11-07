@@ -132,6 +132,23 @@ export default function SignUpPage() {
           )}
         </div>
 
+        <div className="form-group">
+          <label className="form-label" htmlFor="inviteCode">
+            Invite code
+          </label>
+          <input
+            id="inviteCode"
+            name="inviteCode"
+            type="text"
+            autoComplete="off"
+            className={`form-input ${state?.fieldErrors?.inviteCode ? "form-input--error" : ""}`}
+            disabled={isPending}
+          />
+          {state?.fieldErrors?.inviteCode && (
+            <span className="form-error">{state.fieldErrors.inviteCode}</span>
+          )}
+        </div>
+
         <button type="submit" className="auth-submit" disabled={isPending}>
           {isPending ? (
             <>
