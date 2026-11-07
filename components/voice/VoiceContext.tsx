@@ -7,6 +7,7 @@ import { playVoiceChime } from "@/lib/audio/soundEffects";
 import type { VoiceRoom } from "@/lib/domain/types";
 
 const STATE_HEARTBEAT_MS = 15_000;
+const CONNECT_TIMEOUT_MS = 45_000;
 
 export type VoiceStatus = "idle" | "connecting" | "connected" | "reconnecting";
 export type RemoteScreen = { participantId: string; name: string; track: RemoteTrack };
@@ -183,7 +184,13 @@ export function VoiceProvider({ children }: { children: React.ReactNode }) {
           });
 
         roomRef.current = room;
-        await room.connect(pass.url, pass.token);
+        // On a bad network a join can stall without failing, so it gets a deadline.
+        await Promise.race([
+          room.connect(pass.url, pass.token),
+          new Promise((_, reject) =>
+            setTimeout(() => reject(new Error("Voice took too long to connect. Check your connection and try again.")), CONNECT_TIMEOUT_MS),
+          ),
+        ]);
         if (!isCurrent()) {
           leavingRef.current = true;
           await room.disconnect();
