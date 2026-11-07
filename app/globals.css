@@ -153,7 +153,7 @@ input, textarea { caret-color: var(--fruit); }
 .crumb { color: var(--muted); font-size: 14px; text-decoration: none; }
 .crumb:hover { color: var(--text); }
 .crumb-sep { color: var(--seam-strong); }
-.topbar-actions { display: flex; gap: 8px; align-items: center; justify-content: flex-end; }
+.topbar-actions, .topbar > .topbar-actions, .main-topbar > .topbar-actions { display: flex; gap: 8px; align-items: center; justify-content: flex-end; }
 .search { height: 34px; display: grid; grid-template-columns: auto 1fr auto; gap: 8px; align-items: center; padding: 0 10px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface-1); color: var(--muted); }
 .search:focus-within { border-color: var(--seam-strong); }
 .search input { min-width: 0; border: 0; outline: none; background: transparent; color: var(--text); font-size: 13px; }
