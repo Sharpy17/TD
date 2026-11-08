@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { AuthSessionUser } from "@/lib/auth/service";
+import { markDirectRead } from "@/lib/chat/direct";
 import { findChannel, getChatDirectory, getMessages } from "@/lib/chat/service";
 import type { ChannelSummary } from "@/lib/chat/types";
 import { ChannelList } from "./ChannelList";
@@ -28,6 +29,11 @@ export async function ChatScreen({
 
   const messages = await getMessages(channelId, user.id);
   const { channel, project } = found;
+  if (channel.kind === "direct") {
+    await markDirectRead(channel.id, user.id);
+    const person = directory.people.find((candidate) => candidate.channelId === channel.id);
+    if (person) person.unread = 0;
+  }
 
   const hrefFor = (target: ChannelSummary, projectSlug: string | null) =>
     scope.kind === "project" && projectSlug
@@ -53,7 +59,7 @@ export async function ChatScreen({
         initialMessages={messages}
         currentUser={{ id: user.id, name: user.name, initials: user.name.slice(0, 2).toUpperCase() }}
         context={{
-          scopeLabel: project ? project.name : "Workspace",
+          scopeLabel: project ? project.name : channel.kind === "direct" ? "Direct message" : "Workspace",
           scopeHref: project ? `/projects/${project.slug}` : undefined,
           boardHref: project && channel.moduleId ? `/projects/${project.slug}/modules/${channel.moduleId}` : undefined,
         }}

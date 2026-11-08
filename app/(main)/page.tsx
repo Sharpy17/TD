@@ -3,7 +3,9 @@ import { ProjectCard } from "@/components/projects/ProjectCard";
 import { HomeRooms } from "@/components/dashboard/HomeRooms";
 import { Icon } from "@/components/ui/Icon";
 import { getProjects } from "@/lib/projects/service";
-import { getSidebarAccount } from "@/lib/auth/account";
+import { InviteButton } from "@/components/workspace/InviteButton";
+import { getSidebarAccount, getViewerWorkspace } from "@/lib/auth/account";
+import { canManageInvites } from "@/lib/workspaces/service";
 import { getVoiceRooms } from "@/lib/voice/service";
 import { formatDeadline, getDeadlineStatus, isUrgentTask } from "@/lib/domain/deadlines";
 
@@ -14,7 +16,12 @@ function requestTimeMs(): number {
 }
 
 export default async function HomePage() {
-  const [projects, account, rooms] = await Promise.all([getProjects(), getSidebarAccount(), getVoiceRooms()]);
+  const viewer = await getViewerWorkspace();
+  const [projects, account, rooms] = await Promise.all([
+    getProjects(viewer?.workspaceId),
+    getSidebarAccount(),
+    getVoiceRooms(viewer?.workspaceId),
+  ]);
   // The busiest project leads the sheet; the rest keep their order.
   const taskTotal = (entry: (typeof projects)[number]) =>
     entry.project.modules.reduce((total, module) => total + module.tasks.length, 0);
@@ -49,9 +56,7 @@ export default async function HomePage() {
           <kbd>⌘K</kbd>
         </label>
         <div className="topbar-actions">
-          <button className="secondary-button" type="button">
-            <Icon name="users" size={15} /> Invite
-          </button>
+          {viewer && canManageInvites(viewer.role) && <InviteButton workspaceName={viewer.workspaceName} />}
           <Link className="primary-button button-link" href="/projects">
             All projects
           </Link>

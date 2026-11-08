@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { VoiceRoom } from "@/lib/domain/types";
 import { Icon, type IconName } from "@/components/ui/Icon";
+import { useLive } from "@/components/live/LiveContext";
 import { useVoice } from "@/components/voice/VoiceContext";
 import { AccountMenu, type SidebarAccount } from "./AccountMenu";
 
@@ -15,7 +16,8 @@ const navigation: Array<{ href: string; label: string; icon: IconName }> = [
 
 export function GlobalSidebar({ account, rooms = [] }: { account: SidebarAccount; rooms?: VoiceRoom[] }) {
   const pathname = usePathname();
-  const { currentRoomId, joinRoom, leaveRoom } = useVoice();
+  const { currentRoomId, joinRoom, leaveRoom, membersOf } = useVoice();
+  const { unreadDirect } = useLive();
 
   return (
     <aside className="sidebar global-sidebar">
@@ -39,6 +41,9 @@ export function GlobalSidebar({ account, rooms = [] }: { account: SidebarAccount
               >
                 <Icon name={item.icon} />
                 <span className="nav-item__label">{item.label}</span>
+                {item.href === "/chats" && unreadDirect > 0 && (
+                  <span className="unread-badge" aria-label={`${unreadDirect} unread direct messages`}>{unreadDirect}</span>
+                )}
               </Link>
             );
           })}
@@ -50,7 +55,7 @@ export function GlobalSidebar({ account, rooms = [] }: { account: SidebarAccount
           <div className="sidebar-label">Voice rooms</div>
           {rooms.map((room) => {
             const live = currentRoomId === room.id;
-            const count = room.members.length + (live ? 1 : 0);
+            const count = membersOf(room.id).length;
             return (
               <button
                 key={room.id}

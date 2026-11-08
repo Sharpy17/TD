@@ -5,8 +5,9 @@ import type { UserSummary } from "@/lib/domain/types";
  * - workspace: the one team-wide #general (announcements, wins, async standups)
  * - project:   each project's #general (anything that spans its modules)
  * - module:    one channel per module, created automatically with it
+ * - direct:    a private conversation between two people
  */
-export type ChannelKind = "workspace" | "project" | "module";
+export type ChannelKind = "workspace" | "project" | "module" | "direct";
 
 export const QUICK_REACTIONS = ["🔥", "🚀", "👍", "💀", "💯", "🤡"] as const;
 export type QuickReaction = (typeof QUICK_REACTIONS)[number];
@@ -37,9 +38,19 @@ export type ChatProjectGroup = {
   channels: ChannelSummary[];
 };
 
+/** A teammate you can message. `channelId` is null until the conversation is first opened. */
+export type ChatPerson = {
+  userId: string;
+  name: string;
+  initials: string;
+  channelId: string | null;
+  unread: number;
+};
+
 export type ChatDirectory = {
   workspace: ChannelSummary[];
   projects: ChatProjectGroup[];
+  people: ChatPerson[];
 };
 
 export type ChatReaction = { emoji: string; count: number; mine: boolean };
@@ -51,5 +62,7 @@ export type ChatMessage = {
   author: UserSummary;
   /** Present when the message is a comment posted from a task card. */
   task: { id: string; code: string | null; title: string } | null;
+  /** Present when the message is a sticker that still exists. */
+  sticker: { id: string; name: string } | null;
   reactions: ChatReaction[];
 };

@@ -3,9 +3,14 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { logoutAction } from "@/app/(auth)/actions";
+import { switchWorkspaceAction } from "@/app/workspace-actions";
 import { Icon } from "@/components/ui/Icon";
 
-export type SidebarAccount = { name: string; email: string } | null;
+export type SidebarAccount = {
+  name: string;
+  email: string;
+  workspaces?: Array<{ id: string; name: string; active: boolean }>;
+} | null;
 
 /**
  * Sidebar footer: who you are, plus log out / switch account.
@@ -30,6 +35,12 @@ export function AccountMenu({ account, extraItems }: { account: SidebarAccount; 
       document.removeEventListener("keydown", onKeyDown);
     };
   }, [open]);
+
+  // A full reload also leaves voice and reconnects the live stream for the new workspace.
+  const switchTo = async (workspaceId: string) => {
+    // eslint-disable-next-line @next/next/no-location-assign-relative-destination -- a full reload is the point here.
+    if (await switchWorkspaceAction(workspaceId)) window.location.assign("/");
+  };
 
   if (!account) {
     return (
@@ -73,6 +84,19 @@ export function AccountMenu({ account, extraItems }: { account: SidebarAccount; 
 
       {open && (
         <div className="account__menu" role="menu">
+          {(account.workspaces?.length ?? 0) > 1 &&
+            account.workspaces?.map((workspace) => (
+              <button
+                type="button"
+                key={workspace.id}
+                className="account__item"
+                role="menuitemradio"
+                aria-checked={workspace.active}
+                onClick={() => switchTo(workspace.id)}
+              >
+                <Icon name={workspace.active ? "check" : "dot"} /> {workspace.name}
+              </button>
+            ))}
           <Link className="account__item" role="menuitem" href="/login" onClick={() => setOpen(false)}>
             <Icon name="user" /> Switch account
           </Link>

@@ -22,6 +22,7 @@ export interface CreateProjectInput {
   name: string;
   description?: string;
   createDefaultModules?: boolean;
+  workspaceId?: string;
 }
 
 export interface ProjectResult {
@@ -178,9 +179,11 @@ export async function ensureDemoProjectSeeded(): Promise<string> {
  * Fetches all projects in the workspace.
  * If no projects exist in the database, automatically seeds the demo project.
  */
-export async function getProjects(): Promise<Array<{ project: Project; slug: string }>> {
+export async function getProjects(workspaceId?: string): Promise<Array<{ project: Project; slug: string }>> {
   try {
+    const where = workspaceId ? { workspaceId } : undefined;
     let dbProjects = await prisma.project.findMany({
+      where,
       include: {
         modules: {
           include: {
@@ -199,9 +202,10 @@ export async function getProjects(): Promise<Array<{ project: Project; slug: str
       orderBy: { createdAt: "desc" },
     });
 
-    if (dbProjects.length === 0) {
+    if (dbProjects.length === 0 && (await prisma.project.count()) === 0) {
       await ensureDemoProjectSeeded();
       dbProjects = await prisma.project.findMany({
+        where,
         include: {
           modules: {
             include: {
@@ -222,7 +226,7 @@ export async function getProjects(): Promise<Array<{ project: Project; slug: str
     }
 
     if (dbProjects.length === 0) {
-      return [{ project: demoProject, slug: demoProjectSlug }];
+      return workspaceId ? [] : [{ project: demoProject, slug: demoProjectSlug }];
     }
 
     const healed = await Promise.all(dbProjects.map(healLegacyDemoName));
@@ -232,7 +236,7 @@ export async function getProjects(): Promise<Array<{ project: Project; slug: str
     }));
   } catch (err) {
     console.error("[getProjects] Falling back to demo project:", err);
-    return [{ project: demoProject, slug: demoProjectSlug }];
+    return workspaceId ? [] : [{ project: demoProject, slug: demoProjectSlug }];
   }
 }
 
@@ -312,9 +316,9 @@ export async function createProject(input: CreateProjectInput): Promise<ProjectR
 
   try {
     // Ensure we have a workspace
-    let workspace = await prisma.workspace.findFirst({
-      orderBy: { createdAt: "asc" },
-    });
+    let workspace = input.workspaceId
+      ? await prisma.workspace.findUnique({ where: { id: input.workspaceId } })
+      : await prisma.workspace.findFirst({ orderBy: { createdAt: "asc" } });
 
     if (!workspace) {
       workspace = await prisma.workspace.create({

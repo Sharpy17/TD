@@ -7,6 +7,7 @@ import {
   hashSessionToken,
 } from "./session";
 import { deleteSessionCookie, getSessionCookie, setSessionCookie } from "./cookies";
+import type { WorkspaceRole } from "@prisma/client";
 import type { LoginInput, SignUpInput } from "./validations";
 
 export interface AuthSessionUser {
@@ -48,7 +49,10 @@ function sanitizeErrorMessage(error: unknown, defaultMessage: string): string {
 /**
  * Registers a new user, hashes their password, and provisions their default workspace.
  */
-export async function registerUser(input: SignUpInput): Promise<AuthResult> {
+export async function registerUser(
+  input: SignUpInput,
+  invite?: { id: string; workspaceId: string; role: WorkspaceRole },
+): Promise<AuthResult> {
   const { name, email, password, workspaceName } = input;
 
   try {
@@ -74,6 +78,7 @@ export async function registerUser(input: SignUpInput): Promise<AuthResult> {
         data: {
           email,
           name: name.trim(),
+          activeWorkspaceId: invite?.workspaceId,
         },
       });
 
@@ -86,21 +91,27 @@ export async function registerUser(input: SignUpInput): Promise<AuthResult> {
       });
 
       // 3. Create Default Startup Workspace
-      const workspace = await tx.workspace.create({
-        data: {
-          name: finalWorkspaceName,
-          slug: workspaceSlug,
-        },
-      });
+      const workspace = invite
+        ? await tx.workspace.findUniqueOrThrow({ where: { id: invite.workspaceId } })
+        : await tx.workspace.create({
+            data: {
+              name: finalWorkspaceName,
+              slug: workspaceSlug,
+            },
+          });
 
       // 4. Assign OWNER role
       await tx.membership.create({
         data: {
           userId: user.id,
           workspaceId: workspace.id,
-          role: "OWNER",
+          role: invite?.role ?? "OWNER",
         },
       });
+
+      if (invite) {
+        await tx.workspaceInvite.update({ where: { id: invite.id }, data: { useCount: { increment: 1 } } });
+      }
 
       // 5. Create active Session
       await tx.session.create({

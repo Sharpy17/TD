@@ -7,3 +7,5 @@ coverage/
 .vercel/
 tsconfig.tsbuildinfo
 
+uploads/
+public/emoji-data/

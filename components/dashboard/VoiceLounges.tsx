@@ -13,7 +13,7 @@ export function VoiceLounges({
   rooms: VoiceRoom[];
   projectId?: string;
 }) {
-  const { currentRoomId, joinRoom, leaveRoom, isMuted, isSpeaking } = useVoice();
+  const { currentRoomId, joinRoom, leaveRoom, membersOf } = useVoice();
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   const handleRoomClick = (room: VoiceRoom) => {
@@ -47,17 +47,7 @@ export function VoiceLounges({
           {rooms.map((room) => {
             const isCurrentRoom = currentRoomId === room.id;
 
-            // Include current user in members if they are in this room
-            const displayMembers = [...room.members];
-            if (isCurrentRoom && !displayMembers.some((m) => m.id === "me")) {
-              displayMembers.unshift({
-                id: "me",
-                name: "You",
-                initials: "YOU",
-                muted: isMuted,
-                speaking: isSpeaking,
-              });
-            }
+            const displayMembers = membersOf(room.id);
 
             return (
               <button

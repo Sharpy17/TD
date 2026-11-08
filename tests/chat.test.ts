@@ -87,7 +87,7 @@ describe("Text channels (lib/chat/service)", () => {
   });
 
   it("keeps outsiders out", async () => {
-    expect(await getChatDirectory(ids.outsider)).toEqual({ workspace: [], projects: [] });
+    expect(await getChatDirectory(ids.outsider)).toEqual({ workspace: [], projects: [], people: [] });
     const result = await createMessage({ channelId: projectChannelId(projectId), authorId: ids.outsider, content: "hi" });
     expect(result.success).toBe(false);
   });
@@ -111,7 +111,7 @@ describe("Text channels (lib/chat/service)", () => {
     const channelId = projectChannelId(projectId);
     const [message] = await getMessages(channelId, ids.member);
 
-    expect((await toggleReaction({ messageId: message.id, userId: ids.member, emoji: "🦄" })).success).toBe(false);
+    expect((await toggleReaction({ messageId: message.id, userId: ids.member, emoji: "not an emoji" })).success).toBe(false);
     const on = await toggleReaction({ messageId: message.id, userId: ids.member, emoji: "🔥" });
     expect(on.success && on.active).toBe(true);
     expect((await getMessages(channelId, ids.member))[0].reactions).toEqual([{ emoji: "🔥", count: 1, mine: true }]);

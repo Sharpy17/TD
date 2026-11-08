@@ -10,6 +10,7 @@ function ChannelLink({ channel, href, active }: { channel: ChannelSummary; href:
     <Link
       className={`chat-channel ${active ? "chat-channel--active" : ""}`}
       href={href}
+      prefetch={false}
       aria-current={active ? "page" : undefined}
     >
       <span className="chat-channel__hash">{channel.kind === "module" ? <ModuleIcon glyph={channel.icon} size={14} /> : "#"}</span>
@@ -46,6 +47,25 @@ export function ChannelList({
           <div className="sidebar-label">Workspace</div>
           {directory.workspace.map((channel) => (
             <ChannelLink key={channel.id} channel={channel} href={hrefFor(channel, null)} active={channel.id === activeId} />
+          ))}
+        </div>
+      )}
+
+      {!onlyProjectId && directory.people.length > 0 && (
+        <div className="chat-channels__group">
+          <div className="sidebar-label">Direct messages</div>
+          {directory.people.map((person) => (
+            <Link
+              key={person.userId}
+              className={`chat-channel ${person.channelId === activeId ? "chat-channel--active" : ""}`}
+              href={person.channelId ? `/chats/${person.channelId}` : `/chats/dm/${person.userId}`}
+              prefetch={false}
+              aria-current={person.channelId === activeId ? "page" : undefined}
+            >
+              <span className="avatar avatar--small chat-channel__avatar">{person.initials}</span>
+              <span className="chat-channel__name">{person.name}</span>
+              {person.unread > 0 && <span className="unread-badge">{person.unread}</span>}
+            </Link>
           ))}
         </div>
       )}

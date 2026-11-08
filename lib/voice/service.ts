@@ -51,12 +51,15 @@ export async function ensureDefaultVoiceRoomsSeeded(workspaceId?: string): Promi
     });
 
     if (count === 0) {
+      // Stable ids: a layout and its page both get here at once on a new workspace.
       await prisma.voiceRoom.createMany({
-        data: DEFAULT_ROOMS.map((r) => ({
+        data: DEFAULT_ROOMS.map((r, index) => ({
+          id: `room-${wsId}-${index}`,
           name: r.name,
           maxUsers: r.maxUsers,
           workspaceId: wsId,
         })),
+        skipDuplicates: true,
       });
     }
   } catch (err) {
@@ -80,6 +83,7 @@ export async function getVoiceRooms(workspaceId?: string): Promise<VoiceRoom[]> 
     return dbRooms.map((r) => ({
       id: r.id,
       name: r.name,
+      maxUsers: r.maxUsers,
       members: [],
     }));
   } catch (err) {

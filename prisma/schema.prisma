@@ -33,6 +33,7 @@ model User {
   email       String              @unique
   name        String
   avatarUrl   String?
+  activeWorkspaceId String?
   credential  PasswordCredential?
   sessions    Session[]
   memberships Membership[]
@@ -41,6 +42,10 @@ model User {
   assignments Task[]              @relation("TaskAssignee")
   messages    Message[]
   reactions   Reaction[]
+  directChannels Channel[]        @relation("DirectParticipants")
+  directReads DirectRead[]
+  createdInvites WorkspaceInvite[]
+  stickers    Sticker[]
   createdAt   DateTime            @default(now())
   updatedAt   DateTime            @updatedAt
 }
@@ -81,6 +86,8 @@ model Workspace {
   channels        Channel[]
   voiceRooms      VoiceRoom[]
   soundboardClips SoundboardClip[]
+  invites         WorkspaceInvite[]
+  stickers        Sticker[]
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
 }
@@ -167,6 +174,10 @@ model Channel {
   project     Project?  @relation(fields: [projectId], references: [id], onDelete: Cascade)
   moduleId    String?   @unique
   module      Module?   @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  /// Direct conversations are private to their participants, whatever their workspace role.
+  isDirect     Boolean      @default(false)
+  participants User[]       @relation("DirectParticipants")
+  reads        DirectRead[]
   messages    Message[]
   createdAt   DateTime  @default(now())
 
@@ -184,6 +195,9 @@ model Message {
   /// Set when the message is a comment on a task; it still lives in the module's channel.
   taskId    String?
   task      Task?      @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  /// Set when the message is a sticker; `content` keeps its name for when the image is deleted.
+  stickerId String?
+  sticker   Sticker?   @relation(fields: [stickerId], references: [id], onDelete: SetNull)
   reactions Reaction[]
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
@@ -226,4 +240,45 @@ model SoundboardClip {
   createdAt   DateTime  @default(now())
 
   @@index([workspaceId])
+}
+
+model DirectRead {
+  channelId  String
+  channel    Channel  @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lastReadAt DateTime
+
+  @@id([channelId, userId])
+}
+
+model WorkspaceInvite {
+  id          String        @id @default(cuid())
+  tokenHash   String        @unique
+  role        WorkspaceRole @default(MEMBER)
+  workspaceId String
+  workspace   Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdById String
+  createdBy   User          @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  expiresAt   DateTime
+  revokedAt   DateTime?
+  useCount    Int           @default(0)
+  createdAt   DateTime      @default(now())
+
+  @@index([workspaceId])
+}
+
+model Sticker {
+  id           String    @id @default(cuid())
+  name         String
+  storageKey   String    @unique
+  mimeType     String
+  workspaceId  String
+  workspace    Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  uploadedById String?
+  uploadedBy   User?     @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
+  messages     Message[]
+  createdAt    DateTime  @default(now())
+
+  @@index([workspaceId, createdAt])
 }

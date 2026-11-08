@@ -6,7 +6,7 @@ import { Icon } from "@/components/ui/Icon";
 
 /** Voice rooms on Home: one list, and the room you are in is highlighted. */
 export function HomeRooms({ rooms }: { rooms: VoiceRoom[] }) {
-  const { currentRoomId, joinRoom, leaveRoom } = useVoice();
+  const { currentRoomId, joinRoom, leaveRoom, membersOf, status } = useVoice();
 
   if (rooms.length === 0) {
     return <p className="attention-list attention-empty">No voice rooms yet. Create one from a project.</p>;
@@ -16,17 +16,18 @@ export function HomeRooms({ rooms }: { rooms: VoiceRoom[] }) {
     <ul className="room-list">
       {rooms.map((room) => {
         const live = currentRoomId === room.id;
-        const count = room.members.length + (live ? 1 : 0);
+        const members = membersOf(room.id);
+        const count = members.length;
         return (
           <li className={`room-row ${live ? "room-row--live" : ""}`} key={room.id}>
             <i className="room-row__dot" aria-hidden="true" />
             <div className="room-row__copy">
               <strong>{room.name}</strong>
-              <small>{live ? "You are connected" : count > 0 ? `${count} in room` : "Quiet"}</small>
+              <small>{live ? (status === "connected" ? "You are connected" : "Connecting…") : count > 0 ? `${count} in room` : "Quiet"}</small>
             </div>
-            {room.members.length > 0 && (
+            {members.length > 0 && (
               <span className="avatar-stack">
-                {room.members.slice(0, 3).map((member) => (
+                {members.slice(0, 3).map((member) => (
                   <span
                     key={member.id}
                     className={`avatar avatar--small ${member.speaking ? "avatar--speaking" : ""}`}

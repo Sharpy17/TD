@@ -1,5 +1,6 @@
 import type { NextRequest } from "next/server";
 import { z } from "zod";
+import { canViewProject } from "@/lib/auth/project-access";
 import { getCurrentUser } from "@/lib/auth/service";
 import { canonicalProjectId } from "@/lib/projects/service";
 import { touchViewer } from "@/lib/realtime/hub";
@@ -13,6 +14,7 @@ const heartbeatSchema = z.object({
 export async function POST(request: NextRequest, ctx: { params: Promise<{ projectId: string }> }) {
   const user = await getCurrentUser();
   if (!user) return new Response(null, { status: 401 });
+  if (!(await canViewProject((await ctx.params).projectId))) return new Response(null, { status: 403 });
 
   const body = heartbeatSchema.safeParse(await request.json().catch(() => null));
   if (!body.success) return new Response(null, { status: 400 });

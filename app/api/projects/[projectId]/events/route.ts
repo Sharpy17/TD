@@ -1,4 +1,5 @@
 import type { NextRequest } from "next/server";
+import { canViewProject } from "@/lib/auth/project-access";
 import { canonicalProjectId } from "@/lib/projects/service";
 import { dropViewer, listViewers, subscribe, type BoardEvent } from "@/lib/realtime/hub";
 
@@ -6,7 +7,9 @@ const KEEPALIVE_MS = 25_000;
 
 /** Server-sent events: task changes, comments and presence for one project's board. */
 export async function GET(request: NextRequest, ctx: { params: Promise<{ projectId: string }> }) {
-  const projectId = canonicalProjectId((await ctx.params).projectId);
+  const routeProjectId = (await ctx.params).projectId;
+  if (!(await canViewProject(routeProjectId))) return Response.json({ error: "Not allowed." }, { status: 403 });
+  const projectId = canonicalProjectId(routeProjectId);
   const clientId = request.nextUrl.searchParams.get("clientId");
   const encoder = new TextEncoder();
 

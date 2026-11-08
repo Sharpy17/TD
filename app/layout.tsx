@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { DM_Mono, Urbanist } from "next/font/google";
 import "./globals.css";
+import { LiveProvider } from "@/components/live/LiveContext";
 import { VoiceProvider } from "@/components/voice/VoiceContext";
 import { VoiceAudioDock } from "@/components/voice/VoiceAudioDock";
 
@@ -16,10 +17,12 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en" className={`${urbanist.variable} ${dmMono.variable}`}>
       <body>
-        <VoiceProvider>
-          {children}
-          <VoiceAudioDock />
-        </VoiceProvider>
+        <LiveProvider>
+          <VoiceProvider>
+            {children}
+            <VoiceAudioDock />
+          </VoiceProvider>
+        </LiveProvider>
       </body>
     </html>
   );
