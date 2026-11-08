@@ -313,6 +313,12 @@ kbd { padding: 2px 6px; border: 1px solid var(--border); border-radius: 4px; bac
 .module-card { min-width: 0; display: grid; gap: 16px; padding: 16px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface-1); transition: border-color 160ms ease; }
 .module-card:hover { border-color: var(--seam-strong); }
 .module-card--burning { border-color: rgba(229, 72, 77, .32); }
+.module-card__top { display: flex; gap: 8px; align-items: start; }
+.module-card__top .module-card__head { flex: 1; min-width: 0; }
+.module-card__actions { display: flex; gap: 2px; margin: -4px -4px 0 0; opacity: 0; transition: opacity 140ms ease; }
+.module-card__actions .task-row-delete-btn { margin-left: 0; }
+.module-card:hover .module-card__actions, .module-card__actions:focus-within { opacity: 1; }
+@media (hover: none) { .module-card__actions { opacity: 1; } }
 .module-card__head { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: start; }
 .module-card__icon { display: grid; width: 32px; height: 32px; place-items: center; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface-2); font-size: 16px; }
 .module-card h3 { margin: 4px 0 4px; font-size: 15px; font-weight: 600; }
@@ -398,6 +404,7 @@ select.form-input { cursor: pointer; }
 .form-input:focus { border-color: var(--fruit); box-shadow: 0 0 0 3px rgba(255,129,38, 0.18); }
 .form-input::placeholder { color: var(--muted); }
 .form-input--error { border-color: rgba(229, 72, 77, 0.7) !important; box-shadow: 0 0 0 3px rgba(229, 72, 77, 0.14) !important; }
+.form-hint { margin-top: 2px; color: var(--muted); font-size: 12px; line-height: 1.4; }
 .form-error { margin-top: 2px; color: #f28b8e; font-size: 12px; line-height: 1.4; }
 .auth-banner-error { display: flex; gap: 10px; align-items: center; padding: 10px 12px; border: 1px solid rgba(229, 72, 77, 0.4); border-radius: var(--radius-sm); background: rgba(229, 72, 77, 0.08); color: #f4a0a2; font-size: 13px; line-height: 1.4; }
 .auth-submit { display: flex; gap: 8px; align-items: center; justify-content: center; width: 100%; height: 40px; margin-top: 8px; border: 0; border-radius: var(--radius-sm); background: var(--fruit); color: var(--fruit-ink); font-size: 14px; font-weight: 600; cursor: pointer; transition: background 140ms ease; }

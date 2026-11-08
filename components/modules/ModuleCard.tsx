@@ -18,6 +18,8 @@ export function ModuleCard({
   onAddTask,
   onEditTask,
   onDeleteTask,
+  onRenameModule,
+  onDeleteModule,
 }: {
   module: Module;
   nowMs: number;
@@ -25,6 +27,8 @@ export function ModuleCard({
   onAddTask?: (moduleId: string) => void;
   onEditTask?: (task: Task, moduleId: string) => void;
   onDeleteTask?: (taskId: string, taskTitle: string) => void;
+  onRenameModule?: (module: Module) => void;
+  onDeleteModule?: (module: Module) => void;
 }) {
   const [expanded, setExpanded] = useState(false);
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
@@ -60,15 +64,43 @@ export function ModuleCard({
 
   return (
     <article className={`module-card ${burningCount ? "module-card--burning" : ""}`}>
-      <Link className="module-card__head module-card__link" href={`/projects/${projectId}/modules/${module.id}`} aria-label={`Open ${module.name}`}>
-        <span className="module-card__icon" aria-hidden="true">
-          <ModuleIcon glyph={module.icon} />
-        </span>
-        <div>
-          <h3>{module.name}</h3>
-          <p>{module.description}</p>
-        </div>
-      </Link>
+      <div className="module-card__top">
+        <Link className="module-card__head module-card__link" href={`/projects/${projectId}/modules/${module.id}`} aria-label={`Open ${module.name}`}>
+          <span className="module-card__icon" aria-hidden="true">
+            <ModuleIcon glyph={module.icon} />
+          </span>
+          <div>
+            <h3>{module.name}</h3>
+            <p>{module.description}</p>
+          </div>
+        </Link>
+        {(onRenameModule || onDeleteModule) && (
+          <div className="module-card__actions">
+            {onRenameModule && (
+              <button
+                type="button"
+                className="task-row-btn"
+                title="Rename module"
+                aria-label={`Rename module ${module.name}`}
+                onClick={() => onRenameModule(module)}
+              >
+                <Icon name="pencil" size={15} />
+              </button>
+            )}
+            {onDeleteModule && (
+              <button
+                type="button"
+                className="task-row-delete-btn"
+                title="Delete module"
+                aria-label={`Delete module ${module.name}`}
+                onClick={() => onDeleteModule(module)}
+              >
+                <Icon name="trash" size={15} />
+              </button>
+            )}
+          </div>
+        )}
+      </div>
       <Ripeness values={taskStages(module.tasks)} percentage={progress} size="md" />
       <div className="module-card__meta">
         <button type="button" className="module-card__toggle" aria-expanded={expanded} onClick={() => setExpanded(!expanded)}>

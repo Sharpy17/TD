@@ -2,7 +2,7 @@
 
 import { canEditProject, canEditModule, canEditTask } from "@/lib/auth/project-access";
 import { revalidatePath } from "next/cache";
-import { createModule } from "@/lib/modules/service";
+import { createModule, deleteModule, renameModule } from "@/lib/modules/service";
 import { createTask, deleteTask, updateTask, addTaskComment } from "@/lib/tasks/service";
 import { getCurrentUser } from "@/lib/auth/service";
 import { canonicalProjectId } from "@/lib/projects/service";
@@ -61,6 +61,38 @@ export async function createModuleAction(
   revalidatePath("/");
   notifyBoard(projectId);
 
+  return { success: true };
+}
+
+export async function renameModuleAction(
+  moduleId: string,
+  name: string,
+  projectId?: string
+): Promise<{ success: boolean; error?: string }> {
+  if (!moduleId) return { success: false, error: "Missing module ID." };
+  if (!name.trim()) return { success: false, error: "Module name cannot be empty." };
+  if (!(await canEditModule(moduleId))) return { success: false, error: "You cannot rename this module." };
+
+  const result = await renameModule(moduleId, name);
+  if (!result.success) return { success: false, error: result.error || "Failed to rename module." };
+
+  revalidatePath("/projects/[projectId]", "layout");
+  revalidateProjectViews(projectId);
+  return { success: true };
+}
+
+export async function deleteModuleAction(
+  moduleId: string,
+  projectId?: string
+): Promise<{ success: boolean; error?: string }> {
+  if (!moduleId) return { success: false, error: "Missing module ID." };
+  if (!(await canEditModule(moduleId))) return { success: false, error: "You cannot delete this module." };
+
+  const result = await deleteModule(moduleId);
+  if (!result.success) return { success: false, error: result.error || "Failed to delete module." };
+
+  revalidatePath("/projects/[projectId]", "layout");
+  revalidateProjectViews(projectId);
   return { success: true };
 }
 

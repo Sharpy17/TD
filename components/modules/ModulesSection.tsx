@@ -4,6 +4,8 @@ import { useState } from "react";
 import type { Module } from "@/lib/domain/types";
 import { ModuleCard } from "./ModuleCard";
 import { CreateModuleModal } from "./CreateModuleModal";
+import { RenameModuleModal } from "./RenameModuleModal";
+import { DeleteModuleModal } from "./DeleteModuleModal";
 import { CreateTaskModal } from "@/components/tasks/CreateTaskModal";
 import { EditTaskModal } from "@/components/tasks/EditTaskModal";
 import { DeleteTaskModal } from "@/components/tasks/DeleteTaskModal";
@@ -22,6 +24,8 @@ export function ModulesSection({ modules, nowMs, projectId }: ModulesSectionProp
   const [taskModuleId, setTaskModuleId] = useState<string | undefined>(undefined);
   const [taskToDelete, setTaskToDelete] = useState<{ id: string; title: string } | null>(null);
   const [taskToEdit, setTaskToEdit] = useState<{ task: Task; moduleId: string } | null>(null);
+  const [moduleToRename, setModuleToRename] = useState<Module | null>(null);
+  const [moduleToDelete, setModuleToDelete] = useState<Module | null>(null);
 
   const handleOpenAddTask = (moduleId?: string) => {
     setTaskModuleId(moduleId);
@@ -80,9 +84,32 @@ export function ModulesSection({ modules, nowMs, projectId }: ModulesSectionProp
               onAddTask={handleOpenAddTask}
               onEditTask={(task, modId) => setTaskToEdit({ task, moduleId: modId })}
               onDeleteTask={(taskId, taskTitle) => setTaskToDelete({ id: taskId, title: taskTitle })}
+              onRenameModule={setModuleToRename}
+              onDeleteModule={setModuleToDelete}
             />
           ))}
         </div>
+      )}
+
+      {moduleToRename && (
+        <RenameModuleModal
+          key={moduleToRename.id}
+          onClose={() => setModuleToRename(null)}
+          moduleId={moduleToRename.id}
+          moduleName={moduleToRename.name}
+          projectId={projectId}
+        />
+      )}
+
+      {moduleToDelete && (
+        <DeleteModuleModal
+          key={moduleToDelete.id}
+          onClose={() => setModuleToDelete(null)}
+          moduleId={moduleToDelete.id}
+          moduleName={moduleToDelete.name}
+          taskCount={moduleToDelete.tasks.length}
+          projectId={projectId}
+        />
       )}
 
       <CreateModuleModal

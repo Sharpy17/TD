@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { createProject, deleteProject, getProjectById } from "../lib/projects/service";
-import { createModule } from "../lib/modules/service";
+import { createModule, deleteModule, renameModule } from "../lib/modules/service";
+import { createTask } from "../lib/tasks/service";
+import { ensureModuleChannel } from "../lib/chat/service";
+import { prisma } from "../lib/prisma";
 
 describe("Modules Service (lib/modules/service)", () => {
   it("rejects module creation with invalid names", async () => {
@@ -77,6 +80,48 @@ describe("Modules Service (lib/modules/service)", () => {
     const createdMod = project?.modules.find((m) => m.name === "Autonomous AI Agents");
     expect(createdMod).toBeDefined();
     expect(createdMod?.icon).toBe("🚀");
+  });
+
+  it("renames a module and its chat channel", async () => {
+    const projectRes = await createProject({ name: "Rename Module Project", createDefaultModules: false });
+    const projectId = projectRes.projectId!;
+    const moduleRes = await createModule({ projectId, name: "Old Name" });
+    const moduleId = moduleRes.moduleId!;
+    const channelId = await ensureModuleChannel(moduleId);
+
+    expect((await renameModule(moduleId, " ")).error).toContain("at least 2 characters");
+    expect((await renameModule("missing-module-999", "Anything")).error).toContain("not found");
+
+    const renamed = await renameModule(moduleId, "  Payments & Billing  ");
+    expect(renamed.success).toBe(true);
+
+    const project = await getProjectById(projectId);
+    expect(project?.modules[0].name).toBe("Payments & Billing");
+    const channel = await prisma.channel.findUnique({ where: { id: channelId! } });
+    expect(channel?.name).toBe("mod-payments-billing");
+
+    await deleteProject(projectId);
+  });
+
+  it("deletes a module together with its tasks and channel", async () => {
+    const projectRes = await createProject({ name: "Delete Module Project", createDefaultModules: false });
+    const projectId = projectRes.projectId!;
+    const keep = await createModule({ projectId, name: "Keep Me" });
+    const doomed = await createModule({ projectId, name: "Remove Me" });
+    const task = await createTask({ moduleId: doomed.moduleId!, title: "Goes with the module" });
+    const channelId = await ensureModuleChannel(doomed.moduleId!);
+
+    const result = await deleteModule(doomed.moduleId!);
+    expect(result.success).toBe(true);
+
+    const project = await getProjectById(projectId);
+    expect(project?.modules.map((m) => m.id)).toEqual([keep.moduleId]);
+    expect(await prisma.task.findUnique({ where: { id: task.taskId! } })).toBeNull();
+    expect(await prisma.channel.findUnique({ where: { id: channelId! } })).toBeNull();
+
+    expect((await deleteModule(doomed.moduleId!)).error).toContain("not found");
+
+    await deleteProject(projectId);
   });
 });
 
